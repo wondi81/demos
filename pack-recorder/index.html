@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>패킹 영상 녹화기 데모</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg></span>
+    <div><b>패킹 영상 녹화기</b><small>작업대 PC용 · 브라우저 시연판</small></div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab on" data-tab="station" role="tab">작업대 녹화</button>
+    <button class="tab" data-tab="cs" role="tab">CS 영상 찾기</button>
+  </nav>
+  <div class="net"><span class="dot"></span><span id="netLabel">S3 연결됨</span></div>
+</header>
+
+<main>
+  <!-- 작업대 -->
+  <section id="station" class="view on">
+    <div class="col-main">
+      <div class="card stage-card">
+        <div class="stage-head">
+          <div>
+            <h1 id="stationTitle">작업대 1</h1>
+            <p class="muted">송장 바코드를 스캔하면 녹화가 자동으로 시작됩니다</p>
+          </div>
+          <div class="cam-ctl">
+            <span class="chip" id="camChip">가상 카메라</span>
+            <button class="btn ghost sm" id="camBtn">웹캠 연결</button>
+          </div>
+        </div>
+        <div class="stage" id="stage">
+          <canvas id="cv" width="1280" height="720"></canvas>
+          <div class="idle" id="idle">
+            <div class="idle-box">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6v12M7 6v12M10 6v12M14 6v12M16 6v12M20 6v12"/></svg>
+              <b>대기 중</b>
+              <span>송장 바코드를 스캔하세요</span>
+            </div>
+          </div>
+        </div>
+        <div class="scanbar">
+          <label class="scan-field" for="scan">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M16 8v8"/></svg>
+            <input id="scan" inputmode="numeric" autocomplete="off" placeholder="스캐너 입력 대기 중… (숫자 입력 후 Enter)" aria-label="송장 번호">
+            <span class="focus-tag" id="focusTag">스캐너 준비됨</span>
+          </label>
+          <button class="btn primary" id="sampleBtn">샘플 송장 스캔</button>
+          <button class="btn danger" id="stopBtn" disabled>녹화 종료</button>
+        </div>
+        <p class="hint">같은 송장을 다시 스캔하거나 Enter를 누르면 녹화가 끝나고 저장됩니다. 녹화 중 <b>다른 송장</b>을 스캔하면 이전 영상을 자동 저장하고 새 녹화를 바로 시작합니다.</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><small>오늘 녹화</small><b id="stCount">0</b><span>건</span></div>
+        <div class="stat"><small>업로드 완료</small><b id="stDone">0</b><span>건</span></div>
+        <div class="stat"><small>절감 용량</small><b id="stSaved">0</b><span>MB</span></div>
+      </div>
+    </div>
+
+    <aside class="col-side">
+      <div class="card">
+        <div class="card-head"><h2>업로드 대기열</h2><span class="badge" id="qBadge">0</span></div>
+        <ul class="queue" id="queue"></ul>
+        <div class="empty" id="qEmpty">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0-4 4m4-4 4 4M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+          <p>아직 녹화된 영상이 없습니다.<br>송장을 스캔하면 녹화 → 압축 → S3 업로드가 자동으로 이어집니다.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>설정</h2><span class="muted xs">관리자 전용 · 시연용 읽기 전용</span></div>
+        <dl class="settings">
+          <div><dt>작업대 이름</dt><dd><select id="stationSel"><option>작업대 1</option><option>작업대 2</option><option>작업대 3</option><option>작업대 4</option></select></dd></div>
+          <div><dt>카메라 해상도</dt><dd><select disabled><option>1280 × 720 · 30fps</option></select></dd></div>
+          <div><dt>S3 버킷</dt><dd><code>packing-video-demo</code></dd></div>
+          <div><dt>저장 경로</dt><dd><code>YYYY/MM/DD/송장번호_시각.mp4</code></dd></div>
+          <div><dt>보관 기간</dt><dd><span class="pill">90일 후 자동 삭제</span><small class="muted xs">S3 수명 주기 규칙</small></dd></div>
+        </dl>
+      </div>
+
+      <div class="card note">
+        <h2>실제 프로그램은 이렇게 동작합니다</h2>
+        <ul>
+          <li><b>Windows 설치형</b> · C# .NET 8 WPF, 작업대 PC 4대에 설치</li>
+          <li><b>FFmpeg H.264 압축</b> · 화면처럼 송장번호·시각 자막을 영상에 새김</li>
+          <li><b>S3 멀티파트 업로드</b> · 실패 시 자동 재시도</li>
+          <li><b>네트워크가 끊기면</b> 로컬에 보관했다가 복구되는 즉시 재업로드</li>
+        </ul>
+      </div>
+    </aside>
+  </section>
+
+  <!-- CS -->
+  <section id="cs" class="view">
+    <div class="card cs-card">
+      <div class="cs-head">
+        <div>
+          <h1>CS 영상 찾기</h1>
+          <p class="muted">고객 문의가 들어오면 송장번호로 포장 영상을 바로 확인하세요</p>
+        </div>
+        <label class="search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="q" placeholder="송장번호 일부만 입력해도 검색됩니다" inputmode="numeric" aria-label="송장번호 검색">
+        </label>
+      </div>
+      <div class="cs-body">
+        <div class="results">
+          <p class="muted xs" id="rCount"></p>
+          <ul id="results"></ul>
+        </div>
+        <div class="pwrap">
+        <div class="player" id="player">
+          <div class="player-empty" id="pEmpty">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>
+            <p>목록에서 영상을 선택하세요</p>
+          </div>
+          <video id="vid" controls playsinline hidden></video>
+        </div>
+        <p class="pmeta" id="pMeta" hidden></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>제안용 데모 · 가상 데이터 · 실제 납품물은 요구사항 확정 후 개발</footer>
+<div class="toast" id="toast" role="status"></div>
+<script src="app.js"></script>
+</body>
+</html>

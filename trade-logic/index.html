@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>단계별 매매 로직 시뮬레이터</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:,">
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>단계별 매매 로직 시뮬레이터</h1>
+    <p class="sub">로직을 <b>명세표</b>로 확정 → 엔진이 표 그대로 동작 → <b>모든 규칙이 한 번 이상 발동</b>했는지로 검수</p>
+  </div>
+  <div class="notice" role="note"><span class="dot"></span>모의 시뮬레이션 · 실제 주문 없음 · 투자 권유 아님</div>
+</header>
+
+<main class="grid">
+  <section class="card chart-card">
+    <div class="card-head">
+      <div class="title-row">
+        <h2>가상 종목 · 1분봉</h2>
+        <span class="stage-now" id="stageNow">대기</span>
+        <span class="clock" id="clock"></span>
+      </div>
+      <ul class="legend" id="legend">
+        <li data-s="0"><i style="--c:#8a94a6"></i>0 대기</li>
+        <li data-s="1"><i style="--c:#2dd4bf"></i>1 1차 진입</li>
+        <li data-s="2"><i style="--c:#38bdf8"></i>2 추세 확인</li>
+        <li data-s="3"><i style="--c:#a78bfa"></i>3 2차 진입</li>
+        <li data-s="4"><i style="--c:#fbbf24"></i>4 부분 청산</li>
+        <li data-s="5"><i style="--c:#84cc16"></i>5 전량 청산</li>
+        <li data-s="6"><i style="--c:#fb7185"></i>6 손실 방어</li>
+        <li class="ma"><i class="l w"></i>단기MA</li>
+        <li class="ma"><i class="l o"></i>장기MA</li>
+      </ul>
+    </div>
+    <div class="chart-wrap"><canvas id="chart" aria-label="가상 시세 차트와 단계 배경"></canvas></div>
+    <div class="controls">
+      <button id="play" class="primary">▶ 재생</button>
+      <button id="step" title="한 봉씩 진행">한 봉 ▸</button>
+      <button id="reset">⟲ 처음부터</button>
+      <label class="speed">속도
+        <select id="speed"><option value="1">1×</option><option value="2" selected>2×</option><option value="4">4×</option><option value="8">8×</option></select>
+      </label>
+      <button id="reseed">시드 변경 <span id="seed" class="mono"></span></button>
+      <input id="scrub" type="range" min="0" value="0" aria-label="재생 위치">
+    </div>
+  </section>
+
+  <aside class="side">
+    <section class="card">
+      <h3>평가손익 <small>(모의)</small></h3>
+      <div id="pnl" class="big">+$0.00</div>
+      <dl class="kv">
+        <div><dt>실현손익</dt><dd id="realized"></dd></div>
+        <div><dt>보유</dt><dd id="pos"></dd></div>
+        <div><dt>단계 전환</dt><dd id="trans"></dd></div>
+        <div><dt>체결</dt><dd id="fillCount"></dd></div>
+      </dl>
+      <h4>체결 내역 <small>(모의)</small></h4>
+      <ul id="fills" class="fills"></ul>
+    </section>
+
+    <section class="card check-card">
+      <div class="check-head"><h3>검수 체크리스트</h3><span class="score" id="checkScore"></span></div>
+      <div class="bar"><span id="checkBar"></span></div>
+      <ul id="checks" class="checks"></ul>
+      <p class="hint">모든 규칙이 명세대로 실제로 발동한 것을 확인해야 검수 완료입니다. 이 시세에서 안 나온 규칙은 다른 시드·과거 데이터로 재현합니다.</p>
+    </section>
+  </aside>
+
+  <section class="card table-card">
+    <div class="card-head">
+      <h2>로직 명세표 <small>— 의뢰인 확인·서명 대상</small></h2>
+      <p class="sub">파란 칸의 숫자를 바꾸면 같은 시세로 즉시 다시 계산됩니다. 현재 단계는 강조 표시됩니다.</p>
+    </div>
+    <div class="table-scroll">
+      <table id="rules">
+        <thead><tr><th>단계</th><th>진입 조건</th><th>다음 단계로 가는 조건</th><th>이 단계에서 할 일(주문)</th><th>예외/중단 조건</th></tr></thead>
+        <tbody>
+          <tr data-s="0"><td><span class="sn" style="--c:#8a94a6">0</span>대기</td>
+            <td>포지션 없음<br><span class="muted">(시작 또는 청산 후)</span></td>
+            <td><code data-rule="R1">R1</code> 단기MA(<input data-p="fast" value="5" inputmode="numeric">)가 장기MA(<input data-p="slow" value="20" inputmode="numeric">) 상향 돌파 → 1단계</td>
+            <td>주문 없음 · 시세 감시</td>
+            <td>손실 방어 직후 5봉 동안 진입 금지</td></tr>
+          <tr data-s="1"><td><span class="sn" style="--c:#2dd4bf">1</span>1차 진입</td>
+            <td><code>R1</code> 충족</td>
+            <td><code data-rule="R2">R2</code> 진입가 대비 +<input data-p="confirm" value="0.8" inputmode="decimal">% &amp; 단기MA 상승 → 2단계</td>
+            <td>기준 수량 100주 매수</td>
+            <td><code data-rule="R3">R3</code> 진입가 대비 -<input data-p="stop" value="1" inputmode="decimal">% → 6단계</td></tr>
+          <tr data-s="2"><td><span class="sn" style="--c:#38bdf8">2</span>추세 확인</td>
+            <td><code>R2</code> 충족</td>
+            <td><code data-rule="R4">R4</code> 고점 대비 -<input data-p="pullback" value="0.4" inputmode="decimal">% 되돌림 &amp; 종가가 장기MA 위 → 3단계</td>
+            <td>주문 없음 · 고점 추적</td>
+            <td><code data-rule="R5">R5</code> 단기MA가 장기MA 하향 이탈 → 5단계</td></tr>
+          <tr data-s="3"><td><span class="sn" style="--c:#a78bfa">3</span>2차 진입</td>
+            <td><code>R4</code> 충족</td>
+            <td><code data-rule="R6">R6</code> 2차 진입가 대비 +<input data-p="take" value="1" inputmode="decimal">% → 4단계</td>
+            <td>추가 매수 <input data-p="add" value="30" inputmode="numeric">% (기준 수량 대비)</td>
+            <td><code data-rule="R7">R7</code> 2차 진입가 대비 -<span data-show="stop">1</span>% → 6단계</td></tr>
+          <tr data-s="4"><td><span class="sn" style="--c:#fbbf24">4</span>부분 청산</td>
+            <td><code>R6</code> 충족</td>
+            <td><code data-rule="R8">R8</code> 고점 대비 -<span data-show="pullback">0.4</span>% 또는 추세 붕괴 → 5단계</td>
+            <td>보유 수량 50% 매도</td>
+            <td class="muted">—</td></tr>
+          <tr data-s="5"><td><span class="sn" style="--c:#84cc16">5</span>전량 청산</td>
+            <td><code>R5</code> 또는 <code>R8</code></td>
+            <td>다음 봉에 0단계 복귀</td>
+            <td>잔량 전량 매도</td>
+            <td>체결 미확인 시 재조회 후 진행</td></tr>
+          <tr data-s="6"><td><span class="sn" style="--c:#fb7185">6</span>손실 방어</td>
+            <td><code>R3</code> 또는 <code>R7</code></td>
+            <td>다음 봉에 0단계 복귀</td>
+            <td>보유 전량 즉시 매도</td>
+            <td>복귀 후 5봉 재진입 금지</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="scope">
+      <div><b>이 표가 곧 개발 범위입니다.</b> 숫자(기간·%·비율)는 설정값이라 바꿔도 범위 변경이 아닙니다.</div>
+      <div>표에 없는 조건·단계를 추가할 때만 <b>변경 요청</b>으로 따로 적고, 일정·비용을 먼저 합의한 뒤 반영합니다.</div>
+    </div>
+  </section>
+
+  <section class="card log-card">
+    <h3>판단 로그 <small>— 실제 프로그램도 같은 형식으로 파일에 저장</small></h3>
+    <ul id="log" class="log"></ul>
+  </section>
+
+  <section class="card arch-card">
+    <h3>실제 프로그램 구성</h3>
+    <ol class="flow"><li>시세 수신</li><li>지표 계산</li><li>단계 엔진</li><li>주문·체결 확인</li></ol>
+    <ul class="notes">
+      <li>키움 OpenAPI-W(해외) 연동 · 영웅문Global 계좌</li>
+      <li>모의투자 계좌로 먼저 검증한 뒤 실계좌 전환</li>
+      <li>모든 판단·주문·체결 로그 저장, 사후 대조 가능</li>
+    </ul>
+  </section>
+</main>
+
+<div id="toast" class="toast" role="status"></div>
+<footer>제안용 데모 · 가상 데이터 · 실제 로직은 미팅 후 의뢰인 자료로 구현</footer>
+<script src="app.js"></script>
+</body>
+</html>
