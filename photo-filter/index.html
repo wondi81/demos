@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>필터 매니저 데모</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:,">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo" aria-hidden="true"></span><b>필터 매니저</b><span class="sub">Filter Manager · 라이트룸 방식 프리셋 제작</span></div>
+  <span class="chip">브라우저 시연판</span>
+</header>
+
+<main class="app">
+  <aside class="left">
+    <div class="sec-h">프리셋 <span id="pcount" class="muted"></span></div>
+    <div class="save-bar">
+      <input id="pname" placeholder="프리셋 이름" maxlength="30" aria-label="프리셋 이름">
+      <div class="row2">
+        <button id="btnNew" class="btn primary">새로 저장</button>
+        <button id="btnUpdate" class="btn">업데이트</button>
+      </div>
+      <div id="dirty" class="dirty"></div>
+    </div>
+    <ul id="plist" class="plist"></ul>
+    <div class="exports">
+      <div class="sec-h">내보내기</div>
+      <div class="grid2">
+        <button id="btnJsonView" class="btn">JSON 보기</button>
+        <button id="btnJsonExport" class="btn">JSON 내보내기</button>
+        <button id="btnCubeExport" class="btn">.cube 내보내기</button>
+        <button id="btnThumbExport" class="btn">썸네일 PNG</button>
+      </div>
+    </div>
+  </aside>
+
+  <section class="center">
+    <div class="toolbar">
+      <label class="btn">이미지 열기<input id="fileImg" type="file" accept="image/jpeg,image/png" hidden></label>
+      <button id="btnSample" class="btn">샘플 이미지</button>
+      <div class="seg" role="group" aria-label="비교 방식">
+        <button data-mode="split" class="on">분할</button>
+        <button data-mode="sbs">나란히</button>
+      </div>
+      <div class="spacer"></div>
+      <div class="badge" id="badge"><i></i><span id="badgeTxt">CPU 렌더 준비 중</span></div>
+    </div>
+    <div class="viewer" id="viewer">
+      <div class="stage" id="stage">
+        <canvas id="cvBefore"></canvas>
+        <canvas id="cvAfter"></canvas>
+        <div class="handle" id="handle"><span></span></div>
+        <span class="tag tl">Before 원본</span>
+        <span class="tag tr">After 적용</span>
+      </div>
+      <div class="drop-hint">이미지를 놓으면 불러옵니다</div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-h">엔진 구조 <span class="muted">· 지금 이 화면이 실제로 이렇게 동작합니다</span></div>
+        <div class="pipe">
+          <div class="step"><b>파라미터</b><small id="stParams">기본·커브·HSL·LUT</small></div>
+          <div class="arr">→</div>
+          <div class="step hot"><b>33³ LUT 굽기 (1회)</b><small id="stBake">-</small></div>
+          <div class="arr">→</div>
+          <div class="step hot"><b>픽셀당 LUT 조회</b><small id="stApply">-</small></div>
+          <div class="arr fx">+</div>
+          <div class="step fx"><b>그레인·비네팅</b><small>위치 의존 효과만 별도</small></div>
+        </div>
+        <p class="note">파라미터 → 33³ LUT 굽기(1회) → 픽셀당 LUT 조회 = GPU 없는 PC에서도 빠름. 실제 엔진은 C++/OpenCV로 같은 구조, Flutter에서는 DLL(FFI) 또는 CLI로 호출</p>
+        <p class="note muted" id="stEst"></p>
+      </div>
+      <div class="card">
+        <div class="card-h">키오스크 연동</div>
+<pre class="code"><span class="c"># CLI (프로세스 호출)</span>
+filter_engine.exe --in photo.jpg ^
+  --preset P-0007 --out result.jpg
+
+<span class="c">// Flutter (Windows)</span>
+final r = await Process.run('filter_engine.exe', [
+  '--in', inPath, '--preset', 'P-0007',
+  '--out', outPath]);
+<span class="c">// 또는 FFI(DLL): apply_filter(inPath, id, outPath)</span></pre>
+        <p class="note muted">프리셋은 서버에서 JSON으로 내려받아 매장별 배포 가능</p>
+      </div>
+    </div>
+  </section>
+
+  <aside class="right">
+    <div class="hist"><canvas id="hist"></canvas></div>
+    <div class="right-scroll">
+      <div class="rp-head"><span>보정</span><button id="btnReset" class="btn sm">전체 초기화</button></div>
+
+      <details open>
+        <summary>기본 <span class="en">Basic</span></summary>
+        <div class="body" id="basicBody"></div>
+      </details>
+
+      <details open>
+        <summary>톤 커브 <span class="en">Tone Curve</span></summary>
+        <div class="body">
+          <div class="tabs" id="curveTabs">
+            <button data-ch="rgb" class="on">RGB</button><button data-ch="r">R</button><button data-ch="g">G</button><button data-ch="b">B</button>
+          </div>
+          <canvas id="curve" class="curve"></canvas>
+          <div class="hint">클릭: 점 추가 · 드래그: 이동 · 더블클릭/밖으로 끌기: 삭제 <button id="btnCurveReset" class="link">채널 초기화</button></div>
+        </div>
+      </details>
+
+      <details open>
+        <summary>HSL / 컬러 <span class="en">HSL</span></summary>
+        <div class="body">
+          <div class="tabs" id="hslTabs">
+            <button data-t="hue" class="on">색조</button><button data-t="saturation">채도</button><button data-t="luminance">휘도</button>
+          </div>
+          <div id="hslBody"></div>
+        </div>
+      </details>
+
+      <details open>
+        <summary>효과 <span class="en">Effects</span></summary>
+        <div class="body" id="fxBody"></div>
+      </details>
+
+      <details open>
+        <summary>LUT 3D <span class="en">.cube</span></summary>
+        <div class="body">
+          <label class="btn block">.cube 파일 불러오기<input id="fileCube" type="file" accept=".cube" hidden></label>
+          <div id="lutInfo" class="hint">불러온 LUT 없음</div>
+          <div id="lutBody"></div>
+          <div class="hint">팁: 왼쪽 ‘.cube 내보내기’로 만든 파일을 다시 불러와 결과가 같은지 검증할 수 있습니다.</div>
+        </div>
+      </details>
+    </div>
+  </aside>
+</main>
+
+<footer class="foot">제안용 데모 · 브라우저 시연판 · 실제 납품물은 Windows 관리자 프로그램 + CPU 렌더링 엔진</footer>
+
+<dialog id="dlgJson">
+  <div class="dlg-h"><b>프리셋 JSON</b><span class="muted">현재 편집 상태 기준</span><div class="spacer"></div><button id="btnCopy" class="btn sm">복사</button><button id="btnClose" class="btn sm">닫기</button></div>
+  <pre id="jsonPre" class="json"></pre>
+</dialog>
+<div id="toast" role="status"></div>
+<script src="app.js"></script>
+</body>
+</html>
