@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>외벽 점검 판독 데모</title>
+<meta name="description" content="드론 외벽 점검 사진 균열·파손 판독 및 보고서 출력 프로그램 제안용 데모 (가상 데이터)">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="ribbon">제안용 작동 데모 · 가상 데이터 · 실제 납품 실적 아님 — 사진은 브라우저에서 절차 생성한 가상 외벽이며, 탐지 결과는 실제 AI 판독이 아니라 <b>탐지 결과 형식의 샘플 데이터</b>입니다.</div>
+
+<header class="top">
+  <div class="brand">
+    <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 21V5l8-3 8 3v16"/><path d="M9 21v-5h6v5M8 8h2M14 8h2M8 12h2M14 12h2"/></svg></span>
+    <div><b>외벽 점검 판독</b><small>가상 단지 · 3개 동 · 사진 <span id="totalCount">-</span>장</small></div>
+  </div>
+  <div class="top-actions">
+    <button class="btn ghost" id="importBtn">사진 일괄 등록 (시연)</button>
+    <button class="btn primary" id="csvBtn">엑셀 보고서 내려받기</button>
+  </div>
+</header>
+
+<main class="layout">
+  <aside class="tree-panel" aria-label="그룹">
+    <div class="panel-head"><h2>그룹 (동 · 면 · 층)</h2></div>
+    <label class="sr-only" for="groupSelect">그룹 선택</label>
+    <select id="groupSelect" class="group-select"></select>
+    <ul class="tree" id="tree" role="tree"></ul>
+  </aside>
+
+  <section class="list-panel" aria-label="사진 목록">
+    <div class="list-head">
+      <div>
+        <h1 id="scopeTitle">전체</h1>
+        <p class="muted" id="scopeMeta"></p>
+      </div>
+      <div class="sev-summary" id="sevSummary"></div>
+    </div>
+    <div class="filters" role="group" aria-label="심각도 필터">
+      <button class="chip" data-f="all">전체 사진</button>
+      <button class="chip on" data-f="hit">탐지 있음</button>
+      <button class="chip sev-h" data-f="상">심각도 상</button>
+      <button class="chip sev-m" data-f="중">중</button>
+      <button class="chip sev-l" data-f="하">하</button>
+    </div>
+    <div class="grid" id="grid"></div>
+    <nav class="pager" aria-label="페이지">
+      <button class="btn ghost sm" id="prevBtn" aria-label="이전 페이지">이전</button>
+      <span id="pageInfo"></span>
+      <button class="btn ghost sm" id="nextBtn" aria-label="다음 페이지">다음</button>
+    </nav>
+    <p class="note">썸네일은 현재 페이지(24장)만 그립니다. 실제 프로그램에서는 1.5만 장을 한 번에 띄우지 않고 페이지 단위로 저해상도 썸네일 캐시를 읽는 방식으로 설계합니다.</p>
+  </section>
+
+  <section class="detail" id="detail" aria-label="사진 상세" hidden>
+    <div class="detail-head">
+      <div>
+        <h2 id="dTitle"></h2>
+        <p class="muted xs" id="dMeta"></p>
+      </div>
+      <button class="btn ghost sm" id="closeBtn" aria-label="상세 닫기">닫기</button>
+    </div>
+    <div class="viewer" id="viewer">
+      <canvas id="view" width="1200" height="800" aria-label="원본 해상도 사진 뷰어"></canvas>
+      <div class="zoom-tag" id="zoomTag">전체</div>
+    </div>
+    <div class="viewer-ctl">
+      <button class="btn ghost sm" id="fitBtn">전체 보기</button>
+      <label class="toggle"><input type="checkbox" id="boxToggle" checked> 탐지 표시</label>
+      <span class="muted xs">항목을 누르면 원본 해상도에서 해당 위치로 이동합니다</span>
+    </div>
+    <h3 class="sub">파손 항목 <span class="badge" id="dCount">0</span></h3>
+    <ol class="defects" id="defects"></ol>
+  </section>
+</main>
+
+<div class="modal" id="importModal" hidden role="dialog" aria-modal="true" aria-labelledby="impTitle">
+  <div class="modal-box">
+    <h2 id="impTitle">사진 일괄 등록 · 판독 큐</h2>
+    <p class="muted">폴더를 고르면 파일명·EXIF(촬영일·해상도)로 동/면/층을 자동 분류하고, 판독은 작업 큐로 나눠 처리합니다. 실패한 사진은 따로 모아 다시 시도합니다. (숫자는 시뮬레이션)</p>
+    <div class="q-bars">
+      <div class="q-row"><span>등록</span><div class="bar"><i id="barReg"></i></div><b id="numReg">0</b></div>
+      <div class="q-row"><span>판독</span><div class="bar"><i id="barDet"></i></div><b id="numDet">0</b></div>
+      <div class="q-row"><span>실패→재시도</span><div class="bar warn"><i id="barFail"></i></div><b id="numFail">0</b></div>
+    </div>
+    <p class="xs muted" id="impLog">대기 중</p>
+    <div class="modal-actions">
+      <button class="btn primary" id="impRun">시작</button>
+      <button class="btn ghost" id="impClose">닫기</button>
+    </div>
+  </div>
+</div>
+
+<footer>제안용 데모 · 가상 데이터 · 실제 탐지 모델과 보고서 양식은 표본 사진 검토 후 확정</footer>
+<script src="app.js"></script>
+</body>
+</html>
