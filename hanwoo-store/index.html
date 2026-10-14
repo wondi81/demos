@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>한우 선물세트 스토어 데모</title>
+<meta name="theme-color" content="#1E3B30">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%231E3B30'/%3E%3Cpath d='M6 15c2-5 10-5 12 0' stroke='%23F4F3EF' stroke-width='2' fill='none'/%3E%3C/svg%3E">
+</head>
+<body>
+<div class="band" role="note">제안용 작동 데모 · 가상 데이터 · 실제 납품 실적 아님</div>
+<header class="bar">
+  <div class="bar-in">
+    <a class="mark" href="#main" aria-label="한결한우 스토어 메인으로">
+      <span class="seal" aria-hidden="true">한결</span>
+      <span><b>한결한우</b><small>가상 업체 · 스마트스토어 시안</small></span>
+    </a>
+    <nav class="seg" aria-label="데모 화면 전환">
+      <a href="#main" data-tab="main">스토어 메인</a>
+      <a href="#p/1" data-tab="p">상세페이지</a>
+      <a href="#todo" data-tab="todo">오픈 체크리스트</a>
+    </nav>
+  </div>
+</header>
+<main id="app" tabindex="-1"></main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+</body>
+</html>
