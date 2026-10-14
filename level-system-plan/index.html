@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>레벨 정책 정의서 샘플</title>
+<meta name="description" content="스포츠 커뮤니티 앱 레벨·경험치 시스템 정책 정의서 샘플 (제안용, 가상 수치)">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="ribbon">제안용 작동 데모 · 가상 데이터 · 실제 납품 실적 아님 — 수치는 모두 예시이며 실제 값은 운영 데이터 확인 후 협의로 확정합니다.</div>
+
+<header class="doc-head">
+  <div class="wrap">
+    <p class="kicker">서비스 정책 정의서 · 샘플 v0.1</p>
+    <h1>레벨 · 경험치(EXP) · 티어 정책</h1>
+    <p class="lead">실시간 점수·픽 공유 앱에 레벨 시스템을 붙일 때의 정책 정의서 형식 예시입니다. 수치를 바꾸면 레벨업 소요 일수가 바로 다시 계산됩니다.</p>
+    <nav class="toc" aria-label="목차">
+      <a href="#calc">1. 레벨 곡선 계산기</a>
+      <a href="#tiers">2. 티어·승급·보상</a>
+      <a href="#wire">3. 화면 와이어프레임</a>
+      <a href="#picks">4. 전문가 픽 열람 개편안</a>
+      <a href="#risk">5. 점검 메모</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="calc" class="sec">
+    <h2><span class="no">1</span>레벨 곡선 계산기</h2>
+    <p class="desc">조건별 EXP와 하루 활동량을 넣으면 레벨별 도달 일수를 계산합니다. 적중 보상만 키우면 "맞히는 사람만 크는" 구조가 되므로, 참여·기록·커뮤니티 비중을 함께 봅니다.</p>
+    <div class="calc">
+      <div class="panel">
+        <h3>조건별 EXP <small>(1회당)</small></h3>
+        <div class="sliders" id="expSliders"></div>
+        <h3>유저 유형별 하루 활동 <small>(가정)</small></h3>
+        <div class="persona" role="group" aria-label="유저 유형">
+          <button class="seg" data-p="light">가벼운 유저</button>
+          <button class="seg on" data-p="normal">일반 유저</button>
+          <button class="seg" data-p="heavy">헤비 유저</button>
+        </div>
+        <div class="sliders" id="actSliders"></div>
+        <h3>곡선</h3>
+        <div class="sliders" id="curveSliders"></div>
+      </div>
+      <div class="panel out">
+        <div class="kpis">
+          <div><span>하루 EXP</span><b id="kDaily">-</b></div>
+          <div><span>레벨 10 도달</span><b id="kL10">-</b></div>
+          <div><span>레벨 30 도달</span><b id="kL30">-</b></div>
+          <div><span>만렙(50) 도달</span><b id="kMax">-</b></div>
+        </div>
+        <div class="share" aria-label="하루 EXP 구성">
+          <div class="share-bar" id="shareBar"></div>
+          <div class="share-legend" id="shareLegend"></div>
+        </div>
+        <p class="warn" id="shareWarn" hidden></p>
+        <svg id="chart" viewBox="0 0 640 300" role="img" aria-label="레벨별 도달 일수 곡선"></svg>
+        <div class="tbl-wrap"><table class="tbl" id="lvTable"></table></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tiers" class="sec">
+    <h2><span class="no">2</span>티어 · 승급 기준 · 자동 보상</h2>
+    <p class="desc">레벨은 누적(내려가지 않음), 티어는 레벨 + 최근 활동 조건으로 승급합니다. 도달 일수는 위 계산기의 현재 유형 기준입니다.</p>
+    <div class="tbl-wrap"><table class="tbl" id="tierTable"></table></div>
+  </section>
+
+  <section id="wire" class="sec">
+    <h2><span class="no">3</span>화면 와이어프레임 <small>(저해상도)</small></h2>
+    <p class="desc">개발·디자인 팀에 넘기는 구조 설계용입니다. 버튼은 실제로 눌러볼 수 있습니다.</p>
+    <div class="phones">
+      <figure class="phone">
+        <div class="screen">
+          <div class="w-bar"></div>
+          <div class="w-prof">
+            <div class="w-avatar" id="wAvatar"></div>
+            <div>
+              <div class="w-name">닉네임</div>
+              <div class="w-tier" id="wTier">실버 · Lv.14</div>
+            </div>
+          </div>
+          <div class="w-stats">
+            <div><b>128</b><span>참여 픽</span></div>
+            <div><b>41</b><span>작성 글</span></div>
+            <div><b>3장</b><span>열람권</span></div>
+          </div>
+          <div class="w-label">획득 배지</div>
+          <div class="w-badges"><i></i><i></i><i></i><i class="off"></i><i class="off"></i></div>
+          <div class="w-label">최근 활동</div>
+          <div class="w-line"></div><div class="w-line short"></div><div class="w-line"></div>
+        </div>
+        <figcaption><b>① 프로필</b> 레벨·티어 배지, 활동 지표, 남은 열람권</figcaption>
+      </figure>
+      <figure class="phone">
+        <div class="screen">
+          <div class="w-bar"></div>
+          <div class="w-label">오늘의 경기 목록</div>
+          <div class="w-card"></div><div class="w-card"></div>
+          <div class="xpbox">
+            <div class="xp-top"><b id="xpLv">Lv.14</b><span id="xpNum">620 / 1,000 EXP</span></div>
+            <div class="xp-track"><i id="xpFill"></i></div>
+            <div class="xp-log" id="xpLog">픽 참여 시 EXP가 쌓입니다</div>
+          </div>
+          <div class="xp-btns">
+            <button class="wbtn" data-xp="pick">픽 참여 +</button>
+            <button class="wbtn" data-xp="hit">적중 +</button>
+            <button class="wbtn" data-xp="post">분석글 +</button>
+          </div>
+          <div class="lvup" id="lvup" hidden>레벨 업! <span id="lvupTxt"></span></div>
+        </div>
+        <figcaption><b>② 경험치 바</b> 획득 직후 증가량 표시, 레벨업 시 보상 안내</figcaption>
+      </figure>
+      <figure class="phone">
+        <div class="screen">
+          <div class="w-bar"></div>
+          <div class="w-tabs" role="tablist" aria-label="랭킹 기간">
+            <button class="wt on" data-r="week" role="tab" aria-selected="true">주간</button>
+            <button class="wt" data-r="season" role="tab" aria-selected="false">시즌</button>
+            <button class="wt" data-r="friend" role="tab" aria-selected="false">친구</button>
+          </div>
+          <ol class="w-rank" id="wRank"></ol>
+          <div class="w-me" id="wMe"></div>
+        </div>
+        <figcaption><b>③ 랭킹</b> 기간별 탭, 하단에 내 순위 고정</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="picks" class="sec">
+    <h2><span class="no">4</span>전문가 픽 열람 권한 개편안</h2>
+    <p class="desc">기존 인앱 결제를 없애는 대신 레벨 보상과 병행하는 안입니다. 결제 매출 잠식 여부는 적용 전·후 지표로 확인합니다.</p>
+    <div class="tbl-wrap"><table class="tbl cmp">
+      <thead><tr><th scope="col">항목</th><th scope="col">현행 (가정)</th><th scope="col">개편안 A · 레벨 연동 병행</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">열람 방법</th><td>건당 인앱 결제</td><td>티어별 월 열람권 자동 지급 + 부족분은 기존 결제</td></tr>
+        <tr><th scope="row">신규 유저</th><td>결제 전 품질 확인 어려움</td><td>브론즈 첫 레벨업 때 열람권 1장으로 체험</td></tr>
+        <tr><th scope="row">헤비 유저</th><td>결제 빈도에 의존</td><td>활동으로 일부 충당, 상위 티어 선공개 시간</td></tr>
+        <tr><th scope="row">열람권 성격</th><td>-</td><td>앱 내 사용 전용 · 양도·환전 불가 · 유효기간 있음</td></tr>
+        <tr><th scope="row">확인할 지표</th><td>건당 결제 수</td><td>결제 수 변화, 열람권 사용률, 7일·30일 재방문율</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="risk" class="sec">
+    <h2><span class="no">5</span>점검 메모</h2>
+    <ul class="memo">
+      <li><b>보상 설계 전 확인:</b> 건전 프로토 관련 규정과 앱 마켓 심사 기준상 보상·문구에 제한이 있을 수 있어, 해당 내용을 확인한 뒤 정책에 반영합니다. 이 샘플의 보상은 모두 현금성 없는 앱 내 혜택으로만 잡았습니다.</li>
+      <li><b>적중 EXP 비중 상한:</b> 하루 EXP 중 적중 보상 비중이 높으면 결과만 쫓는 구조가 됩니다. 계산기는 비중이 40%를 넘으면 경고합니다(기준값은 협의).</li>
+      <li><b>어뷰징:</b> 같은 경기 양쪽 픽, 짧은 글 반복 작성에 대비해 하루 상한과 조건별 상한을 둡니다.</li>
+      <li><b>미정 항목:</b> EXP 수치와 보상 아이템은 운영 데이터(일 활동량 분포) 확인 후 협의로 확정합니다.</li>
+    </ul>
+  </section>
+</main>
+<footer>제안용 데모 · 가상 데이터 · 특정 구단·경기·배당 정보는 사용하지 않았습니다</footer>
+<script src="app.js"></script>
+</body>
+</html>
