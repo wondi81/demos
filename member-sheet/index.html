@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>회원·결제 관리 시트 데모</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23187348'/%3E%3Cpath d='M6 8h12M6 12h12M6 16h12M10 6v12' stroke='white' stroke-width='1.6'/%3E%3C/svg%3E">
+</head>
+<body>
+<div class="notice" role="note">제안용 작동 데모 · 가상 데이터 · 실제 납품 실적 아님</div>
+
+<header class="bar">
+  <div class="file">
+    <span class="logo" aria-hidden="true"></span>
+    <div><h1>회원 관리 시트</h1><p>실제 VBA·매크로가 아닌 웹 시뮬레이션입니다. 실제 납품은 사용하시는 엑셀/구글시트에 수식·앱스스크립트로 만듭니다.</p></div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <button id="addRow" class="tb primary">+ 행 추가</button>
+  <button id="csv" class="tb">CSV 내려받기</button>
+  <label class="tb chk"><input type="checkbox" id="onlySoon"> 7일 내 결제만 보기</label>
+  <span class="today" id="today"></span>
+</div>
+
+<div class="fx" aria-live="polite"><span class="ref" id="ref">A1</span><span class="fxi">fx</span><code id="formula">셀을 누르면 실제 시트에 들어갈 수식이 보입니다</code></div>
+
+<section class="kpis" aria-label="요약">
+  <div><span>회원 수</span><b id="kMembers">0</b></div>
+  <div><span>이번 달 결제 합계</span><b id="kMonth">0</b></div>
+  <div><span>총 결제 금액</span><b id="kTotal">0</b></div>
+  <div class="warn"><span>7일 내 결제 예정</span><b id="kSoon">0</b></div>
+</section>
+
+<main class="grid-wrap" id="panel"></main>
+
+<nav class="sheets" role="tablist" aria-label="시트">
+  <button role="tab" data-s="members" aria-selected="true">회원 목록</button>
+  <button role="tab" data-s="log" aria-selected="false">결제 기록</button>
+  <button role="tab" data-s="monthly" aria-selected="false">월별 합계</button>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+<script src="app.js"></script>
+</body>
+</html>
