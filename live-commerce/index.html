@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>라이브 커머스 시청·관리 데모</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23E5482F'/%3E%3Ccircle cx='12' cy='12' r='4' fill='white'/%3E%3C/svg%3E">
+</head>
+<body>
+<div class="notice" role="note">제안용 작동 데모 · 가상 데이터 · 실제 납품 실적 아님 — 영상·채팅·결제는 브라우저 안 시뮬레이션이며 AWS IVS·PG 실제 연동이 아닙니다</div>
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brand"><span class="dot" aria-hidden="true"></span>라이브 커머스 <small>데모</small></div>
+    <nav class="tabs" role="tablist" aria-label="화면 전환">
+      <button role="tab" id="tab-viewer" aria-selected="true" aria-controls="viewer">시청자 화면</button>
+      <button role="tab" id="tab-admin" aria-selected="false" aria-controls="admin">관리자 화면</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="viewer" role="tabpanel" aria-labelledby="tab-viewer" class="viewer">
+    <div class="stage" id="stage">
+      <div class="video" aria-label="방송 화면(가상)">
+        <div class="scene" aria-hidden="true">
+          <div class="light l1"></div><div class="light l2"></div>
+          <div class="table"></div>
+          <div class="host"><div class="head"></div><div class="body"></div></div>
+          <div class="prod-box"></div>
+        </div>
+        <div class="offair" id="offair"><b>방송 준비 중</b><span>관리자 화면에서 ‘방송 시작’을 누르면 송출이 시작됩니다</span></div>
+      </div>
+      <div class="hud">
+        <span class="live" id="liveBadge">LIVE</span>
+        <span class="pill" id="viewers">시청 0</span>
+        <span class="pill" id="elapsed">00:00</span>
+      </div>
+      <ol class="chat" id="chat" aria-live="polite" aria-label="실시간 채팅"></ol>
+      <button class="pin" id="pin" aria-haspopup="dialog"></button>
+      <form class="say" id="sayForm" autocomplete="off">
+        <label class="sr" for="sayInput">채팅 입력</label>
+        <input id="sayInput" maxlength="60" placeholder="채팅을 입력하세요">
+        <button type="submit">보내기</button>
+      </form>
+
+      <div class="sheet-bg" id="sheetBg" hidden></div>
+      <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+        <div class="grab" aria-hidden="true"></div>
+        <div class="sheet-head">
+          <div class="thumb" id="sheetThumb" aria-hidden="true"></div>
+          <div><h2 id="sheetTitle"></h2><p class="price" id="sheetPrice"></p><p class="stock" id="sheetStock"></p></div>
+          <button class="x" id="sheetClose" aria-label="닫기">×</button>
+        </div>
+        <fieldset class="opts" id="opts"><legend>옵션</legend></fieldset>
+        <div class="qty">
+          <span>수량</span>
+          <div class="stepper"><button id="qMinus" aria-label="수량 줄이기">−</button><output id="qty">1</output><button id="qPlus" aria-label="수량 늘리기">+</button></div>
+        </div>
+        <div class="pay">
+          <span>결제수단</span>
+          <label><input type="radio" name="pm" value="간편결제" checked> 간편결제</label>
+          <label><input type="radio" name="pm" value="카드"> 카드</label>
+        </div>
+        <button class="buy" id="buyBtn">0원 결제하기</button>
+        <p class="fine">방송은 뒤에서 계속 재생됩니다. 결제는 가상 처리입니다.</p>
+      </div>
+      <div class="toast" id="toast" role="status"></div>
+    </div>
+
+    <aside class="side">
+      <h2>이 방송의 상품</h2>
+      <ul class="plist" id="plist"></ul>
+      <h2>구현 메모</h2>
+      <ul class="memo">
+        <li>영상: 실제 납품 시 Amazon IVS Player Web SDK로 교체</li>
+        <li>채팅: IVS Chat Client SDK 이벤트(메시지·상품 노출·품절)로 교체</li>
+        <li>재고: 서버에서 주문 시점에 차감, 품절은 채팅 이벤트로 즉시 반영</li>
+      </ul>
+    </aside>
+  </section>
+
+  <section id="admin" role="tabpanel" aria-labelledby="tab-admin" class="admin" hidden>
+    <div class="acard ctl">
+      <div>
+        <h2>방송 제어</h2>
+        <p id="aStatus">대기 중</p>
+      </div>
+      <button class="big" id="toggleLive">방송 시작</button>
+    </div>
+    <div class="stats">
+      <div class="acard"><span>동시 시청</span><b id="sViewers">0</b></div>
+      <div class="acard"><span>주문 건수</span><b id="sOrders">0</b></div>
+      <div class="acard"><span>방송 매출</span><b id="sSales">0원</b></div>
+    </div>
+    <div class="acard">
+      <h2>상품 순서·재고</h2>
+      <p class="hint">위·아래로 노출 순서를 바꾸고, ‘지금 노출’로 방송 화면 상품 카드를 교체합니다. 재고는 바로 수정됩니다.</p>
+      <ul class="alist" id="alist"></ul>
+    </div>
+    <div class="acard">
+      <h2>최근 주문</h2>
+      <ul class="orders" id="orders"><li class="empty">아직 주문이 없습니다</li></ul>
+    </div>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
