@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>업비트 읽기 전용 연결 런북</title>
+<meta name="description" content="업비트 자산조회 전용 API 연결 설정·상시 점검 제안용 데모 (가상 데이터)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="ribbon">제안용 작동 데모 · 가상 데이터 · 실제 납품 실적 아님 — 터미널 출력과 잔고, 점검 기록은 모두 <b>예시 화면</b>이며 업비트 서버에 연결하지 않습니다.</div>
+
+<header class="top">
+  <div class="brand">
+    <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14v3"/></svg></span>
+    <div><b>업비트 읽기 전용 연결</b><small>설정 런북 · 상시 점검</small></div>
+  </div>
+  <div class="server-pill"><span class="dot ok" aria-hidden="true"></span>고객 VPS <code>207.148.x.x</code> · Ubuntu</div>
+</header>
+
+<main>
+  <section class="hero reveal">
+    <span class="eyebrow">자산조회 권한 하나만 · IP 고정 · 매일 자동 점검</span>
+    <h1>비밀키는 저희가<br>한 번도 보지 않습니다.</h1>
+    <p class="lead">코드와 점검 장치는 저희가 서버에 설치합니다. 비밀키는 고객님이 명령어 한 줄로 직접 넣으시고, 화면에도 기록에도 남지 않습니다. 그 뒤 연결 시험과 매일 점검은 키 내용을 몰라도 돌아갑니다.</p>
+    <ul class="facts">
+      <li><b>root 전용 600</b><span>키 파일 권한. 다른 계정은 읽을 수 없음</span></li>
+      <li><b>매일 1회</b><span>인증 호출·권한 범위·IP·만료일 점검</span></li>
+      <li><b>실패 시 알림</b><span>텔레그램 또는 이메일 중 선택</span></li>
+    </ul>
+  </section>
+
+  <section class="bento" aria-label="설정 단계">
+    <div class="shell span-steps reveal">
+      <div class="core">
+        <div class="card-head">
+          <h2>설정 단계</h2>
+          <span class="muted" id="stepCount">1 / 5</span>
+        </div>
+        <ol class="steps" id="steps"></ol>
+        <div class="step-actions">
+          <button class="btn primary" id="runBtn"><span>이 단계 실행해 보기</span><i aria-hidden="true">→</i></button>
+          <button class="btn ghost" id="nextBtn">다음 단계</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell dark span-term reveal">
+      <div class="core term-core">
+        <div class="term-bar">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="term-title" id="termTitle">root@vps — 권한 설정</span>
+          <span class="who" id="termWho">고객님 작업</span>
+        </div>
+        <pre class="term" id="term" aria-live="polite" tabindex="0"></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="bento two" aria-label="상시 점검">
+    <div class="shell span-health reveal">
+      <div class="core">
+        <div class="card-head">
+          <h2>상시 점검 기록 <small>최근 30일</small></h2>
+          <span class="status-chip ok" id="statusChip">정상</span>
+        </div>
+        <div class="health-grid" id="healthGrid" role="list" aria-label="일별 점검 결과"></div>
+        <div class="legend"><span><i class="sq ok"></i>통과</span><span><i class="sq warn"></i>경고</span><span><i class="sq bad"></i>실패</span></div>
+        <dl class="health-meta">
+          <div><dt>마지막 점검</dt><dd id="lastCheck">-</dd></div>
+          <div><dt>다음 점검</dt><dd>매일 09:00 (KST)</dd></div>
+          <div><dt>키 만료까지</dt><dd id="expiry">-</dd></div>
+          <div><dt>알림 경로</dt><dd>
+            <div class="seg" role="radiogroup" aria-label="알림 경로">
+              <button role="radio" aria-checked="true" data-ch="tg">텔레그램</button>
+              <button role="radio" aria-checked="false" data-ch="mail">이메일</button>
+            </div>
+          </dd></div>
+        </dl>
+        <p class="day-detail" id="dayDetail">칸을 누르면 그날 점검 내용을 볼 수 있습니다.</p>
+        <div class="sim-row">
+          <button class="btn ghost small" data-sim="ip">서버 IP가 바뀐 경우</button>
+          <button class="btn ghost small" data-sim="exp">키 만료가 다가온 경우</button>
+          <button class="btn ghost small" data-sim="reset">정상으로 되돌리기</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell span-alert reveal">
+      <div class="core">
+        <div class="card-head"><h2>점검 항목</h2></div>
+        <ul class="checks" id="checks"></ul>
+        <div class="alert-preview" id="alertPreview" hidden>
+          <div class="alert-head"><span id="alertCh">텔레그램</span> 알림 미리보기</div>
+          <p id="alertText"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="doc-wrap reveal" aria-label="설정 문서 미리보기">
+    <div class="doc-intro">
+      <span class="eyebrow">납품 문서</span>
+      <h2>설정 문서 미리보기</h2>
+      <p class="muted">납품 때 서버의 <code>/opt/upbit-readonly/README.md</code>와 같은 내용을 함께 드립니다. 다른 사람에게 넘겨도 이 문서만 보고 운영할 수 있게 씁니다.</p>
+      <div class="tabs" role="tablist" aria-label="문서 장">
+        <button role="tab" aria-selected="true" aria-controls="doc" data-tab="0">1. 구성</button>
+        <button role="tab" aria-selected="false" aria-controls="doc" data-tab="1">2. 키 교체</button>
+        <button role="tab" aria-selected="false" aria-controls="doc" data-tab="2">3. 장애 대응</button>
+        <button role="tab" aria-selected="false" aria-controls="doc" data-tab="3">4. 인계</button>
+      </div>
+    </div>
+    <div class="shell">
+      <article class="core doc" id="doc" role="tabpanel" tabindex="0"></article>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p>업비트 Open API 인증 방식(JWT·HS512, 요청마다 새 nonce), 키별 허용 IP 최대 10개, 키 목록 조회의 만료일(expire_at), default 그룹 초당 30회 제한은 업비트 개발자 문서 기준으로 적었습니다. 실제 작업 때 최신 문서를 다시 확인합니다.</p>
+  </footer>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
