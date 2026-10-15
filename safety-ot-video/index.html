@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>안전보건교육영상 제작 시안</title>
+<meta name="description" content="신규입사자 OT용 안전보건교육영상 제작 제안 시안 (가상 회사·가상 사례)">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --line:#e1e6ee; --text:#18212f; --muted:#5d6878;
+  --navy:#16325c; --navy-2:#0f2444; --yellow:#f5b400; --red:#d7342a; --green:#1f9d6b; --blue:#2f6fd6;
+  --radius:14px; --shadow:0 1px 2px rgba(16,30,54,.06),0 8px 24px rgba(16,30,54,.07);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;word-break:keep-all}
+.ribbon{background:#22262d;color:#e9e7e2;font-size:12.5px;padding:7px 16px;text-align:center}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+header.top{padding:36px 0 22px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:12.5px;font-weight:700;color:var(--navy);background:#e4ebf6;border-radius:999px;padding:4px 12px;letter-spacing:.02em}
+h1{font-size:clamp(24px,3.4vw,34px);line-height:1.25;letter-spacing:-.03em;margin:14px 0 8px}
+.lead{color:var(--muted);margin:0;max-width:760px}
+section{margin:0 0 44px}
+h2{font-size:21px;letter-spacing:-.02em;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 18px;font-size:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+
+/* player */
+.player-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+.player{overflow:hidden}
+.stage{position:relative;aspect-ratio:16/9;background:#0e1a2e;container-type:inline-size;overflow:hidden;border-radius:var(--radius) var(--radius) 0 0}
+.stage svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.subs{position:absolute;left:0;right:0;margin:0 auto;width:fit-content;bottom:4.2cqw;max-width:92%;text-align:center;font-weight:600;font-size:clamp(12px,2cqw,24px);line-height:1.45;color:#fff;background:rgba(10,16,28,.78);padding:.35em .9em;border-radius:.4em;letter-spacing:-.01em;transition:opacity .2s}
+.subs:empty,.subs.off{opacity:0}
+.bigplay{position:absolute;inset:0;display:grid;place-items:center;background:rgba(10,18,32,.28);border:0;cursor:pointer;color:#fff}
+.bigplay span{width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.bigplay svg{position:static;width:30px;height:30px}
+.bigplay[hidden]{display:none}
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;padding:12px 14px}
+.btn{appearance:none;border:1px solid var(--line);background:#fff;color:var(--text);font:inherit;font-size:13.5px;font-weight:600;border-radius:9px;padding:7px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:36px}
+.btn:hover{border-color:#c4cede}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn svg{width:15px;height:15px}
+.btn[aria-pressed="true"]{background:#e8eef8;border-color:#b9c8e2;color:var(--navy)}
+.seek{flex:1 1 220px;display:flex;align-items:center;gap:10px;min-width:0}
+.seek input{flex:1;min-width:0;accent-color:var(--navy)}
+.time{font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted);white-space:nowrap}
+.chapters{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 14px}
+.chip{border:1px solid var(--line);background:#f7f9fc;border-radius:999px;font:inherit;font-size:12.5px;padding:4px 11px;cursor:pointer;color:var(--muted)}
+.chip b{color:var(--text);font-weight:600;margin-left:4px}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#cfdbef}
+.chip.on b{color:#fff}
+.side{padding:20px}
+.side h3{font-size:15px;margin:0 0 10px}
+.side ol{margin:0 0 16px;padding-left:18px;font-size:14px}
+.side li{margin-bottom:6px}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:6px;padding:1px 7px;margin-right:4px;vertical-align:1px}
+.tag.p{background:#e4ebf6;color:var(--navy)}
+.tag.c{background:#fdf1d3;color:#8a5a00}
+.note{font-size:13px;color:var(--muted);background:#f7f9fc;border:1px dashed #cfd7e4;border-radius:10px;padding:10px 12px;margin:0}
+
+/* storyboard */
+.sb{width:100%;border-collapse:collapse;font-size:14px}
+.sb th,.sb td{padding:11px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.sb thead th{font-size:12.5px;color:var(--muted);font-weight:600;background:#f7f9fc}
+.sb td.n{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+.sb td.s{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+.sb tr.grp td{background:#f3f6fb;font-weight:700;color:var(--navy);font-size:13px;padding:8px 14px}
+.sb tr.hl td{background:#fffaf0}
+.sb tfoot td{font-weight:700;border-bottom:0}
+.bar{display:flex;height:12px;border-radius:6px;overflow:hidden;margin:4px 0 16px}
+.bar i{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--muted);margin-bottom:14px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;background:var(--c);vertical-align:-1px}
+
+/* characters */
+.chars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.char{padding:0 0 16px;overflow:hidden}
+.char .pic{background:linear-gradient(180deg,var(--tint) 0%,#fff 100%);height:250px;display:grid;place-items:end center;padding-top:10px}
+.char .pic svg{height:236px;width:auto}
+.char h3{margin:14px 16px 2px;font-size:16px}
+.char .role{margin:0 16px 10px;font-size:13px;color:var(--muted)}
+.char ul{margin:0 16px;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:5px}
+.char li{font-size:12px;background:#f3f5f8;border-radius:6px;padding:2px 8px}
+.char .case{margin:12px 16px 0;font-size:13px;border-top:1px solid var(--line);padding-top:10px}
+.char .case b{color:var(--red)}
+footer{padding:10px 0 40px;color:var(--muted);font-size:13px}
+
+@media (max-width:960px){
+  .player-grid{grid-template-columns:1fr}
+  .chars{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  header.top{padding:24px 0 16px}
+  .stage{border-radius:12px 12px 0 0}
+  .bigplay span{width:56px;height:56px}
+  .bigplay svg{width:22px;height:22px}
+  .controls{padding:10px;gap:8px}
+  .seek{order:3;flex-basis:100%}
+  .subs{font-size:11px;max-width:96%;bottom:2.5cqw}
+  .btn{padding:6px 10px;font-size:13px}
+  .chars{gap:10px}
+  .char .pic{height:190px}
+  .char .pic svg{height:178px}
+  .char h3{margin:10px 12px 2px;font-size:15px}
+  .char .role,.char ul,.char .case{margin-left:12px;margin-right:12px}
+  .sb thead{display:none}
+  .sb,.sb tbody,.sb tr,.sb td,.sb tfoot{display:block;width:100%}
+  .sb tr{border-bottom:1px solid var(--line);padding:10px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:2px 10px}
+  .sb td{border:0;padding:0}
+  .sb td.n{grid-row:1}
+  .sb td.v{grid-column:1/-1;grid-row:2;font-weight:600}
+  .sb td.t{grid-column:1/-1;color:var(--muted)}
+  .sb td.m{grid-column:1/-1}
+  .sb td.s{grid-column:3;grid-row:1}
+  .sb td.h{grid-column:2;grid-row:1;font-size:12px;color:var(--muted)}
+  .sb tr.grp{display:block;padding:8px 14px;background:#f3f6fb}
+  .sb tr.grp td{padding:0}
+  .sb tfoot tr{display:flex;justify-content:space-between}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="ribbon">제안용 시안 · <b>가상 회사 · 가상 사례</b> — 실제 고객사 정보나 실제 사고가 아니며, 실제 납품 실적도 아닙니다.</div>
+
+<div class="wrap">
+<header class="top">
+  <span class="eyebrow">신규입사자 OT · 안전보건교육영상 5분 30초</span>
+  <h1>픽토그램으로 제도를 설명하고,<br>캐릭터로 사고 순간을 보여줍니다</h1>
+  <p class="lead">본편의 한 구간(안전보건제도 &gt; 사고사례 2: 물류)을 약 40초 분량으로 미리 만든 시안입니다. 실제 납품은 3D 캐릭터 렌더 + 모션그래픽 편집본(MP4 1080p)이며, 이 페이지는 연출 흐름·자막 톤·캐릭터 방향을 확인하시기 위한 웹 미리보기입니다.</p>
+</header>
+
+<section aria-labelledby="s1">
+  <h2 id="s1">1. 샘플 영상 (약 39초)</h2>
+  <p class="sub">재생 버튼을 누르세요. 자막은 기본 켜짐, 나레이션은 브라우저 음성(한국어)으로 미리 들어볼 수 있습니다.</p>
+  <div class="player-grid">
+    <div class="card player">
+      <div class="stage" id="stage">
+        <svg id="scene" viewBox="0 0 1280 720" role="img" aria-label="작업중지권 픽토그램과 지게차 사각지대 사고 애니메이션"></svg>
+        <div class="subs" id="subs" aria-live="polite"></div>
+        <button class="bigplay" id="bigplay" aria-label="재생"><span><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z" fill="#16325c"/></svg></span></button>
+      </div>
+      <div class="controls">
+        <button class="btn primary" id="playBtn" aria-label="재생"><svg viewBox="0 0 24 24" id="playIco"><path d="M7 4.5v15l13-7.5z" fill="currentColor"/></svg><span id="playTxt">재생</span></button>
+        <button class="btn" id="restartBtn" aria-label="처음부터"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg>처음부터</button>
+        <div class="seek"><input type="range" id="seek" min="0" max="1000" value="0" aria-label="재생 위치"><span class="time" id="time">0:00 / 0:39</span></div>
+        <button class="btn" id="subBtn" aria-pressed="true">자막</button>
+        <button class="btn" id="ttsBtn" aria-pressed="false">나레이션</button>
+      </div>
+      <div class="chapters" id="chapters"></div>
+    </div>
+    <aside class="card side">
+      <h3>이 샘플에서 보실 부분</h3>
+      <ol>
+        <li><span class="tag p">픽토그램</span>안전보건제도: 작업중지권 (0:00)</li>
+        <li><span class="tag c">캐릭터</span>사고 상황 연출: 적재물이 시야를 가린 지게차와 랙 뒤 보행자 (0:09)</li>
+        <li><span class="tag c">캐릭터</span>충돌 직전 정지 + 사각지대 표시 (0:19)</li>
+        <li><span class="tag p">픽토그램</span>사례별 핵심 안전수칙 3가지 (0:22)</li>
+      </ol>
+      <p class="note">자막은 핵심어만 강조하는 포인트 자막 방식입니다. 본편 나레이션은 AI 성우(국문)로 녹음하고, 법정 교육 항목 문구는 고객사 안전관리자 검수 후 확정합니다.</p>
+    </aside>
+  </div>
+</section>
+
+<section aria-labelledby="s2">
+  <h2 id="s2">2. 전체 구성안 (5분 30초)</h2>
+  <p class="sub">공고의 구성 순서 그대로입니다. 초 단위는 시나리오 협의 때 조정합니다. 노란 줄이 위 샘플 구간입니다.</p>
+  <div class="card" style="padding:16px 0 4px">
+    <div style="padding:0 16px">
+      <div class="legend"><span style="--c:#9fb4d6">도입·마무리</span><span style="--c:#16325c">회사 개요·조직도</span><span style="--c:#2f6fd6">안전보건제도</span><span style="--c:#f5b400">사고사례 4건</span></div>
+      <div class="bar" id="sbBar" aria-hidden="true"></div>
+    </div>
+    <table class="sb" id="sbTable">
+      <thead><tr><th>씬</th><th>화면</th><th>나레이션 요지</th><th>표현 방식</th><th>길이</th></tr></thead>
+      <tbody></tbody>
+      <tfoot><tr><td colspan="4" style="padding-left:14px">합계</td><td class="s" id="sbTotal" style="padding-right:14px"></td></tr></tfoot>
+    </table>
+  </div>
+</section>
+
+<section aria-labelledby="s3">
+  <h2 id="s3">3. 직군별 캐릭터 시트</h2>
+  <p class="sub">사고사례 4건은 직군마다 다른 캐릭터가 등장합니다. 보호구는 실제 현장 지급품에 맞춰 바꿉니다.</p>
+  <div class="chars" id="chars"></div>
+</section>
+
+<footer>
+  본 페이지의 회사·조직·사고 사례는 모두 가상이며 제안 검토용 시안입니다. 법령 관련 문구는 이해를 돕기 위한 요약이며, 실제 교육 내용은 고객사 안전관리자 검수를 거쳐 확정합니다.
+</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(() => {
+/* ---------- color helper ---------- */
+const sh = (hex, p) => { // p -1..1 darken/lighten
+  const n = parseInt(hex.slice(1), 16), t = p < 0 ? 0 : 255, a = Math.abs(p);
+  const c = [n >> 16, (n >> 8) & 255, n & 255].map(v => Math.round(v + (t - v) * a));
+  return '#' + c.map(v => v.toString(16).padStart(2, '0')).join('');
+};
+
+/* ---------- shaded chibi character (feet at 0,0) ---------- */
+function person(o) {
+  const p = o.id, lx = o.look || 0;
+  const lin = (id, c) => `<linearGradient id="${p}${id}" x1="0" x2="1"><stop offset="0" stop-color="${sh(c,.28)}"/><stop offset=".55" stop-color="${c}"/><stop offset="1" stop-color="${sh(c,-.32)}"/></linearGradient>`;
+  const rad = (id, c) => `<radialGradient id="${p}${id}" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="${sh(c,.45)}"/><stop offset=".5" stop-color="${c}"/><stop offset="1" stop-color="${sh(c,-.35)}"/></radialGradient>`;
+  const hand = o.gloves || o.skin;
+  let s = `<defs>${rad('sk', o.skin)}${lin('tp', o.top)}${lin('pt', o.pants)}${o.helmet ? rad('hm', o.helmet) : ''}${o.vest ? lin('vs', o.vest) : ''}${rad('hd', hand)}${o.hair ? rad('hr', o.hair) : ''}</defs>`;
+  s += `<ellipse cx="0" cy="0" rx="44" ry="8" fill="#0b1424" opacity=".22"/>`;
+  // legs
+  [['legL', -21], ['legR', 4]].forEach(([c, x]) => {
+    s += `<g class="${c}"><rect x="${x}" y="-94" width="17" height="86" rx="8" fill="url(#${p}pt)"/><ellipse cx="${x + 8.5 + (lx < 0 ? -3 : 0)}" cy="-6" rx="14" ry="7.5" fill="#262b33"/><ellipse cx="${x + 5}" cy="-9" rx="6" ry="2" fill="#fff" opacity=".18"/></g>`;
+  });
+  // arms (behind torso edge)
+  [['armL', -47], ['armR', 32]].forEach(([c, x]) => {
+    s += `<g class="${c}"><rect x="${x}" y="-174" width="15" height="72" rx="7.5" fill="url(#${p}tp)"/><circle cx="${x + 7.5}" cy="-100" r="8.5" fill="url(#${p}hd)"/></g>`;
+  });
+  // torso
+  const torso = `M-34,-160 Q-34,-178 -16,-180 L16,-180 Q34,-178 34,-160 L32,-94 Q32,-86 24,-86 L-24,-86 Q-32,-86 -32,-94 Z`;
+  s += `<path d="${torso}" fill="url(#${p}tp)"/>`;
+  if (o.vest) {
+    s += `<path d="${torso}" fill="url(#${p}vs)"/><path d="M-13,-180 L0,-150 L13,-180 Z" fill="url(#${p}tp)"/>`;
+    s += `<rect x="-33" y="-132" width="66" height="7" fill="#eef3f6" opacity=".92"/><rect x="-32.5" y="-116" width="65" height="7" fill="#eef3f6" opacity=".92"/>`;
+  }
+  if (o.collar) s += `<path d="M-14,-180 L0,-164 L14,-180 L8,-182 L0,-172 L-8,-182Z" fill="#fff"/>`;
+  if (o.lanyard) s += `<path d="M-10,-178 L-2,-150 M10,-178 L2,-150" stroke="${o.lanyard}" stroke-width="2.5" fill="none"/><rect x="-9" y="-150" width="18" height="23" rx="2.5" fill="#fff" stroke="#c8d0dc"/><rect x="-6" y="-146" width="12" height="5" rx="1" fill="${o.lanyard}"/>`;
+  s += `<rect x="-32" y="-100" width="64" height="8" rx="2" fill="${o.belt || '#2b2f36'}"/>`;
+  if (o.toolbelt) s += `<rect x="-30" y="-98" width="16" height="20" rx="3" fill="#7a5530"/><rect x="14" y="-98" width="16" height="22" rx="3" fill="#7a5530"/><rect x="20" y="-110" width="4" height="14" fill="#9aa4b1"/>`;
+  if (o.harness) s += `<path d="M-22,-178 L-20,-96 M22,-178 L20,-96 M-21,-140 L21,-140" stroke="${o.harness}" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+  // neck + head
+  s += `<rect x="-8" y="-190" width="16" height="14" rx="4" fill="${sh(o.skin,-.15)}"/>`;
+  s += `<circle cx="-32" cy="-213" r="6" fill="${sh(o.skin,-.1)}"/><circle cx="32" cy="-213" r="6" fill="${sh(o.skin,-.1)}"/>`;
+  s += `<circle cx="0" cy="-216" r="33" fill="url(#${p}sk)"/>`;
+  if (o.hair) s += `<path d="M-35,-214 Q-38,-256 0,-255 Q38,-256 35,-214 Q30,-236 8,-238 Q-6,-232 -20,-236 Q-31,-232 -35,-214Z" fill="url(#${p}hr)"/>`;
+  // face
+  s += `<g transform="translate(${lx},0)"><ellipse cx="-11" cy="-212" rx="3.8" ry="4.8" fill="#2a2522"/><ellipse cx="11" cy="-212" rx="3.8" ry="4.8" fill="#2a2522"/><circle cx="-9.8" cy="-213.8" r="1.3" fill="#fff"/><circle cx="12.2" cy="-213.8" r="1.3" fill="#fff"/>`;
+  s += `<ellipse cx="-19" cy="-201" rx="5.5" ry="3" fill="#e9785f" opacity=".28"/><ellipse cx="19" cy="-201" rx="5.5" ry="3" fill="#e9785f" opacity=".28"/>`;
+  s += `<path class="mouth" d="M-6,-199 Q0,-194 6,-199" stroke="#7a3b2e" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>`;
+  if (o.glasses) s += `<rect x="${-23 + lx}" y="-220" width="46" height="14" rx="6" fill="#a9dcf0" opacity=".5" stroke="#3b5566" stroke-width="2"/>`;
+  if (o.earmuff) s += `<path d="M-37,-220 Q0,-268 37,-220" stroke="${sh(o.earmuff,-.3)}" stroke-width="5" fill="none"/><circle cx="-36" cy="-214" r="10" fill="${o.earmuff}"/><circle cx="36" cy="-214" r="10" fill="${o.earmuff}"/>`;
+  if (o.helmet) {
+    if (o.chin) s += `<path d="M-30,-224 Q-24,-190 0,-185 Q24,-190 30,-224" stroke="#2b2f36" stroke-width="2" fill="none"/>`;
+    s += `<path d="M-37,-222 Q-38,-261 0,-262 Q38,-261 37,-222 Z" fill="url(#${p}hm)"/>`;
+    s += `<rect x="-5" y="-261" width="10" height="38" rx="5" fill="${sh(o.helmet,.35)}" opacity=".55"/>`;
+    s += `<rect x="-43" y="-227" width="86" height="9" rx="4.5" fill="${sh(o.helmet,-.18)}"/>`;
+    s += `<ellipse cx="-15" cy="-248" rx="10" ry="4.5" fill="#fff" opacity=".55" transform="rotate(-24 -15 -248)"/>`;
+    if (o.mark) s += `<path d="M-12,-236 h24 M0,-248 v24" stroke="${o.mark}" stroke-width="5" opacity=".9"/>`;
+  }
+  return `<g id="${p}">${s}</g>`;
+}
+
+const ROLES = {
+  prod: {id:'cProd', skin:'#f1bf98', top:'#4b6f9e', pants:'#2f3e57', helmet:'#f4f6f8', mark:'#1f9d6b', gloves:'#e8e1cf', glasses:true, earmuff:'#d7342a'},
+  logi: {id:'cLogi', skin:'#e8b088', top:'#3b4a5e', pants:'#2b3442', helmet:'#f5b400', vest:'#c6e93b', gloves:'#4b5563'},
+  office: {id:'cOff', skin:'#f3c6a5', top:'#e9eef5', pants:'#3a4350', hair:'#2e2420', collar:true, lanyard:'#2f6fd6', belt:'#3a3f47'},
+  fac: {id:'cFac', skin:'#dda57f', top:'#36507a', pants:'#29374f', helmet:'#f07a1a', chin:true, gloves:'#c9a227', toolbelt:true, harness:'#e33b2f', belt:'#5a4127'},
+};
+
+/* ---------- forklift (rear-left origin, faces right) ---------- */
+function forklift() {
+  const box = (x, y) => `<g><rect x="${x}" y="${y}" width="58" height="50" rx="2" fill="url(#fkBox)" stroke="#9c7243" stroke-width="1.5"/><rect x="${x+24}" y="${y}" width="10" height="50" fill="#c79a5e" opacity=".7"/></g>`;
+  let load = '';
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 2; c++) load += box(298 + c * 58, -82 - r * 50);
+  const wheel = (cx, cy, r) => `<g class="wheel"><circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#fkTire)"/><circle cx="${cx}" cy="${cy}" r="${r*.42}" fill="url(#fkHub)"/><rect x="${cx-2}" y="${cy-r*.36}" width="4" height="${r*.72}" fill="#3d4450"/><rect x="${cx-r*.36}" y="${cy-2}" width="${r*.72}" height="4" fill="#3d4450"/></g>`;
+  const driver = person({...ROLES.logi, id:'drv', look:8});
+  return `<g id="forklift">
+    <defs>
+      <linearGradient id="fkBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffc83d"/><stop offset=".5" stop-color="#f2a900"/><stop offset="1" stop-color="#c47f00"/></linearGradient>
+      <linearGradient id="fkCw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a5260"/><stop offset="1" stop-color="#262b33"/></linearGradient>
+      <linearGradient id="fkMast" x1="0" x2="1"><stop offset="0" stop-color="#8b95a3"/><stop offset=".5" stop-color="#5d6674"/><stop offset="1" stop-color="#3a414c"/></linearGradient>
+      <linearGradient id="fkBox" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2b77a"/><stop offset="1" stop-color="#b98a51"/></linearGradient>
+      <radialGradient id="fkTire" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#4a505a"/><stop offset="1" stop-color="#15181d"/></radialGradient>
+      <radialGradient id="fkHub" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#e3e7ec"/><stop offset="1" stop-color="#8e98a6"/></radialGradient>
+      <radialGradient id="fkBeacon" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffb020" stop-opacity=".9"/><stop offset="1" stop-color="#ffb020" stop-opacity="0"/></radialGradient>
+    </defs>
+    <ellipse cx="215" cy="2" rx="225" ry="13" fill="#0b1424" opacity=".25"/>
+    <polygon id="blindZone" points="420,-6 700,-46 700,30 420,10" fill="url(#blind)" opacity="0"/>
+    <g id="bzLabel" opacity="0"><rect x="424" y="-112" width="112" height="36" rx="18" fill="#d7342a"/><text x="480" y="-88" text-anchor="middle" font-size="17" font-weight="800" fill="#fff">사각지대</text></g>
+    <rect x="60" y="-196" width="16" height="70" rx="6" fill="#2b313b"/>
+    <g transform="translate(100,-78) scale(.6)">${driver}</g>
+    <path d="M20,-40 L20,-128 Q20,-150 42,-150 L120,-150 L132,-112 L232,-112 Q252,-112 256,-92 L266,-40 Z" fill="url(#fkBody)"/>
+    <path d="M24,-138 L118,-138" stroke="#fff" stroke-opacity=".35" stroke-width="4" stroke-linecap="round"/>
+    <path d="M0,-40 L0,-120 Q0,-140 20,-140 L44,-140 L44,-40 Z" fill="url(#fkCw)"/>
+    <rect x="34" y="-300" width="9" height="160" rx="3" fill="#2b313b"/><rect x="226" y="-300" width="9" height="190" rx="3" fill="#2b313b"/>
+    <rect x="26" y="-308" width="218" height="12" rx="4" fill="#2b313b"/>
+    <path d="M44,-302 L224,-302" stroke="#5d6674" stroke-width="2"/>
+    <circle class="beaconGlow" cx="96" cy="-320" r="34" fill="url(#fkBeacon)"/>
+    <path d="M86,-308 Q86,-328 96,-328 Q106,-328 106,-308 Z" fill="#ff9d00"/>
+    <rect x="266" y="-330" width="11" height="300" rx="2" fill="url(#fkMast)"/><rect x="282" y="-330" width="11" height="300" rx="2" fill="url(#fkMast)"/>
+    <rect x="264" y="-250" width="31" height="6" fill="#3a414c"/><rect x="264" y="-150" width="31" height="6" fill="#3a414c"/>
+    <rect x="293" y="-74" width="7" height="66" fill="#2b313b"/>
+    <rect x="293" y="-18" width="124" height="7" rx="2" fill="#2b313b"/>
+    <rect x="296" y="-32" width="118" height="14" fill="#a8743c"/><rect x="296" y="-32" width="118" height="4" fill="#c38c4f"/>
+    ${load}
+    <g id="sight" opacity="0">
+      <path d="M118,-208 L278,-208" stroke="#fff" stroke-width="4" stroke-dasharray="10 8" fill="none"/>
+      <circle cx="298" cy="-208" r="18" fill="#d7342a" stroke="#fff" stroke-width="3"/><path d="M290,-216 l16,16 M306,-216 l-16,16" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+      <g transform="translate(150,-392)"><rect width="206" height="44" rx="22" fill="#18212f" opacity=".9"/><text x="103" y="29" text-anchor="middle" font-size="19" font-weight="700" fill="#fff">적재물에 시야 가림</text></g>
+    </g>
+    ${wheel(62, -32, 32)}${wheel(232, -36, 36)}
+  </g>`;
+}
+
+/* ---------- rack ---------- */
+function rack(x, y, w, h, levels, scale = 1, back = false) {
+  let s = `<g transform="translate(${x},${y}) scale(${scale})">`;
+  const lh = h / levels, boxes = true;
+  if (back) s += `<rect x="0" y="${-h}" width="${w}" height="${h}" fill="#55627a"/><rect x="0" y="${-h}" width="${w}" height="${h}" fill="url(#rackShade)"/>`;
+  for (let i = 0; i < levels; i++) {
+    const by = -lh * (i + 1);
+    if (boxes) {
+      let bx = 14;
+      while (bx < w - 50) {
+        const bw = 44 + ((bx * 7 + i * 13) % 30), bh = lh * (0.5 + ((bx + i * 5) % 7) / 20);
+        if (bx + bw > w - 12) break;
+        s += `<rect x="${bx}" y="${by + lh - bh - 8}" width="${bw}" height="${bh}" rx="2" fill="${(bx + i) % 3 ? '#d4a96c' : '#c49556'}" stroke="#a37848" stroke-width="1"/>`;
+        bx += bw + 8;
+      }
+    }
+    s += `<rect x="0" y="${by + lh - 8}" width="${w}" height="9" fill="#e26a1f"/><rect x="0" y="${by + lh - 8}" width="${w}" height="3" fill="#f39150"/>`;
+  }
+  s += `<rect x="-6" y="${-h - 10}" width="12" height="${h + 10}" fill="#2f5fa8"/><rect x="${w - 6}" y="${-h - 10}" width="12" height="${h + 10}" fill="#2f5fa8"/><rect x="-6" y="${-h - 10}" width="4" height="${h + 10}" fill="#5b8bd6"/><rect x="${w - 6}" y="${-h - 10}" width="4" height="${h + 10}" fill="#5b8bd6"/>`;
+  return s + '</g>';
+}
+
+/* ---------- pictogram helpers ---------- */
+const octagon = (cx, cy, r) => Array.from({length: 8}, (_, i) => { const a = Math.PI / 8 + i * Math.PI / 4; return `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`; }).join(' ');
+const picto = (x, y, s, c) => `<g transform="translate(${x},${y}) scale(${s})" fill="${c}"><circle cx="0" cy="-150" r="22"/><path d="M-30,-118 h60 a14 14 0 0 1 14 14 v62 a9 9 0 0 1 -18 0 v-52 h-4 v126 a11 11 0 0 1 -22 0 v-72 h-4 v72 a11 11 0 0 1 -22 0 v-126 h-4 v52 a9 9 0 0 1 -18 0 v-62 a14 14 0 0 1 14 -14z"/></g>`;
+
+/* ---------- build scene ---------- */
+const svg = document.getElementById('scene');
+svg.innerHTML = `
+<defs>
+  <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cdd6e2"/><stop offset="1" stop-color="#e7ecf2"/></linearGradient>
+  <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9aa6b5"/><stop offset="1" stop-color="#6f7c8d"/></linearGradient>
+  <linearGradient id="blind" x1="0" x2="1"><stop offset="0" stop-color="#d7342a" stop-opacity=".55"/><stop offset="1" stop-color="#d7342a" stop-opacity="0"/></linearGradient>
+  <radialGradient id="blueSpot" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#4aa3ff" stop-opacity=".8"/><stop offset="1" stop-color="#4aa3ff" stop-opacity="0"/></radialGradient>
+  <radialGradient id="vig" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></radialGradient>
+  <linearGradient id="cardBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b3a68"/><stop offset="1" stop-color="#0e2242"/></linearGradient>
+  <linearGradient id="rackShade" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".25"/><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient>
+  <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#16325c" flood-opacity=".16"/></filter>
+  <clipPath id="frame"><rect width="1280" height="720"/></clipPath>
+</defs>
+<g clip-path="url(#frame)" font-family="Pretendard, 'Malgun Gothic', sans-serif">
+
+<!-- SCENE B : warehouse -->
+<g id="sceneB">
+ <g id="cam">
+  <rect width="1280" height="440" fill="url(#wall)"/>
+  <rect y="120" width="1280" height="4" fill="#b7c2d0"/>
+  ${rack(40, 430, 300, 260, 3, 1)}${rack(400, 430, 300, 260, 3, 1)}${rack(1090, 430, 260, 260, 3, 1)}
+  <rect x="740" y="190" width="120" height="240" fill="#aab6c6"/><rect x="750" y="200" width="100" height="230" fill="#93a1b4"/><path d="M800,200 v230" stroke="#7f8ea3" stroke-width="2"/>
+  <text x="800" y="182" text-anchor="middle" font-size="18" font-weight="700" fill="#5d6878">출고 B</text>
+  <rect y="430" width="1280" height="290" fill="url(#floor)"/>
+  <path d="M0,430 H1280" stroke="#5d6a7b" stroke-width="2"/>
+  <g stroke="#ffffff" stroke-opacity=".07" stroke-width="2">${Array.from({length: 14}, (_, i) => `<path d="M${-400 + i * 140},720 L${240 + i * 64},430"/>`).join('')}</g>
+  <g id="lane"><path d="M0,668 H1280" stroke="#f5c400" stroke-width="10"/><path d="M0,690 H1280" stroke="#f5c400" stroke-width="4" stroke-dasharray="26 18"/></g>
+  <text id="laneTxt" x="1180" y="712" text-anchor="end" font-size="15" font-weight="700" fill="#f5c400" opacity="0">보행자 통로</text>
+  <ellipse id="blueSpot" cx="0" cy="612" rx="70" ry="13" fill="url(#blueSpot)"/>
+  <g id="fkWrap" transform="translate(-330,612)">${forklift()}</g>
+  <g id="worker" transform="translate(1000,628) scale(.88)">${person({...ROLES.logi, id:'wk', look:-8})}</g>
+  ${rack(880, 650, 180, 520, 4, 1, true)}
+ </g>
+ <rect width="1280" height="720" fill="url(#vig)" pointer-events="none"/>
+ <rect id="freezeDim" width="1280" height="720" fill="#0c1424" opacity="0"/>
+ <g id="freeze" opacity="0">
+  <circle id="ring" cx="752" cy="520" r="120" fill="none" stroke="#ff4b3e" stroke-width="7"/>
+  <g transform="translate(56,52)"><rect width="196" height="56" rx="10" fill="#d7342a"/><rect x="20" y="16" width="7" height="24" rx="2" fill="#fff"/><rect x="33" y="16" width="7" height="24" rx="2" fill="#fff"/><text x="56" y="37" font-size="23" font-weight="800" fill="#fff">충돌 직전</text></g>
+ </g>
+</g>
+
+<!-- SCENE A : pictogram -->
+<g id="sceneA">
+  <rect width="1280" height="720" fill="#f2f5f9"/>
+  <circle cx="1180" cy="-40" r="260" fill="#e6ecf5"/>
+  <g id="aHead">
+    <text x="96" y="120" font-size="22" font-weight="700" fill="#2f6fd6" letter-spacing="1">03 · 안전보건제도</text>
+    <text x="92" y="200" font-size="72" font-weight="800" fill="#16325c" letter-spacing="-2">작업중지권</text>
+  </g>
+  <g id="aLaw"><rect x="96" y="232" width="406" height="46" rx="23" fill="#fff" stroke="#d6deea"/><text x="299" y="262" text-anchor="middle" font-size="19" font-weight="600" fill="#3b4a60">산업안전보건법 제52조 · 불이익 처우 금지</text></g>
+  <g id="aBig" filter="url(#soft)">
+    <circle cx="920" cy="390" r="215" fill="#fff"/>
+  </g>
+  <g id="aPerson">${picto(860, 498, 1.45, '#16325c')}</g>
+  <g id="aArm"><path d="M890,343 L955,278" stroke="#16325c" stroke-width="26" stroke-linecap="round"/><g transform="translate(962,270) rotate(-45)"><rect x="-16" y="-34" width="32" height="40" rx="14" fill="#16325c"/></g></g>
+  <g id="aStop"><polygon points="${octagon(1040, 300, 78)}" fill="#d7342a" stroke="#fff" stroke-width="7"/><text x="1040" y="318" text-anchor="middle" font-size="46" font-weight="800" fill="#fff">중지</text></g>
+  <g id="aGear" opacity=".9"><circle cx="1050" cy="490" r="44" fill="none" stroke="#9fb0c8" stroke-width="16" stroke-dasharray="14 9"/><circle cx="1050" cy="490" r="26" fill="#9fb0c8"/><rect x="1040" y="478" width="7" height="24" rx="2" fill="#fff"/><rect x="1053" y="478" width="7" height="24" rx="2" fill="#fff"/></g>
+  <g id="aSteps" font-size="21" font-weight="700" fill="#18212f" text-anchor="middle">
+    <g class="step"><circle cx="160" cy="440" r="56" fill="#fff" stroke="#d6deea" stroke-width="2"/><path d="M160,408 L192,462 H128 Z" fill="#f5b400" stroke="#f5b400" stroke-width="6" stroke-linejoin="round"/><rect x="156" y="424" width="8" height="22" rx="3" fill="#18212f"/><circle cx="160" cy="453" r="4.5" fill="#18212f"/><text x="160" y="530">위험 발견</text></g>
+    <path class="chev" d="M240,428 l14,12 l-14,12" stroke="#9fb0c8" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <g class="step"><circle cx="334" cy="440" r="56" fill="#fff" stroke="#d6deea" stroke-width="2"/><polygon points="${octagon(334, 440, 30)}" fill="#d7342a"/><rect x="323" y="428" width="7" height="24" rx="2" fill="#fff"/><rect x="338" y="428" width="7" height="24" rx="2" fill="#fff"/><text x="334" y="530">중지·대피</text></g>
+    <path class="chev" d="M414,428 l14,12 l-14,12" stroke="#9fb0c8" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <g class="step"><circle cx="508" cy="440" r="56" fill="#fff" stroke="#d6deea" stroke-width="2"/><path d="M480,418 h56 a8 8 0 0 1 8 8 v26 a8 8 0 0 1 -8 8 h-30 l-14 12 v-12 h-12 a8 8 0 0 1 -8 -8 v-26 a8 8 0 0 1 8 -8z" fill="#2f6fd6"/><circle cx="494" cy="439" r="4" fill="#fff"/><circle cx="508" cy="439" r="4" fill="#fff"/><circle cx="522" cy="439" r="4" fill="#fff"/><text x="508" y="530">즉시 보고</text></g>
+  </g>
+</g>
+
+<!-- CASE CARD -->
+<g id="card" transform="translate(-1280,0)">
+  <rect width="1280" height="720" fill="url(#cardBg)"/>
+  <rect x="96" y="250" width="8" height="190" fill="#f5b400"/>
+  <text x="132" y="290" font-size="26" font-weight="700" fill="#f5b400" letter-spacing="2">사고사례 02 · 물류</text>
+  <text x="128" y="372" font-size="64" font-weight="800" fill="#fff" letter-spacing="-2">지게차 사각지대 충돌</text>
+  <text x="132" y="426" font-size="24" fill="#b9c8e2">적재물이 운전자의 시야를 가린 순간</text>
+  <circle cx="1010" cy="390" r="190" fill="#ffffff" opacity=".06"/>
+  <g transform="translate(1010,560) scale(1.2)">${person({...ROLES.logi, id:'cardC'})}</g>
+</g>
+
+<!-- RULES -->
+<g id="rules" transform="translate(0,720)">
+  <rect width="1280" height="720" fill="#f2f5f9"/>
+  <text x="96" y="118" font-size="22" font-weight="700" fill="#d7342a" letter-spacing="1">사고사례 02 · 핵심 안전수칙</text>
+  <text x="92" y="182" font-size="52" font-weight="800" fill="#16325c" letter-spacing="-1.5">이렇게 지키면 막을 수 있습니다</text>
+  ${[
+    ['1', '보행자는', '지정 보행 통로로만', `<path d="M-46,30 H46 M-46,-30 H46" stroke="#f5b400" stroke-width="7"/>${picto(0, 32, .42, '#16325c')}`],
+    ['2', '랙 모퉁이·교차로에서', '멈추고 좌우 확인', `<circle cx="0" cy="0" r="18" fill="#16325c"/><circle cx="0" cy="0" r="7" fill="#fff"/><path d="M-30,0 l-16,0 m6,-8 l-8,8 l8,8 M30,0 l16,0 m-6,-8 l8,8 l-8,8" stroke="#16325c" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`],
+    ['3', '시야가 가리면', '후진 운행 또는 유도자 배치', `<g transform="translate(-20,24) scale(.2)"><rect x="0" y="-150" width="250" height="110" rx="14" fill="#16325c"/><rect x="250" y="-300" width="20" height="270" fill="#16325c"/><rect x="270" y="-24" width="120" height="14" fill="#16325c"/><circle cx="60" cy="-30" r="34" fill="#16325c"/><circle cx="210" cy="-30" r="34" fill="#16325c"/></g><path d="M-30,-36 h-30 m8,-9 l-9,9 l9,9" stroke="#d7342a" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`],
+  ].map(([n, a, b, ico], i) => `<g transform="translate(${96 + i * 372},236)"><g class="rule">
+    <rect width="344" height="300" rx="22" fill="#fff" stroke="#dbe2ec" stroke-width="2" filter="url(#soft)"/>
+    <rect class="ruleHl" width="344" height="300" rx="22" fill="none" stroke="#16325c" stroke-width="4" opacity="0"/>
+    <circle cx="172" cy="104" r="66" fill="#eef3fa"/>
+    <g transform="translate(172,104) scale(1.2)">${ico}</g>
+    <circle cx="44" cy="44" r="22" fill="#16325c"/><text x="44" y="52" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">${n}</text>
+    <text x="172" y="218" text-anchor="middle" font-size="22" font-weight="600" fill="#5d6878">${a}</text>
+    <text x="172" y="258" text-anchor="middle" font-size="${b.length > 10 ? 25 : 30}" font-weight="800" fill="#18212f" letter-spacing="-.5">${b}</text>
+  </g></g>`).join('')}
+  <g id="endCard" opacity="0">
+    <rect width="1280" height="720" fill="#16325c"/>
+    <polygon points="${octagon(640, 280, 62)}" fill="#d7342a" stroke="#fff" stroke-width="6"/><text x="640" y="296" text-anchor="middle" font-size="38" font-weight="800" fill="#fff">STOP</text>
+    <text x="640" y="430" text-anchor="middle" font-size="50" font-weight="800" fill="#fff" letter-spacing="-1">안전은 멈춤에서 시작됩니다</text>
+    <text x="640" y="482" text-anchor="middle" font-size="21" fill="#9fb4d6">가상 회사 · 가상 사례 시안</text>
+  </g>
+</g>
+</g>`;
+
+/* ---------- subtitles ---------- */
+const CUES = [
+  [0.4, 4.4, '위험을 느꼈다면, 누구나 작업을 멈출 수 있습니다.'],
+  [4.6, 8.6, '급박한 위험이 있으면 작업을 멈추고 대피한 뒤, 관리감독자에게 바로 알립니다.'],
+  [9.0, 11.2, '사고사례 2. 물류센터 지게차 사각지대 충돌'],
+  [11.4, 15.2, '출고장. 지게차가 팔레트를 높이 싣고 이동합니다.'],
+  [15.4, 19.4, '짐에 가려, 운전자는 랙 뒤에서 나오는 동료를 보지 못합니다.'],
+  [19.6, 22.6, '바로 이 순간, 사각지대에서 사고가 납니다.'],
+  [22.9, 25.3, '이 사고는 세 가지 수칙으로 막을 수 있습니다.'],
+  [25.5, 28.9, '첫째, 보행자는 지정된 보행 통로로만 다닙니다.'],
+  [29.0, 32.4, '둘째, 랙 모퉁이와 교차로에서는 멈춰 서서 좌우를 확인합니다.'],
+  [32.5, 36.0, '셋째, 짐이 시야를 가리면 후진으로 운행하거나 유도자를 둡니다.'],
+  [36.4, 39.0, '안전은 멈춤에서 시작됩니다.'],
+];
+const CHAPTERS = [[0, '작업중지권'], [9, '사고 상황'], [19.6, '충돌 직전'], [22.9, '핵심 수칙']];
+
+/* ---------- timeline ---------- */
+const q = s => svg.querySelector(s);
+const tl = gsap.timeline({paused: true});
+gsap.set(['#aHead', '#aLaw', '#aBig', '#aPerson', '#aArm', '#aStop', '#aGear', '#aSteps .step', '#aSteps .chev'], {opacity: 0});
+gsap.set('#aArm', {rotation: 70, svgOrigin: '890 343'});
+gsap.set('#aStop', {scale: .3, svgOrigin: '1040 300'});
+gsap.set('#wk .legL', {rotation: -18, transformOrigin: '50% 0%'});
+gsap.set('#wk .legR', {rotation: 18, transformOrigin: '50% 0%'});
+gsap.set('#wk .armL', {rotation: 16, transformOrigin: '50% 8%'});
+gsap.set('#wk .armR', {rotation: -16, transformOrigin: '50% 8%'});
+
+// A: pictogram
+tl.to('#aHead', {opacity: 1, y: 0, duration: .7, ease: 'power3.out', startAt: {y: 24}}, .2)
+  .to('#aBig', {opacity: 1, scale: 1, svgOrigin: '920 390', duration: .8, ease: 'back.out(1.4)', startAt: {scale: .85}}, .4)
+  .to('#aPerson', {opacity: 1, duration: .5}, .8)
+  .to('#aArm', {opacity: 1, duration: .2}, 1.0)
+  .to('#aArm', {rotation: 0, svgOrigin: '890 343', duration: .6, ease: 'back.out(2)'}, 1.0)
+  .to('#aStop', {opacity: 1, scale: 1, svgOrigin: '1040 300', duration: .6, ease: 'back.out(2.2)'}, 1.5)
+  .to('#aGear', {opacity: .9, duration: .5}, 2.4)
+  .to('#aSteps .step, #aSteps .chev', {opacity: 1, y: 0, stagger: .35, duration: .5, ease: 'power2.out', startAt: {y: 16}}, 4.7)
+  .to('#aLaw', {opacity: 1, x: 0, duration: .6, ease: 'power2.out', startAt: {x: -20}}, 6.6)
+  // card in / A out
+  .to('#card', {x: 0, duration: .7, ease: 'power3.inOut'}, 8.6)
+  .set('#sceneA', {opacity: 0}, 9.3)
+  .from('#card text', {opacity: 0, x: -30, stagger: .12, duration: .5, ease: 'power2.out'}, 9.1)
+  .to('#card', {x: 1280, duration: .7, ease: 'power3.inOut'}, 11.0);
+
+// B: forklift move
+tl.to('#fkWrap', {x: 250, duration: 8.4, ease: 'power1.inOut'}, 11.2)
+  .to('#blueSpot', {attr: {cx: 1010}, duration: 8.4, ease: 'power1.inOut', startAt: {attr: {cx: 290}}}, 11.2)
+  .to('#forklift .wheel', {rotation: 900, transformOrigin: '50% 50%', duration: 8.4, ease: 'power1.inOut'}, 11.2)
+  .to('#forklift .beaconGlow', {opacity: .2, duration: .35, repeat: 23, yoyo: true, ease: 'none'}, 11.2)
+  .to('#blindZone', {opacity: 1, duration: .6}, 15.4)
+  .to('#bzLabel', {opacity: 1, duration: .4}, 15.8)
+  .to('#sight', {opacity: 1, duration: .5}, 16.4)
+  // worker walks out from behind rack
+  .to('#worker', {x: 830, duration: 4.0, ease: 'none'}, 15.6)
+  .to('#wk .legL', {rotation: 18, duration: .4, repeat: 9, yoyo: true, ease: 'sine.inOut'}, 15.6)
+  .to('#wk .legR', {rotation: -18, duration: .4, repeat: 9, yoyo: true, ease: 'sine.inOut'}, 15.6)
+  .to('#wk .armL', {rotation: -16, duration: .4, repeat: 9, yoyo: true, ease: 'sine.inOut'}, 15.6)
+  .to('#wk .armR', {rotation: 16, duration: .4, repeat: 9, yoyo: true, ease: 'sine.inOut'}, 15.6)
+  // freeze
+  .to('#cam', {scale: 1.32, svgOrigin: '750 470', duration: .7, ease: 'power3.out'}, 19.6)
+  .to('#freezeDim', {opacity: .28, duration: .3}, 19.6)
+  .to('#freeze', {opacity: 1, duration: .2}, 19.7)
+  .to('#ring', {attr: {r: 150}, opacity: .35, duration: .6, repeat: 3, yoyo: true, ease: 'sine.inOut'}, 19.8)
+  .to('#wk .mouth', {attr: {d: 'M-5,-198 Q0,-206 5,-198 Q0,-192 -5,-198'}, duration: .1}, 19.7)
+  // rules
+  .to('#rules', {y: 0, duration: .8, ease: 'power3.inOut'}, 22.6)
+  .from('#rules .rule', {opacity: 0, y: 40, stagger: .12, duration: .6, ease: 'power2.out'}, 23.1);
+[25.5, 29.0, 32.5].forEach((t, i) => {
+  tl.to('#rules .rule', {opacity: (j) => j === i ? 1 : .45, duration: .3}, t)
+    .to(svg.querySelectorAll('#rules .ruleHl')[i], {opacity: 1, duration: .3}, t)
+    .to(svg.querySelectorAll('#rules .rule')[i], {y: -10, duration: .4, ease: 'power2.out'}, t);
+  if (i) tl.to(svg.querySelectorAll('#rules .ruleHl')[i - 1], {opacity: 0, duration: .3}, t)
+           .to(svg.querySelectorAll('#rules .rule')[i - 1], {y: 0, duration: .4}, t);
+});
+tl.to('#endCard', {opacity: 1, duration: .7}, 36.2)
+  .from('#endCard polygon, #endCard text', {scale: .9, opacity: 0, transformOrigin: '50% 50%', stagger: .12, duration: .6, ease: 'back.out(1.6)'}, 36.4)
+  .to({}, {duration: .1}, 38.9);
+
+/* ---------- player UI ---------- */
+const $ = id => document.getElementById(id);
+const subs = $('subs'), seek = $('seek'), time = $('time'), D = tl.duration();
+const fmt = t => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+let cueIdx = -1, tts = false;
+const speak = txt => {
+  if (!tts || !('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(txt); u.lang = 'ko-KR'; u.rate = 1.08;
+  const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.startsWith('ko')); if (v) u.voice = v;
+  speechSynthesis.speak(u);
+};
+const chips = CHAPTERS.map(([t, n]) => { const b = document.createElement('button'); b.className = 'chip'; b.innerHTML = `${fmt(t)}<b>${n}</b>`; b.onclick = () => { tl.seek(t); tl.play(); }; $('chapters').append(b); return b; });
+function update() {
+  const t = tl.time();
+  seek.value = Math.round(t / D * 1000);
+  time.textContent = `${fmt(t)} / ${fmt(D)}`;
+  const i = CUES.findIndex(c => t >= c[0] && t < c[1]);
+  if (i !== cueIdx) { cueIdx = i; subs.textContent = i < 0 ? '' : CUES[i][2]; if (i >= 0 && !tl.paused()) speak(CUES[i][2]); }
+  let ch = 0; CHAPTERS.forEach(([ct], k) => { if (t >= ct) ch = k; });
+  chips.forEach((b, k) => b.classList.toggle('on', k === ch));
+}
+tl.eventCallback('onUpdate', update);
+tl.eventCallback('onComplete', () => setPlaying(false));
+const setPlaying = on => {
+  $('playTxt').textContent = on ? '일시정지' : '재생';
+  $('playBtn').setAttribute('aria-label', on ? '일시정지' : '재생');
+  $('playIco').innerHTML = on ? '<rect x="6" y="5" width="4.5" height="14" rx="1" fill="currentColor"/><rect x="13.5" y="5" width="4.5" height="14" rx="1" fill="currentColor"/>' : '<path d="M7 4.5v15l13-7.5z" fill="currentColor"/>';
+  $('bigplay').hidden = on || tl.time() > 0;
+};
+const toggle = () => {
+  if (tl.paused() || tl.progress() === 1) { if (tl.progress() === 1) tl.restart(); else tl.play(); setPlaying(true); }
+  else { tl.pause(); if ('speechSynthesis' in window) speechSynthesis.cancel(); setPlaying(false); }
+};
+$('playBtn').onclick = toggle;
+$('bigplay').onclick = toggle;
+$('restartBtn').onclick = () => { cueIdx = -1; tl.restart(); setPlaying(true); };
+seek.oninput = () => { tl.pause(); setPlaying(false); tl.seek(seek.value / 1000 * D); update(); };
+$('subBtn').onclick = e => { const on = e.currentTarget.getAttribute('aria-pressed') !== 'true'; e.currentTarget.setAttribute('aria-pressed', on); subs.classList.toggle('off', !on); };
+$('ttsBtn').onclick = e => {
+  tts = e.currentTarget.getAttribute('aria-pressed') !== 'true'; e.currentTarget.setAttribute('aria-pressed', tts);
+  if (!tts && 'speechSynthesis' in window) speechSynthesis.cancel();
+  else if (tts && !('speechSynthesis' in window)) alert('이 브라우저는 음성 합성을 지원하지 않습니다.');
+};
+window.__tl = tl; window.__u = () => { cueIdx = -1; update(); }; // for screenshot checks
+update();
+
+/* ---------- storyboard ---------- */
+const SB = [
+  ['도입', 'g'],
+  ['01', '오프닝 타이틀', '입사를 환영합니다. 5분이면 우리 회사의 안전 기본을 익힙니다.', '로고 모션 + 타이틀', 10, '#9fb4d6'],
+  ['회사 개요 · 조직도', 'g'],
+  ['02', '회사 개요: 조직도·주요 업무', '부서 구성과 하는 일을 한눈에. 내가 일할 곳의 위치를 짚어 줍니다.', '픽토그램 + 조직도 모션', 35, '#16325c'],
+  ['03', '안전보건조직도', '안전보건관리책임자부터 관리감독자까지, 문제가 생기면 누구에게 알리는지.', '픽토그램 계층도', 30, '#16325c'],
+  ['안전보건제도', 'g'],
+  ['04', '작업중지권', '급박한 위험이 있으면 누구나 멈추고 대피, 즉시 보고. 불이익 없음.', '픽토그램 3단계', 25, '#2f6fd6', 1],
+  ['05', '위험성평가', '유해·위험요인을 찾고, 위험 정도를 정하고, 줄이는 대책을 세우는 절차. 근로자 참여.', '픽토그램 사이클', 25, '#2f6fd6'],
+  ['06', '안전제안', '작은 위험도 제안으로. 제안 방법과 처리 흐름.', '픽토그램 + 화면 예시', 15, '#2f6fd6'],
+  ['사고사례 4건 (직군별 캐릭터)', 'g'],
+  ['07', '사고사례 인트로', '실제로 일어날 수 있는 네 가지 상황을 봅니다.', '캐릭터 4인 등장', 5, '#f5b400'],
+  ['08', '사례 1 · 생산: 회전체 끼임', '가동 중 이물 제거 중 손이 말려 들어감 > 핵심 수칙 3', '3D 캐릭터 연출 + 수칙 자막', 45, '#f5b400'],
+  ['09', '사례 2 · 물류: 지게차 사각지대', '적재물이 시야를 가린 지게차와 보행자 충돌 직전 > 핵심 수칙 3', '3D 캐릭터 연출 + 수칙 자막', 45, '#f5b400', 1],
+  ['10', '사례 3 · 사무: 계단·통로 넘어짐', '휴대폰 보며 계단 이동, 통로 전선에 걸림 > 핵심 수칙 3', '3D 캐릭터 연출 + 수칙 자막', 35, '#f5b400'],
+  ['11', '사례 4 · 시설정비: 정비 중 기동', '전원 차단 없이 정비하다 다른 사람이 설비를 켬 > 잠금·표지 수칙 3', '3D 캐릭터 연출 + 수칙 자막', 45, '#f5b400'],
+  ['마무리', 'g'],
+  ['12', '마무리', '오늘 배운 세 가지 행동 요약. 위험하면 멈추고 알린다.', '픽토그램 요약 + 엔딩', 15, '#9fb4d6'],
+];
+const tb = $('sbTable').tBodies[0]; let total = 0;
+SB.forEach(r => {
+  const tr = document.createElement('tr');
+  if (r[1] === 'g') { tr.className = 'grp'; tr.innerHTML = `<td colspan="5">${r[0]}</td>`; }
+  else {
+    total += r[4]; if (r[6]) tr.className = 'hl';
+    tr.innerHTML = `<td class="n">씬 ${r[0]}</td><td class="v">${r[1]}</td><td class="t">${r[2]}</td><td class="h">${r[3]}</td><td class="s">${r[4]}초</td>`;
+    $('sbBar').insertAdjacentHTML('beforeend', `<i style="width:${r[4] / 3.3}%;background:${r[5]};${r[6] ? 'outline:2px solid #fff;outline-offset:-2px' : ''}" title="씬 ${r[0]}"></i>`);
+  }
+  tb.append(tr);
+});
+$('sbTotal').textContent = `${total}초 (${fmt(total)})`;
+
+/* ---------- character sheet ---------- */
+const CH = [
+  ['prod', '생산', '박현우 · 생산 2라인', ['안전모', '보안경', '귀마개', '안전장갑', '안전화'], '회전체·프레스 끼임', '#e7f4ee'],
+  ['logi', '물류', '이수진 · 출고 파트', ['안전모', '형광 조끼', '작업장갑', '안전화'], '지게차 사각지대 충돌', '#fff6dc'],
+  ['office', '사무', '최민준 · 경영지원', ['사원증', '실내 보행 안전'], '계단·통로 넘어짐', '#e8f0fb'],
+  ['fac', '시설정비', '정다은 · 설비보전', ['안전모(턱끈)', '안전대', '절연장갑', '공구벨트'], '정비 중 설비 기동', '#fdeee3'],
+];
+$('chars').innerHTML = CH.map(([k, job, name, ppe, cs, tint]) => `<article class="card char" style="--tint:${tint}">
+  <div class="pic"><svg viewBox="-70 -275 140 285" aria-label="${job} 캐릭터">${person({...ROLES[k], id: 'sheet' + k})}</svg></div>
+  <h3>${job}</h3><p class="role">${name} (가상 인물)</p>
+  <ul>${ppe.map(x => `<li>${x}</li>`).join('')}</ul>
+  <p class="case"><b>사례</b> ${cs}</p></article>`).join('');
+})();
+</script>
+</body>
+</html>
