@@ -164,7 +164,7 @@ function insights(p) {
     out.push({
       level: limps.length >= 2 ? 'visit' : 'watch', key: 'limp',
       title: patella ? '산책 후 다리를 드는 모습이 기록됐어요' : '다리를 불편해하는 기록이 있어요',
-      body: patella ? '슬개골 탈구 2기 이력과 관련 있을 수 있어요. 한 번이면 지켜보고, 반복되면 정형외과 진료를 받으세요.' : '관절 관련 이력은 없어요. 반복되면 진료를 받아 보세요.',
+      body: patella ? (limps.length >= 2 ? '최근 3일 안에 반복해서 기록됐어요. 슬개골 탈구 2기 이력이 있어 정형외과 진료를 권해요.' : '슬개골 탈구 2기 이력과 관련 있을 수 있어요. 한 번이면 지켜보고, 반복되면 정형외과 진료를 받으세요.') : '관절 관련 이력은 없어요. 반복되면 진료를 받아 보세요.',
       points: ['절는 순간을 10초 정도 영상으로 남기기', '계단·점프·미끄러운 바닥 피하기', '3일 넘게 반복되면 진료'],
       chips, ask: '산책 후 다리를 절어요'
     });
@@ -573,7 +573,7 @@ function chatView(p) {
 }
 
 function chart(values, labels, opts) {
-  const W = 320, H = 132, pl = 30, pr = 8, pt = 14, pb = 22;
+  const W = 320, H = 132, pl = 30, pr = 18, pt = 14, pb = 22;
   const max = Math.max(...values, opts.base || 0) * 1.15, min = 0;
   const x = i => pl + (W - pl - pr) * (opts.bars ? (i + 0.5) / values.length : i / (values.length - 1));
   const y = v => pt + (H - pt - pb) * (1 - (v - min) / (max - min));
