@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>통화 태깅 진단 키트</title>
+<meta name="description" content="영업 콜센터 녹취록 태깅 기준표·평가자 일치도·CRM 분류 점검 제안용 데모 (가상 녹취)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="ribbon">제안용 작동 데모 · 가상 녹취 · 실제 납품 실적 아님 — 녹취 10건과 사람·AI 태그는 모두 <b>직접 만든 가상 데이터</b>이며, 일치율·카파 값은 이 가상 데이터로 브라우저에서 계산한 결과입니다.</div>
+
+<header class="top">
+  <div class="brand">
+    <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M17 15l2 2 3-4"/></svg></span>
+    <div><b>통화 태깅 진단 키트</b><small>가상 영업 녹취 10건 · 기준표 6항목</small></div>
+  </div>
+  <nav class="nav" aria-label="섹션">
+    <a href="#rubric">기준표</a><a href="#calls">녹취 판정</a><a href="#agree">일치도</a><a href="#crm">CRM 분류</a><a href="#plan">자문 4회</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-text">
+      <p class="eyebrow">STT 이후 단계 점검</p>
+      <h1>태깅이 맞는 방향인지,<br>먼저 숫자로 확인합니다</h1>
+      <p class="lead">우수·미흡 태그를 늘리기 전에 확인할 것은 하나입니다. <b>사람과 AI가, 또는 사람끼리 같은 통화를 같은 태그로 붙이는가.</b> 아래는 가상 녹취로 그 점검 과정을 그대로 돌려 본 화면입니다. 기준표 버전을 바꾸면 모든 수치가 다시 계산됩니다.</p>
+    </div>
+    <div class="hero-side">
+      <div class="seg" role="group" aria-label="기준표 버전">
+        <button type="button" data-ver="1" aria-pressed="true">기준표 v1.0</button>
+        <button type="button" data-ver="2" aria-pressed="false">기준표 v1.1</button>
+      </div>
+      <div class="kpis" id="heroKpis"></div>
+      <p class="xs muted" id="verNote"></p>
+    </div>
+  </section>
+
+  <section class="block" id="rubric">
+    <div class="block-head">
+      <h2><span class="num">01</span>태깅 기준표</h2>
+      <p class="muted">각 항목은 녹취에서 <b>눈으로 확인할 수 있는 행동</b>으로만 정의합니다. 통화 전체의 우수·미흡은 직접 붙이지 않고 항목 판정에서 계산합니다.</p>
+    </div>
+    <div class="rubric" id="rubricGrid"></div>
+    <div class="rule-box">
+      <b>통화 단위 판정 규칙</b>
+      <span>컴플라이언스 위반 1건 → <em class="v bad">미흡</em></span>
+      <span>미흡 항목 2개 이상 → <em class="v bad">미흡</em></span>
+      <span>미흡 0개 + 클로징 충족 → <em class="v ok">우수</em></span>
+      <span>그 외 → <em class="v mid">보통</em></span>
+    </div>
+  </section>
+
+  <section class="block" id="calls">
+    <div class="block-head">
+      <h2><span class="num">02</span>녹취별 판정</h2>
+      <p class="muted">발화마다 어떤 항목이 걸렸는지, 근거 구간과 신뢰도를 함께 봅니다. 사람 태그와 다른 항목은 표시됩니다.</p>
+    </div>
+    <div class="calls">
+      <div class="call-list" id="callList" role="listbox" aria-label="녹취 목록"></div>
+      <div class="call-detail" id="callDetail"></div>
+    </div>
+  </section>
+
+  <section class="block" id="agree">
+    <div class="block-head">
+      <h2><span class="num">03</span>평가자 일치도 (사람 vs AI)</h2>
+      <p class="muted">녹취 10건 × 6항목 = 60쌍. 일치율과 우연 일치를 뺀 코헨 카파(κ)를 함께 봅니다. 표본이 작아 항목별 κ는 참고용입니다.</p>
+    </div>
+    <div class="agree">
+      <div class="card">
+        <h3>항목별 일치</h3>
+        <div class="tbl-wrap"><table class="tbl" id="itemTable"></table></div>
+        <p class="xs muted">κ 0.6 이상이면 기준이 대체로 공유된 상태, 0.4 아래면 기준 문장부터 다시 봐야 합니다. 라벨 종류가 하나뿐인 항목은 κ를 계산할 수 없어 "—"로 둡니다.</p>
+      </div>
+      <div class="card">
+        <h3>어디서 갈리나</h3>
+        <ul class="diffs" id="diffList"></ul>
+      </div>
+    </div>
+    <div class="insight">
+      <b>자문에서 가장 먼저 보는 지점</b>
+      <p>불일치 대부분은 AI 성능이 아니라 <b>기준 문장이 두 가지로 읽히는 곳</b>에서 생깁니다. "생각해 볼게요"가 반론인지, "자료 보내 드릴게요"가 클로징인지 정해 두지 않으면 사람끼리도 갈리고, 그 태그로 학습한 AI 상담원도 같은 혼동을 배웁니다. v1.1은 문장만 고쳤고 녹취는 그대로입니다.</p>
+    </div>
+  </section>
+
+  <section class="block" id="crm">
+    <div class="block-head">
+      <h2><span class="num">04</span>CRM 분류 (통화 → 후속 DB)</h2>
+      <p class="muted">통화에서 관심도·다음 연락 시간대·재통화 사유를 뽑아 CRM 필드로 넘기는 단계입니다. 필드마다 <b>규칙</b>으로 뽑았는지 <b>AI</b>로 뽑았는지 출처를 남깁니다.</p>
+    </div>
+    <div class="filters" role="group" aria-label="필터">
+      <button type="button" class="chip" data-f="all" aria-pressed="true">전체</button>
+      <button type="button" class="chip" data-f="call" aria-pressed="false">재통화 대상</button>
+      <button type="button" class="chip" data-f="stop" aria-pressed="false">연락 금지</button>
+    </div>
+    <div class="tbl-wrap"><table class="tbl crm" id="crmTable"></table></div>
+    <div class="insight">
+      <b>규칙과 AI의 경계</b>
+      <p>수신 거부·연락 금지처럼 놓치면 안 되는 필드는 키워드 규칙으로 먼저 잡고, AI는 "점심시간에 볼게요" 같은 해석이 필요한 필드에만 씁니다. 출처 열이 있어야 검수할 때 어느 쪽을 고칠지 바로 보입니다.</p>
+    </div>
+  </section>
+
+  <section class="block" id="plan">
+    <div class="block-head">
+      <h2><span class="num">05</span>자문 4회 로드맵 (온라인 화상)</h2>
+      <p class="muted">회차마다 다음 회차 전에 내부에서 돌려 볼 숙제가 남도록 구성합니다.</p>
+    </div>
+    <ol class="plan" id="planList"></ol>
+  </section>
+</main>
+
+<footer class="foot">가상 데이터 데모 · 실제 녹취·고객 정보 없음 · 이름은 OO로 가린 형태로 표기</footer>
+<script src="app.js"></script>
+</body>
+</html>

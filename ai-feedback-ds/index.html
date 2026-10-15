@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Margin DS 시안</title>
+<meta name="description" content="AI 평가·첨삭 솔루션 대표 화면 및 디자인 시스템 제안용 시안 (가상 데이터)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230e665a'/%3E%3Cpath d='M9 22V10l7 7 7-7v12' stroke='%23fdfdfc' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<script>
+  (function () {
+    var t = 'light';
+    try { t = localStorage.getItem('mds-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-chev-r" viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></symbol>
+    <symbol id="i-chev-l" viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></symbol>
+    <symbol id="i-chev-d" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.5v.01"/></symbol>
+    <symbol id="i-check-c" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.2l2.8 2.8L16 9.5"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.5L2.8 19.5h18.4z"/><path d="M12 9.5v4.5M12 17v.01"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path d="M15.5 4.5l4 4L8 20H4v-4z"/><path d="M13 7l4 4"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 010 11H11"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0M16 5.2a3.5 3.5 0 010 6.6M18.5 14.2A6.5 6.5 0 0121.5 20"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 4v16h16"/><path d="M8 15l3.5-4 3 2.5L19 8"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 004 0"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8.5 20h7M12 16v4"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="M8.5 7L3.5 12l5 5M15.5 7l5 5-5 5"/></symbol>
+    <symbol id="i-swatch" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M3.5 12H12"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-2.5-6.5z"/><path d="M11.5 13.5L20 4"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  </defs>
+</svg>
+
+<div class="ribbon" role="note">
+  <span>제안용 시안</span><span>가상 데이터</span><span>실제 납품 실적 아님</span><span>실제 납품은 Figma 원본(컴포넌트·변수)</span>
+</div>
+
+<div class="shell">
+  <aside class="side" aria-label="문서 탐색">
+    <div class="side-head">
+      <span class="ds-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M9 22V10l7 7 7-7v12"/></svg></span>
+      <div>
+        <b class="ds-name">Margin DS</b>
+        <small>AI 평가·첨삭 솔루션 시안</small>
+      </div>
+    </div>
+    <nav class="side-nav" id="sideNav">
+      <a href="#overview"><svg class="i"><use href="#i-layers"/></svg>개요와 화면 목록</a>
+      <a href="#tokens"><svg class="i"><use href="#i-swatch"/></svg>디자인 토큰</a>
+      <a href="#components"><svg class="i"><use href="#i-grid"/></svg>컴포넌트</a>
+      <a href="#teacher"><svg class="i"><use href="#i-users"/></svg>교사용 · 채점 검토</a>
+      <a href="#student"><svg class="i"><use href="#i-pen"/></svg>학생용 · 첨삭 보기</a>
+      <a href="#report"><svg class="i"><use href="#i-chart"/></svg>리포트 · 성장</a>
+      <a href="#guide"><svg class="i"><use href="#i-code"/></svg>개발 적용 가이드</a>
+    </nav>
+    <div class="side-controls">
+      <div class="ctl">
+        <span class="ctl-label" id="themeLabel">모드</span>
+        <div class="seg seg-sm" role="radiogroup" aria-labelledby="themeLabel">
+          <button type="button" role="radio" data-set-theme="light"><svg class="i"><use href="#i-sun"/></svg>라이트</button>
+          <button type="button" role="radio" data-set-theme="dark"><svg class="i"><use href="#i-moon"/></svg>다크</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label" id="brandLabel">브랜드 색 교체 시험</span>
+        <div class="brand-swap" role="radiogroup" aria-labelledby="brandLabel">
+          <button type="button" role="radio" data-set-brand="teal" style="--sw:#0e665a" aria-label="틸(기본)"></button>
+          <button type="button" role="radio" data-set-brand="blue" style="--sw:#2849b0" aria-label="블루"></button>
+          <button type="button" role="radio" data-set-brand="orange" style="--sw:#9a4614" aria-label="오렌지"></button>
+        </div>
+        <p class="ctl-help">primitive 10칸만 바꾸면 전체가 따라옵니다. BI 색을 받으면 이 자리에 넣습니다.</p>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main" id="main">
+
+    <!-- ======================= OVERVIEW ======================= -->
+    <section class="sec" id="overview" aria-labelledby="h-overview">
+      <div class="hero">
+        <h1 id="h-overview">토큰에서 화면까지,<br>한 줄로 이어지는 디자인 시스템</h1>
+        <p class="lead">AI 평가·첨삭 솔루션의 대표 화면과 디자인 시스템을 계약 전에 먼저 그려 본 시안입니다. 이 페이지의 색·글자·간격은 모두 아래 토큰(CSS 변수)으로만 그렸습니다.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary btn-md" href="#teacher">대표 화면 보기<svg class="i"><use href="#i-chev-r"/></svg></a>
+          <a class="btn btn-secondary btn-md" href="#tokens">토큰 구조 보기</a>
+        </div>
+      </div>
+
+      <div class="flow" aria-label="시스템 구조">
+        <div class="flow-step"><b>Primitive</b><span>gray-900, brand-600 …</span><small>원시 값 · 컴포넌트에서 직접 쓰지 않음</small></div>
+        <svg class="i flow-arrow" aria-hidden="true"><use href="#i-chev-r"/></svg>
+        <div class="flow-step"><b>Semantic</b><span>color.bg.surface …</span><small>역할 이름 · 라이트/다크 모드</small></div>
+        <svg class="i flow-arrow" aria-hidden="true"><use href="#i-chev-r"/></svg>
+        <div class="flow-step"><b>Component</b><span>Button · Input · Tabs …</span><small>Figma 컴포넌트 속성 · 상태</small></div>
+        <svg class="i flow-arrow" aria-hidden="true"><use href="#i-chev-r"/></svg>
+        <div class="flow-step is-end"><b>Screen</b><span>교사 · 학생 · 리포트</span><small>PC 1280 · 모바일 375</small></div>
+      </div>
+
+      <h2 class="h2">대표 화면 목록 (안) <span class="count-chip">12개 · PC+모바일</span></h2>
+      <p class="sec-desc">공고의 10~15개 범위 안에서, 조작이 가장 많은 교사 화면에 비중을 두고 세 영역을 나눴습니다. 착수 첫 주에 목록을 함께 확정합니다. <span class="mark-legend"><span class="tag tag-brand">시안 포함</span> 이 페이지에서 실제로 움직이는 화면</span></p>
+      <div class="screen-map" id="screenMap"></div>
+    </section>
+
+    <!-- ======================= TOKENS ======================= -->
+    <section class="sec" id="tokens" aria-labelledby="h-tokens">
+      <h2 class="h1" id="h-tokens">디자인 토큰</h2>
+      <p class="sec-desc">이름 규칙은 <code>{분류}.{속성}.{역할}-{상태}</code> 입니다. Figma 변수 이름 <code>color/bg/surface</code> 와 CSS 변수 <code>--color-bg-surface</code> 가 같은 규칙으로 1:1 대응합니다.</p>
+
+      <div class="naming">
+        <div class="naming-row">
+          <span class="nm nm-a">color</span><span class="nm-dot">.</span><span class="nm nm-b">bg</span><span class="nm-dot">.</span><span class="nm nm-c">brand</span><span class="nm-dot">-</span><span class="nm nm-d">hover</span>
+        </div>
+        <div class="naming-legend">
+          <span><i class="nm-a"></i>분류 color · space · radius · shadow · text</span>
+          <span><i class="nm-b"></i>속성 bg · text · border · annot · chart</span>
+          <span><i class="nm-c"></i>역할 surface · muted · brand · danger</span>
+          <span><i class="nm-d"></i>상태 hover · pressed · disabled (선택)</span>
+        </div>
+      </div>
+
+      <h3 class="h3">색 · Primitive</h3>
+      <p class="sub-desc">원시 팔레트입니다. 화면과 컴포넌트는 이 값을 직접 쓰지 않고 아래 Semantic 토큰만 참조합니다.</p>
+      <div class="ramps" id="ramps"></div>
+
+      <h3 class="h3">색 · Semantic <span class="muted-inline">현재 모드 값과 라이트/다크 매핑</span></h3>
+      <div class="tok-table-wrap"><table class="tok-table" id="semanticTable"><thead><tr><th>토큰</th><th>CSS 변수</th><th>라이트</th><th>다크</th></tr></thead><tbody></tbody></table></div>
+
+      <h3 class="h3">대비 검사 <span class="muted-inline">브라우저가 지금 계산한 값 · WCAG AA 기준</span></h3>
+      <div class="contrast" id="contrastGrid"></div>
+
+      <h3 class="h3">BI 색 적용 규칙 <span class="muted-inline">브랜드 규정과 대비 기준이 부딪힐 때</span></h3>
+      <div class="bi">
+        <ol class="bi-steps">
+          <li><b>BI 원색을 brand-500 자리에 둡니다</b><span>나머지 50~900 단계는 같은 색상 계열에서 밝기만 바꿔 만들고, 계산 근거를 함께 드립니다.</span></li>
+          <li><b>글자가 올라가는 곳은 대비 4.5 이상인 단계만 씁니다</b><span>버튼 배경·링크 글자는 600~700 단계, 다크 모드는 300 단계를 씁니다.</span></li>
+          <li><b>못 미치면 예외로 기록하고 확인받습니다</b><span>원색은 로고·일러스트·차트 강조처럼 글자가 없는 곳에 쓰고, 이유를 가이드의 "브랜드 예외" 표에 남깁니다.</span></li>
+        </ol>
+        <div class="bi-case">
+          <span class="bi-case-label">예시 · 가상의 BI 노랑 #F2A900</span>
+          <div class="bi-row"><span class="bi-sw" style="background:#F2A900;color:#fdfdfc">공개하기</span><span class="ct-fail">흰 글자 <b data-ratio="#fdfdfc|#F2A900"></b> 기준 미달</span></div>
+          <div class="bi-row"><span class="bi-sw" style="background:#F2A900;color:#0e1211">공개하기</span><span>검은 글자 <b data-ratio="#0e1211|#F2A900"></b> 통과, 다른 버튼과 톤이 달라짐</span></div>
+          <div class="bi-row"><span class="bi-sw" style="background:#8A5F00;color:#fdfdfc">공개하기</span><span class="ct-pass">같은 계열 700 단계 <b data-ratio="#fdfdfc|#8A5F00"></b> 채택</span></div>
+        </div>
+      </div>
+
+      <div class="tok-split">
+        <div>
+          <h3 class="h3">타이포그래피</h3>
+          <div class="type-scale" id="typeScale"></div>
+        </div>
+        <div>
+          <h3 class="h3">간격 <span class="muted-inline">4px 기준</span></h3>
+          <div class="space-scale" id="spaceScale"></div>
+        </div>
+      </div>
+
+      <div class="tok-split">
+        <div>
+          <h3 class="h3">라운드</h3>
+          <div class="radius-scale" id="radiusScale"></div>
+        </div>
+        <div>
+          <h3 class="h3">그림자 (Elevation)</h3>
+          <div class="elev-scale" id="elevScale"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= COMPONENTS ======================= -->
+    <section class="sec" id="components" aria-labelledby="h-components">
+      <h2 class="h1" id="h-components">컴포넌트</h2>
+      <p class="sec-desc">각 컴포넌트는 Figma에서 <code>variant · size · state</code> 속성을 가진 하나의 컴포넌트 세트로 만듭니다. 아래 표의 상태는 고정 표시이고, 오른쪽 끝 열은 직접 눌러 볼 수 있는 실제 요소입니다.</p>
+
+      <div class="cmp" id="cmp-button">
+        <div class="cmp-head"><h3 class="h3">Button</h3><code class="figma-props">Button · variant=primary|secondary|ghost|danger · size=sm|md|lg · state · icon=none|leading</code></div>
+        <div class="matrix-wrap"><table class="matrix" id="btnMatrix"></table></div>
+        <div class="cmp-row sizes" id="btnSizes"></div>
+      </div>
+
+      <div class="cmp" id="cmp-input">
+        <div class="cmp-head"><h3 class="h3">Input</h3><code class="figma-props">Input · size=sm|md|lg · state=default|hover|focus|disabled|error · helper=on|off</code></div>
+        <div class="input-matrix" id="inputMatrix"></div>
+        <div class="cmp-row sizes" id="inputSizes"></div>
+      </div>
+
+      <div class="cmp-grid">
+        <div class="cmp" id="cmp-list">
+          <div class="cmp-head"><h3 class="h3">List item</h3><code class="figma-props">ListItem · state=default|hover|selected|disabled · trailing=badge|score|chevron</code></div>
+          <ul class="list demo-list" id="demoList"></ul>
+        </div>
+        <div class="cmp" id="cmp-tabs">
+          <div class="cmp-head"><h3 class="h3">Tabs</h3><code class="figma-props">Tabs · type=line|segment · size=sm|md · count=on|off</code></div>
+          <div class="tabs-demo">
+            <div class="tabs" role="tablist" aria-label="탭 예시 (line)">
+              <button class="tab" role="tab" aria-selected="true">전체<span class="tab-count">31</span></button>
+              <button class="tab" role="tab" aria-selected="false">검토 필요<span class="tab-count">17</span></button>
+              <button class="tab" role="tab" aria-selected="false">검토 완료<span class="tab-count">12</span></button>
+              <button class="tab" role="tab" aria-selected="false" disabled>보관함</button>
+            </div>
+            <div class="seg" role="radiogroup" aria-label="탭 예시 (segment)">
+              <button type="button" role="radio" aria-checked="true">학급</button>
+              <button type="button" role="radio" aria-checked="false">개인</button>
+              <button type="button" role="radio" aria-checked="false">항목별</button>
+            </div>
+            <div class="seg seg-sm" role="radiogroup" aria-label="탭 예시 (segment sm)">
+              <button type="button" role="radio" aria-checked="true">주</button>
+              <button type="button" role="radio" aria-checked="false">월</button>
+              <button type="button" role="radio" aria-checked="false">학기</button>
+            </div>
+          </div>
+          <div class="badges-demo">
+            <span class="badge badge-neutral">미제출</span>
+            <span class="badge badge-info">AI 채점 완료</span>
+            <span class="badge badge-warning">검토 필요</span>
+            <span class="badge badge-success">검토 완료</span>
+            <span class="badge badge-danger">채점 오류</span>
+            <span class="badge badge-brand">교사 수정</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmp" id="cmp-card">
+        <div class="cmp-head"><h3 class="h3">Card</h3><code class="figma-props">Card · type=outlined|elevated|interactive · padding=md|lg</code></div>
+        <div class="card-demo">
+          <article class="card card-outlined">
+            <span class="card-kicker">outlined</span>
+            <h4 class="card-title">논설문 쓰기</h4>
+            <p class="card-body">기본 컨테이너. 경계선만으로 묶습니다.</p>
+          </article>
+          <article class="card card-elevated">
+            <span class="card-kicker">elevated · shadow-2</span>
+            <h4 class="card-title">AI 총평 초안</h4>
+            <p class="card-body">떠 있는 정보. 팝오버·고정 패널에만 씁니다.</p>
+          </article>
+          <button class="card card-interactive" type="button">
+            <span class="card-kicker">interactive</span>
+            <span class="card-title">이도현 · 77점</span>
+            <span class="card-body">눌러서 이동. hover 시 테두리 강조, 누를 때 살짝 눌림.</span>
+            <svg class="i card-chev" aria-hidden="true"><use href="#i-chev-r"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="cmp-grid">
+        <div class="cmp" id="cmp-alert">
+          <div class="cmp-head"><h3 class="h3">Alert · Toast</h3><code class="figma-props">Alert · tone=info|success|warning|danger · action=on|off</code></div>
+          <div class="alerts" id="alertsDemo"></div>
+          <div class="cmp-row">
+            <button class="btn btn-secondary btn-sm" type="button" data-toast="success">성공 토스트</button>
+            <button class="btn btn-secondary btn-sm" type="button" data-toast="danger">오류 토스트</button>
+            <button class="btn btn-secondary btn-sm" type="button" data-toast="undo">되돌리기 토스트</button>
+          </div>
+        </div>
+        <div class="cmp" id="cmp-modal">
+          <div class="cmp-head"><h3 class="h3">Modal</h3><code class="figma-props">Modal · size=sm|md · tone=default|danger · footer=1|2 actions</code></div>
+          <div class="modal-preview" aria-hidden="true">
+            <div class="modal-card is-static">
+              <div class="modal-head"><h4>점수를 학생에게 공개할까요?</h4></div>
+              <p class="modal-body">공개 후에는 학생 화면에 점수와 총평이 바로 보입니다. 공개 전까지는 언제든 고칠 수 있습니다.</p>
+              <div class="modal-foot"><span class="btn btn-ghost btn-md">취소</span><span class="btn btn-primary btn-md">공개하기</span></div>
+            </div>
+          </div>
+          <div class="cmp-row">
+            <button class="btn btn-secondary btn-sm" type="button" data-open-modal="default">기본 모달 열기</button>
+            <button class="btn btn-secondary btn-sm" type="button" data-open-modal="danger">위험 모달 열기</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= TEACHER ======================= -->
+    <section class="sec" id="teacher" aria-labelledby="h-teacher">
+      <div class="screen-head">
+        <div>
+          <h2 class="h1" id="h-teacher">교사용 · 과제 제출 현황과 AI 채점 검토</h2>
+          <p class="sec-desc">왼쪽에서 학생을 고르면 오른쪽에서 AI 점수를 항목별로 고치고, AI 총평을 다듬어 공개합니다. 교사가 고친 값은 AI 원본과 구분되어 남습니다.</p>
+        </div>
+        <div class="seg device-seg" role="radiogroup" aria-label="화면 크기">
+          <button type="button" role="radio" aria-checked="true" data-device="pc"><svg class="i"><use href="#i-monitor"/></svg>PC</button>
+          <button type="button" role="radio" aria-checked="false" data-device="mobile"><svg class="i"><use href="#i-phone"/></svg>모바일 375</button>
+        </div>
+      </div>
+      <div class="frame" data-device="pc">
+        <div class="app" id="appTeacher">
+          <header class="appbar">
+            <span class="app-logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 22V10l7 7 7-7v12"/></svg>글결</span>
+            <nav class="app-nav" aria-label="교사 메뉴"><a aria-current="page">과제</a><a>학생</a><a>리포트</a></nav>
+            <span class="app-class">2학년 3반 · 국어</span>
+            <button class="icon-btn" type="button" aria-label="알림"><svg class="i"><use href="#i-bell"/></svg></button>
+            <span class="avatar" aria-label="박정은 선생님">박</span>
+          </header>
+          <div class="t-layout">
+            <section class="t-list" aria-label="제출 현황">
+              <div class="asg-head">
+                <span class="asg-meta">논설문 · 마감 6월 12일(목)</span>
+                <h3 class="asg-title">청소년 SNS 사용 시간, 법으로 제한해야 할까?</h3>
+              </div>
+              <div class="asg-stats">
+                <div><b>29<small>/31</small></b><span>제출</span></div>
+                <div><b>29</b><span>AI 채점 완료</span></div>
+                <div><b id="doneCount">12</b><span>검토 완료</span></div>
+              </div>
+              <div class="stack-bar" aria-label="검토 진행률" id="stackBar"><span class="sb-done"></span><span class="sb-todo"></span><span class="sb-none"></span></div>
+              <div class="tabs tabs-sm" role="tablist" aria-label="제출 상태 필터" id="tFilter">
+                <button class="tab" role="tab" aria-selected="true" data-f="all">전체<span class="tab-count">31</span></button>
+                <button class="tab" role="tab" aria-selected="false" data-f="todo">검토 필요<span class="tab-count" id="todoCount">17</span></button>
+                <button class="tab" role="tab" aria-selected="false" data-f="done">완료</button>
+                <button class="tab" role="tab" aria-selected="false" data-f="none">미제출</button>
+              </div>
+              <label class="field field-sm t-search">
+                <span class="sr-only">학생 이름 검색</span>
+                <span class="input-wrap"><svg class="i"><use href="#i-search"/></svg><input class="input" type="search" placeholder="이름으로 찾기" id="tSearch"></span>
+              </label>
+              <ul class="list t-students" id="tStudents" aria-label="학생 목록"></ul>
+            </section>
+
+            <section class="t-review" aria-label="채점 검토">
+              <div class="rv-head">
+                <button class="icon-btn rv-back" type="button" id="rvBack" aria-label="목록으로"><svg class="i"><use href="#i-chev-l"/></svg></button>
+                <div class="rv-who">
+                  <h3 id="rvName">이도현 <small>3번</small></h3>
+                  <span class="rv-meta"><svg class="i"><use href="#i-clock"/></svg>6월 10일 21:42 제출 · 1,124자</span>
+                </div>
+                <span class="badge badge-warning" id="rvStatus">검토 필요</span>
+              </div>
+
+              <div class="rv-body">
+                <article class="rv-essay card card-outlined">
+                  <div class="rv-essay-head">
+                    <span>제출 글</span>
+                    <div class="legend"><span class="lg lg-spelling">표기</span><span class="lg lg-expression">표현</span><span class="lg lg-logic">논리</span></div>
+                  </div>
+                  <div class="essay essay-compact" id="tEssay"></div>
+                </article>
+
+                <div class="rv-score card card-outlined">
+                  <div class="rv-score-head">
+                    <span>루브릭 점수</span>
+                    <span class="total"><span class="total-ai">AI <b id="aiTotal">77</b></span><svg class="i"><use href="#i-chev-r"/></svg><span class="total-t">최종 <b id="tTotal">77</b><small>/100</small></span></span>
+                  </div>
+                  <table class="rubric" id="rubric">
+                    <thead><tr><th>항목</th><th class="num">AI</th><th class="num">교사 점수</th></tr></thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+
+                <div class="rv-comment card card-outlined" id="aiComment">
+                  <div class="rc-head">
+                    <span class="rc-title"><span class="ai-chip">AI</span>총평 초안</span>
+                    <span class="badge badge-brand" id="rcBadge" hidden>교사 수정</span>
+                    <div class="rc-actions">
+                      <button class="btn btn-ghost btn-sm" type="button" id="rcRevert" hidden><svg class="i"><use href="#i-undo"/></svg>AI 원문으로</button>
+                      <button class="btn btn-secondary btn-sm" type="button" id="rcEdit"><svg class="i"><use href="#i-pen"/></svg>수정</button>
+                    </div>
+                  </div>
+                  <p class="rc-text" id="rcText"></p>
+                  <div class="rc-editor" id="rcEditor" hidden>
+                    <label class="field">
+                      <span class="field-label">학생에게 보일 총평</span>
+                      <textarea class="input textarea" id="rcArea" rows="5" maxlength="400"></textarea>
+                      <span class="field-help"><span id="rcCount">0</span>/400자 · AI 원문은 따로 보관됩니다.</span>
+                    </label>
+                    <div class="rc-editor-foot">
+                      <button class="btn btn-ghost btn-sm" type="button" id="rcCancel">취소</button>
+                      <button class="btn btn-primary btn-sm" type="button" id="rcSave">반영</button>
+                    </div>
+                  </div>
+                  <details class="rc-orig" id="rcOrig" hidden>
+                    <summary>AI 원문 보기</summary>
+                    <p id="rcOrigText"></p>
+                  </details>
+                </div>
+              </div>
+
+              <div class="rv-foot">
+                <button class="btn btn-ghost btn-md" type="button" data-toast-msg="임시 저장했습니다.">임시 저장</button>
+                <button class="btn btn-primary btn-md" type="button" id="rvPublish"><svg class="i"><use href="#i-send"/></svg>검토 완료 · 학생에게 공개</button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= STUDENT ======================= -->
+    <section class="sec" id="student" aria-labelledby="h-student">
+      <div class="screen-head">
+        <div>
+          <h2 class="h1" id="h-student">학생용 · 내 글 첨삭 보기</h2>
+          <p class="sec-desc">글 위의 표시를 누르면 해당 첨삭이 열립니다. 색은 표기·표현·논리 세 가지로만 나눠 학생이 한눈에 구분하게 했습니다.</p>
+        </div>
+        <div class="seg device-seg" role="radiogroup" aria-label="화면 크기">
+          <button type="button" role="radio" aria-checked="true" data-device="pc"><svg class="i"><use href="#i-monitor"/></svg>PC</button>
+          <button type="button" role="radio" aria-checked="false" data-device="mobile"><svg class="i"><use href="#i-phone"/></svg>모바일 375</button>
+        </div>
+      </div>
+      <div class="frame" data-device="pc">
+        <div class="app" id="appStudent">
+          <header class="appbar">
+            <span class="app-logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 22V10l7 7 7-7v12"/></svg>글결</span>
+            <nav class="app-nav" aria-label="학생 메뉴"><a aria-current="page">내 과제</a><a>성장 기록</a></nav>
+            <span class="app-class">2학년 3반</span>
+            <span class="avatar avatar-alt" aria-label="이도현">도현</span>
+          </header>
+          <div class="s-wrap">
+            <div class="s-head">
+              <a class="s-back"><svg class="i"><use href="#i-chev-l"/></svg>내 과제</a>
+              <h3 class="s-title">청소년 SNS 사용 시간, 법으로 제한해야 할까?</h3>
+              <div class="s-meta">
+                <span>6월 10일 제출</span><span>박정은 선생님 검토 완료</span>
+              </div>
+              <div class="s-score"><b>78</b><small>/100</small><span class="delta up"><svg class="i"><use href="#i-arrow-up"/></svg>지난 글보다 6점</span></div>
+            </div>
+            <div class="tabs" role="tablist" aria-label="첨삭 보기" id="sTabs">
+              <button class="tab" role="tab" aria-selected="true" data-p="notes">첨삭<span class="tab-count">6</span></button>
+              <button class="tab" role="tab" aria-selected="false" data-p="diff">고쳐 쓴 글 비교</button>
+              <button class="tab" role="tab" aria-selected="false" data-p="score">점수 상세</button>
+            </div>
+
+            <div class="s-panel" data-panel="notes">
+              <div class="chips" role="group" aria-label="첨삭 종류 필터" id="sChips">
+                <button class="chip" type="button" aria-pressed="true" data-k="all">전체 6</button>
+                <button class="chip chip-spelling" type="button" aria-pressed="false" data-k="spelling"><i></i>표기 1</button>
+                <button class="chip chip-expression" type="button" aria-pressed="false" data-k="expression"><i></i>표현 2</button>
+                <button class="chip chip-logic" type="button" aria-pressed="false" data-k="logic"><i></i>논리 3</button>
+              </div>
+              <div class="s-notes">
+                <article class="essay" id="sEssay" aria-label="내 글"></article>
+                <aside class="notes" id="sNotes" aria-label="첨삭 목록"></aside>
+              </div>
+            </div>
+
+            <div class="s-panel" data-panel="diff" hidden>
+              <div class="diff-bar">
+                <span class="diff-legend"><del>지운 부분</del><ins>고친 부분</ins></span>
+                <div class="seg seg-sm" role="radiogroup" aria-label="비교 방식" id="diffMode">
+                  <button type="button" role="radio" aria-checked="true" data-m="split">나란히</button>
+                  <button type="button" role="radio" aria-checked="false" data-m="inline">한 줄로</button>
+                </div>
+              </div>
+              <div class="diff" id="diff" data-mode="split"></div>
+            </div>
+
+            <div class="s-panel" data-panel="score" hidden>
+              <div class="score-list" id="scoreList"></div>
+              <div class="teacher-note card card-outlined">
+                <span class="tn-who"><span class="avatar avatar-sm">박</span>박정은 선생님 총평</span>
+                <p id="sTeacherNote"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= REPORT ======================= -->
+    <section class="sec" id="report" aria-labelledby="h-report">
+      <div class="screen-head">
+        <div>
+          <h2 class="h1" id="h-report">리포트 · 학급과 개인의 성장</h2>
+          <p class="sec-desc">숫자보다 변화를 먼저 말합니다. 맨 위에 한 문장 요약을 두고, "잘하고 있는 점, 다음 한 걸음" 순서로 읽히게 했습니다. 빨강은 점수 하락이 아니라 첨삭 종류에만 쓰고, 차트 색도 토큰(<code>color.chart.*</code>)이라 다크 모드에서 그대로 바뀝니다.</p>
+        </div>
+        <div class="seg device-seg" role="radiogroup" aria-label="화면 크기">
+          <button type="button" role="radio" aria-checked="true" data-device="pc"><svg class="i"><use href="#i-monitor"/></svg>PC</button>
+          <button type="button" role="radio" aria-checked="false" data-device="mobile"><svg class="i"><use href="#i-phone"/></svg>모바일 375</button>
+        </div>
+      </div>
+      <div class="frame" data-device="pc">
+        <div class="app" id="appReport">
+          <header class="appbar">
+            <span class="app-logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 22V10l7 7 7-7v12"/></svg>글결</span>
+            <nav class="app-nav" aria-label="교사 메뉴"><a>과제</a><a>학생</a><a aria-current="page">리포트</a></nav>
+            <span class="app-class">2학년 3반 · 국어</span>
+            <span class="avatar" aria-label="박정은 선생님">박</span>
+          </header>
+          <div class="r-wrap">
+            <div class="r-head">
+              <div>
+                <span class="asg-meta">1학기 · 쓰기 과제 4회</span>
+                <h3 class="r-title" id="rTitle">학급 성장 리포트</h3>
+              </div>
+              <div class="r-controls">
+                <div class="seg" role="radiogroup" aria-label="리포트 범위" id="rScope">
+                  <button type="button" role="radio" aria-checked="true" data-s="class">학급</button>
+                  <button type="button" role="radio" aria-checked="false" data-s="student">개인 · 이도현</button>
+                </div>
+              </div>
+            </div>
+            <div class="r-summary" id="rSummary" aria-live="polite"></div>
+            <div class="kpis" id="kpis"></div>
+            <div class="r-grid">
+              <figure class="r-card r-line">
+                <figcaption><b>과제별 평균 점수</b><span class="r-legend" id="lineLegend"></span></figcaption>
+                <div class="chart" id="lineChart"></div>
+              </figure>
+              <figure class="r-card r-crit">
+                <figcaption><b>항목별 변화</b><span class="r-legend"><span class="lgd lgd-2">1회차</span><span class="lgd lgd-1">4회차</span></span></figcaption>
+                <div class="chart" id="critChart"></div>
+              </figure>
+              <figure class="r-card r-hist">
+                <figcaption><b>4회차 점수 분포</b><span class="r-sub">31명 중 제출 29명</span></figcaption>
+                <div class="chart" id="histChart"></div>
+              </figure>
+              <figure class="r-card r-errors">
+                <figcaption><b id="errTitle">반복되는 첨삭 유형</b><span class="r-sub">4회 누적</span></figcaption>
+                <ol class="err-list" id="errList"></ol>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= GUIDE ======================= -->
+    <section class="sec" id="guide" aria-labelledby="h-guide">
+      <h2 class="h1" id="h-guide">개발 적용 가이드</h2>
+      <p class="sec-desc">프론트엔드 개발자 한 분이 그대로 옮겨 쓸 수 있게, Figma 변수와 같은 이름의 CSS 변수와 JSON을 함께 드립니다.</p>
+
+      <div class="guide-grid">
+        <div class="g-block">
+          <h3 class="h3">1. 토큰 → CSS 변수</h3>
+          <pre class="code" tabindex="0"><code><span class="c">/* Figma  color/bg/surface  →  CSS */</span>
+<span class="k">:root</span> {
+  --color-bg-surface: <span class="v">var(--gray-0)</span>;
+  --color-text-muted: <span class="v">var(--gray-600)</span>;
+  --space-4: <span class="v">16px</span>;
+  --radius-md: <span class="v">8px</span>;
+}
+<span class="k">[data-theme="dark"]</span> {
+  --color-bg-surface: <span class="v">var(--gray-900)</span>;
+  --color-text-muted: <span class="v">var(--gray-300)</span>;
+}
+
+<span class="c">/* 컴포넌트는 semantic만 참조 */</span>
+<span class="k">.card</span> {
+  background: <span class="v">var(--color-bg-surface)</span>;
+  padding: <span class="v">var(--space-4)</span>;
+  border-radius: <span class="v">var(--radius-lg)</span>;
+}</code></pre>
+          <p class="g-note">같은 값을 <code>tokens.json</code>(W3C Design Tokens 형식)으로도 내보내 Tailwind 설정이나 다른 프레임워크에 연결할 수 있게 합니다.</p>
+        </div>
+
+        <div class="g-block">
+          <h3 class="h3">2. 반응형 기준</h3>
+          <div class="tok-table-wrap"><table class="tok-table bp-table">
+            <thead><tr><th>이름</th><th>범위</th><th>열 · 여백</th><th>규칙</th></tr></thead>
+            <tbody>
+              <tr><td><code>mobile</code></td><td>0~767</td><td>4열 · 16</td><td>한 단, 하단 고정 버튼, 목록 → 상세 이동</td></tr>
+              <tr><td><code>tablet</code></td><td>768~1023</td><td>8열 · 24</td><td>목록·상세 2단, 보조 패널은 접기</td></tr>
+              <tr><td><code>desktop</code></td><td>1024~1279</td><td>12열 · 32</td><td>교사 화면 목록 300 고정 + 상세 가변</td></tr>
+              <tr><td><code>wide</code></td><td>1280~</td><td>12열 · 최대 1280</td><td>본문 최대 폭 고정, 여백만 늘어남</td></tr>
+            </tbody>
+          </table></div>
+          <p class="g-note">버튼·입력은 모바일에서 최소 높이 44px(<code>size=lg</code>)를 씁니다. 글자 크기는 줄이지 않고 줄 수와 배치만 바꿉니다.</p>
+        </div>
+      </div>
+
+      <h3 class="h3">3. 컴포넌트 사용 규칙</h3>
+      <div class="dodont">
+        <div class="dd do"><span class="dd-tag"><svg class="i"><use href="#i-check"/></svg>이렇게</span>
+          <div class="dd-ex"><button class="btn btn-ghost btn-md" type="button">임시 저장</button><button class="btn btn-primary btn-md" type="button">공개하기</button></div>
+          <p>한 화면에 primary 버튼은 하나. 나머지 행동은 secondary·ghost로 내립니다.</p></div>
+        <div class="dd dont"><span class="dd-tag"><svg class="i"><use href="#i-x"/></svg>이렇게 하지 않기</span>
+          <div class="dd-ex"><button class="btn btn-primary btn-md" type="button">임시 저장</button><button class="btn btn-primary btn-md" type="button">공개하기</button></div>
+          <p>primary가 둘이면 교사가 어떤 버튼이 최종 행동인지 망설입니다.</p></div>
+        <div class="dd do"><span class="dd-tag"><svg class="i"><use href="#i-check"/></svg>이렇게</span>
+          <div class="dd-ex"><span class="ex-chip ex-ok">background: var(--color-bg-danger-subtle)</span></div>
+          <p>색은 semantic 토큰 이름으로만 지정합니다. 다크 모드와 BI 교체가 자동으로 따라옵니다.</p></div>
+        <div class="dd dont"><span class="dd-tag"><svg class="i"><use href="#i-x"/></svg>이렇게 하지 않기</span>
+          <div class="dd-ex"><span class="ex-chip ex-bad">background: #fdeeec</span></div>
+          <p>HEX를 직접 쓰면 다크 모드에서 흰 상자가 뜨고, 색을 바꿀 때 파일마다 찾아 고쳐야 합니다.</p></div>
+        <div class="dd do"><span class="dd-tag"><svg class="i"><use href="#i-check"/></svg>이렇게</span>
+          <div class="dd-ex"><span class="ex-err"><svg class="i"><use href="#i-alert"/></svg>점수는 0~25 사이로 입력해 주세요.</span></div>
+          <p>오류는 입력칸 바로 아래에 이유와 고칠 방법을 함께 적습니다. 색만으로 알리지 않고 아이콘을 붙입니다.</p></div>
+        <div class="dd dont"><span class="dd-tag"><svg class="i"><use href="#i-x"/></svg>이렇게 하지 않기</span>
+          <div class="dd-ex"><span class="ex-err ex-err-bad">입력 오류</span></div>
+          <p>빨간 테두리와 "오류"만 띄우면 무엇을 고쳐야 할지 알 수 없습니다.</p></div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <p>제안용 시안입니다. 학생 이름·글·점수는 모두 가상 데이터이며 실제 납품 실적이 아닙니다. 실제 납품물은 편집 권한이 있는 Figma 원본(변수 컬렉션·컴포넌트 세트·화면)과 개발 가이드입니다. 제품명 "글결"은 시안용 가칭입니다.</p>
+    </footer>
+  </main>
+</div>
+
+<div class="toast-region" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<dialog class="modal" id="modal" aria-labelledby="modalTitle">
+  <form method="dialog" class="modal-card">
+    <div class="modal-head">
+      <span class="modal-icon" id="modalIcon"></span>
+      <h4 id="modalTitle"></h4>
+    </div>
+    <p class="modal-body" id="modalBody"></p>
+    <div class="modal-foot">
+      <button class="btn btn-ghost btn-md" value="cancel">취소</button>
+      <button class="btn btn-primary btn-md" value="ok" id="modalOk"></button>
+    </div>
+  </form>
+</dialog>
+
+<script src="js/app.js"></script>
+</body>
+</html>
