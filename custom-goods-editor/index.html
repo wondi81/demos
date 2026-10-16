@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>커스텀 굿즈 편집기 (데모)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Black+Han+Sans&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23ff6b4a'/%3E%3Ccircle cx='12' cy='12' r='6' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#f6f5f2;--card:#fff;--ink:#1d1d1f;--sub:#6b6b70;--line:#e5e3de;--brand:#ff6b4a;--brand-d:#e2522f;--ok:#1f9d63;--warn:#d93025}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.5}
+button,input,select{font:inherit}
+.demo-bar{background:#1d1d1f;color:#fff;text-align:center;font-size:13px;padding:8px 16px}
+header.top{max-width:1200px;margin:0 auto;padding:20px 16px 8px}
+header.top h1{margin:0;font-size:24px}
+header.top p{margin:4px 0 0;color:var(--sub);font-size:14px}
+.wrap{max-width:1200px;margin:0 auto;padding:12px 16px 32px;display:grid;grid-template-columns:240px minmax(0,1fr) 260px;gap:16px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h2{font-size:15px;margin:0 0 10px}
+.products{display:grid;gap:8px}
+.prod{display:flex;justify-content:space-between;align-items:center;border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;cursor:pointer;text-align:left}
+.prod small{color:var(--sub)}
+.prod[aria-pressed=true]{border-color:var(--brand);background:#fff4f1}
+.stickers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.stk{aspect-ratio:1;border:1px solid var(--line);background:#fafaf8;border-radius:10px;padding:6px;cursor:pointer}
+.stk:hover{border-color:var(--brand)}
+.stk img{width:100%;height:100%;display:block}
+.canvas-card{padding:12px}
+.canvas-box{width:100%;aspect-ratio:1;background:#efeee9;border-radius:10px;overflow:hidden;touch-action:none}
+.status{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--sub);margin-top:8px}
+.status .bad{color:var(--warn);font-weight:700}
+.tools{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;color:var(--ink)}
+.btn:hover{border-color:#bbb}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:700}
+.btn.primary:hover{background:var(--brand-d)}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.full{width:100%;padding:12px}
+label.f{display:block;font-size:13px;color:var(--sub);margin:10px 0 4px}
+input[type=text],select{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:#fff;font-size:16px}
+.row{display:flex;gap:8px;align-items:center}
+input[type=color]{width:44px;height:40px;border:1px solid var(--line);border-radius:8px;padding:2px;background:#fff}
+.side-actions{display:grid;gap:8px;margin-top:16px}
+.out{font-size:13px;color:var(--sub);margin-top:8px;word-break:break-all}
+.out b{color:var(--ink);white-space:nowrap}
+.extra{max-width:1200px;margin:0 auto;padding:0 16px 40px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.result{margin-top:10px;padding:10px 12px;border-radius:8px;font-size:14px;display:none}
+.result.ok{display:block;background:#e9f7f0;color:var(--ok)}
+.result.dup{display:block;background:#fff4e5;color:#a65b00}
+.result.no{display:block;background:#fdecea;color:var(--warn)}
+.hint{font-size:12px;color:var(--sub);margin:6px 0 0}
+.qr-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+#qr{width:132px;height:132px;padding:6px;background:#fff;border:1px solid var(--line);border-radius:8px}
+#qr img,#qr canvas{width:100%!important;height:100%!important}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
+.modal.open{display:flex}
+.sheet{background:#fff;border-radius:16px;max-width:420px;width:100%;padding:20px;max-height:90vh;overflow:auto}
+.sheet h3{margin:0 0 12px}
+.sheet img{width:100%;border-radius:10px;background:#efeee9;display:block}
+.sum{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+.sum td{padding:6px 0;border-bottom:1px solid var(--line)}
+.sum td:last-child{text-align:right}
+.sum tr.total td{font-weight:700;border:0;font-size:16px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#1d1d1f;color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:20;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.demo-foot{text-align:center;font-size:12px;color:var(--sub);padding:0 16px 24px}
+@media (max-width:1000px){.wrap{grid-template-columns:1fr 1fr}.canvas-card{grid-column:1/-1;order:-1}}
+@media (max-width:640px){.wrap,.extra{grid-template-columns:1fr}.stickers{grid-template-columns:repeat(8,1fr);gap:4px}.stk{padding:3px}header.top h1{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="demo-bar">커스텀 굿즈 편집기 데모 — 실제 쇼핑몰이 아닙니다</div>
+<header class="top">
+  <h1>나만의 굿즈 만들기</h1>
+  <p>상품을 고르고 스티커와 문구를 자유롭게 배치하세요. 점선 안쪽이 인쇄 영역입니다.</p>
+</header>
+
+<main class="wrap">
+  <section class="card" aria-label="상품과 스티커">
+    <h2>1. 상품 선택</h2>
+    <div class="products" id="products"></div>
+    <h2 style="margin-top:18px">2. 스티커</h2>
+    <div class="stickers" id="stickers"></div>
+    <p class="hint">누르면 캔버스 가운데에 추가됩니다.</p>
+  </section>
+
+  <section class="card canvas-card" aria-label="편집 캔버스">
+    <div class="canvas-box" id="canvasBox"></div>
+    <div class="status"><span id="areaInfo"></span><span id="warnInfo"></span></div>
+    <div class="tools">
+      <button class="btn" id="bFront" disabled>앞으로</button>
+      <button class="btn" id="bBack" disabled>뒤로</button>
+      <button class="btn" id="bDel" disabled>삭제</button>
+      <button class="btn" id="bClear">전체 비우기</button>
+    </div>
+  </section>
+
+  <section class="card" aria-label="텍스트와 출력">
+    <h2>3. 문구</h2>
+    <label class="f" for="tText">내용</label>
+    <input type="text" id="tText" value="우리만의 굿즈" maxlength="30">
+    <label class="f" for="tFont">글꼴</label>
+    <div class="row">
+      <select id="tFont">
+        <option value="Noto Sans KR">본고딕 (Noto Sans KR)</option>
+        <option value="Black Han Sans">굵은 제목 (Black Han Sans)</option>
+      </select>
+      <input type="color" id="tColor" value="#1d1d1f" aria-label="글자 색">
+    </div>
+    <div class="side-actions">
+      <button class="btn" id="bText">텍스트 추가</button>
+    </div>
+    <h2 style="margin-top:18px">4. 저장·출력</h2>
+    <div class="side-actions">
+      <div class="row"><button class="btn" id="bSave" style="flex:1">저장</button><button class="btn" id="bLoad" style="flex:1">불러오기</button></div>
+      <button class="btn dark full" id="bPrint">인쇄 파일 만들기 (300dpi)</button>
+      <button class="btn primary full" id="bOrder">주문하기</button>
+    </div>
+    <div class="out" id="printOut"></div>
+  </section>
+</main>
+
+<section class="extra">
+  <div class="card">
+    <h2>정품 인증 미리보기</h2>
+    <p class="hint">상품 택의 QR·일련번호(SN)·NFC로 정품 여부를 확인합니다. 예시: CG-2026-0001, CG-2026-0002</p>
+    <form class="row" id="snForm" style="margin-top:10px">
+      <input type="text" id="sn" placeholder="일련번호 입력" autocomplete="off">
+      <button class="btn dark" type="submit" style="white-space:nowrap">인증</button>
+    </form>
+    <div class="result" id="snResult" role="status"></div>
+  </div>
+  <div class="card">
+    <h2>매장 현장 수령 QR (예시)</h2>
+    <div class="qr-row">
+      <div id="qr"></div>
+      <div style="flex:1;min-width:160px">
+        <p style="margin:0;font-weight:700">주문번호 DEMO-1016-001</p>
+        <p class="hint">매장 직원이 스캔하면 수령 완료로 바뀌는 1회용 코드입니다. 데모용 값이 들어 있습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="demo-foot">커스텀 굿즈 편집기 데모 — 실제 쇼핑몰이 아닙니다. 결제·배송은 진행되지 않습니다.</div>
+
+<div class="modal" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="oTitle">
+  <div class="sheet">
+    <h3 id="oTitle">주문 요약</h3>
+    <img id="oThumb" alt="디자인 미리보기">
+    <table class="sum" id="oSum"></table>
+    <label class="f" for="oQty">수량</label>
+    <select id="oQty"><option>1</option><option>2</option><option>3</option><option>5</option><option>10</option></select>
+    <label class="f" for="oPick">수령 방법</label>
+    <select id="oPick"><option value="0">택배 배송 (+3,000원)</option><option value="1">매장 현장 수령 (무료)</option></select>
+    <div class="row" style="margin-top:16px"><button class="btn" id="oClose" style="flex:1">닫기</button><button class="btn primary" id="oPay" style="flex:2">결제하기</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/konva@9.3.20/konva.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const L = 500; // 캔버스 논리 좌표계 (가로세로 500)
+const $ = id => document.getElementById(id);
+
+// 상품: 실루엣 path(500 좌표), 인쇄 영역(논리 좌표), 실제 인쇄 크기(mm)
+const PRODUCTS = {
+  keyring: { name:'아크릴 키링', size:'50×50mm', price:8900, mm:[50,50], area:{x:110,y:130,w:280,h:280}, fill:'#ffffff',
+    path:'M250 20a30 30 0 1 1 0 60a30 30 0 1 1 0-60zm0 16a14 14 0 1 0 0 28a14 14 0 1 0 0-28zM110 90h280a40 40 0 0 1 40 40v300a40 40 0 0 1-40 40H110a40 40 0 0 1-40-40V130a40 40 0 0 1 40-40z' },
+  mug: { name:'머그컵', size:'200×90mm', price:14900, mm:[200,90], area:{x:75,y:195,w:290,h:130}, fill:'#ffffff',
+    path:'M60 110h330v300a40 40 0 0 1-40 40H100a40 40 0 0 1-40-40zM390 170c80 0 80 190 0 190v-40c35 0 35-110 0-110z' },
+  tshirt: { name:'티셔츠', size:'250×300mm', price:24900, mm:[250,300], area:{x:165,y:140,w:170,h:204}, fill:'#ffffff',
+    path:'M175 40L130 58L40 125L88 205L130 180V470H370V180L412 205L460 125L370 58L325 40Q250 95 175 40Z' }
+};
+
+// 오리지널 스티커 8종 (viewBox 100)
+const STICKERS = [
+  ['구름냥', '<path d="M22 70a18 18 0 0 1 4-35a24 24 0 0 1 46-4a20 20 0 0 1 6 39z" fill="#cfe8ff" stroke="#2b4a6f" stroke-width="3"/><path d="M34 30l6-12l6 10M58 28l6-10l5 12" fill="#cfe8ff" stroke="#2b4a6f" stroke-width="3" stroke-linejoin="round"/><circle cx="40" cy="50" r="4" fill="#2b4a6f"/><circle cx="62" cy="50" r="4" fill="#2b4a6f"/><path d="M46 58q5 5 10 0" fill="none" stroke="#2b4a6f" stroke-width="3" stroke-linecap="round"/>'],
+  ['방긋별', '<path d="M50 6l12 28l30 3l-23 20l7 30l-26-16l-26 16l7-30l-23-20l30-3z" fill="#ffd34d" stroke="#8a5a00" stroke-width="3" stroke-linejoin="round"/><circle cx="42" cy="48" r="3.5" fill="#5a3a00"/><circle cx="58" cy="48" r="3.5" fill="#5a3a00"/><path d="M43 57q7 6 14 0" fill="none" stroke="#5a3a00" stroke-width="3" stroke-linecap="round"/>'],
+  ['하트', '<path d="M50 88C20 66 8 50 8 33a20 20 0 0 1 42-10a20 20 0 0 1 42 10c0 17-12 33-42 55z" fill="#ff7a8a" stroke="#9c2b3a" stroke-width="3"/><ellipse cx="30" cy="32" rx="7" ry="4" fill="#fff" opacity=".6" transform="rotate(-30 30 32)"/>'],
+  ['몽글이', '<path d="M20 90V45a30 30 0 0 1 60 0v45l-10-8l-10 8l-10-8l-10 8l-10-8z" fill="#efe6ff" stroke="#5b3f8c" stroke-width="3" stroke-linejoin="round"/><ellipse cx="40" cy="45" rx="4" ry="6" fill="#5b3f8c"/><ellipse cx="60" cy="45" rx="4" ry="6" fill="#5b3f8c"/><circle cx="32" cy="58" r="4" fill="#ffb3c7"/><circle cx="68" cy="58" r="4" fill="#ffb3c7"/>'],
+  ['번개', '<path d="M58 4L18 56h26l-8 40l46-56H56z" fill="#ffe14a" stroke="#1d1d1f" stroke-width="3" stroke-linejoin="round"/>'],
+  ['꽃', '<g fill="#ffa3c4" stroke="#a3365e" stroke-width="3"><circle cx="50" cy="24" r="16"/><circle cx="76" cy="43" r="16"/><circle cx="66" cy="74" r="16"/><circle cx="34" cy="74" r="16"/><circle cx="24" cy="43" r="16"/></g><circle cx="50" cy="52" r="13" fill="#ffd34d" stroke="#a3365e" stroke-width="3"/>'],
+  ['도토리곰', '<circle cx="24" cy="26" r="12" fill="#c8915a" stroke="#5a3a1c" stroke-width="3"/><circle cx="76" cy="26" r="12" fill="#c8915a" stroke="#5a3a1c" stroke-width="3"/><circle cx="50" cy="55" r="36" fill="#c8915a" stroke="#5a3a1c" stroke-width="3"/><ellipse cx="50" cy="66" rx="15" ry="11" fill="#f3dcc0"/><circle cx="37" cy="50" r="4" fill="#3a230e"/><circle cx="63" cy="50" r="4" fill="#3a230e"/><ellipse cx="50" cy="61" rx="5" ry="3.5" fill="#3a230e"/>'],
+  ['말풍선', '<path d="M12 18h76a8 8 0 0 1 8 8v40a8 8 0 0 1-8 8H42L24 90V74H12a8 8 0 0 1-8-8V26a8 8 0 0 1 8-8z" fill="#fff" stroke="#1d1d1f" stroke-width="3" stroke-linejoin="round"/><text x="50" y="56" font-family="Arial,sans-serif" font-weight="700" font-size="24" text-anchor="middle" fill="#ff6b4a">HI!</text>']
+];
+const svgUrl = (inner, px) => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="${px}" height="${px}">${inner}</svg>`);
+// 인쇄 해상도 대비 큰 래스터(1200px)로 로드해 300dpi 출력에서도 선명하게
+const imgCache = {};
+function stickerImg(i){
+  return imgCache[i] ||= new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = svgUrl(STICKERS[i][1], 1200); });
+}
+
+// ---------- Konva ----------
+const box = $('canvasBox');
+const stage = new Konva.Stage({ container: box, width: box.clientWidth, height: box.clientWidth });
+const bgLayer = new Konva.Layer({ listening:false });
+const objLayer = new Konva.Layer();
+const uiLayer = new Konva.Layer();
+stage.add(bgLayer, objLayer, uiLayer);
+const silhouette = new Konva.Path({ fill:'#fff', stroke:'#c9c6bf', strokeWidth:2, shadowColor:'#000', shadowOpacity:.08, shadowBlur:12, shadowOffsetY:4 });
+const areaRect = new Konva.Rect({ stroke:'#ff6b4a', strokeWidth:1.5, dash:[6,5] });
+const areaLabel = new Konva.Text({ fontSize:14, fill:'#ff6b4a', fontFamily:'Noto Sans KR' });
+bgLayer.add(silhouette, areaRect, areaLabel);
+const warnGroup = new Konva.Group({ listening:false });
+const tr = new Konva.Transformer({ rotateEnabled:true, keepRatio:true, enabledAnchors:['top-left','top-right','bottom-left','bottom-right'],
+  anchorSize:14, anchorCornerRadius:7, anchorStroke:'#ff6b4a', borderStroke:'#ff6b4a', rotateAnchorOffset:28, padding:4,
+  boundBoxFunc:(o,n) => (Math.abs(n.width) < 12 || Math.abs(n.height) < 12) ? o : n });
+uiLayer.add(warnGroup, tr);
+
+let product = 'keyring';
+function fit(){
+  const w = box.clientWidth; stage.size({ width:w, height:w }); stage.scale({ x:w/L, y:w/L });
+}
+new ResizeObserver(fit).observe(box);
+fit();
+
+function setProduct(key){
+  product = key; const p = PRODUCTS[key], a = p.area;
+  silhouette.data(p.path); areaRect.setAttrs({ x:a.x, y:a.y, width:a.w, height:a.h });
+  areaLabel.setAttrs({ x:a.x, y:a.y - 18, text:`인쇄 영역 ${p.size}` });
+  const px = p.mm.map(mm => Math.round(mm / 25.4 * 300));
+  $('areaInfo').textContent = `${p.name} · 인쇄 ${p.size} → 300dpi ${px[0]}×${px[1]}px`;
+  document.querySelectorAll('.prod').forEach(b => b.setAttribute('aria-pressed', b.dataset.k === key));
+  bgLayer.draw(); checkBounds();
+}
+
+function select(node){
+  tr.nodes(node ? [node] : []);
+  ['bFront','bBack','bDel'].forEach(id => $(id).disabled = !node);
+  if (node && node.getClassName() === 'Text'){
+    $('tText').value = node.text(); $('tFont').value = node.fontFamily(); $('tColor').value = node.fill();
+    $('bText').textContent = '선택한 문구 수정 중 (새로 추가)';
+  } else $('bText').textContent = '텍스트 추가';
+}
+
+function checkBounds(){
+  warnGroup.destroyChildren();
+  const a = PRODUCTS[product].area; let n = 0;
+  objLayer.getChildren().forEach(node => {
+    const r = node.getClientRect({ relativeTo: stage });
+    const out = r.x < a.x - .5 || r.y < a.y - .5 || r.x + r.width > a.x + a.w + .5 || r.y + r.height > a.y + a.h + .5;
+    if (out){ n++; warnGroup.add(new Konva.Rect({ x:r.x, y:r.y, width:r.width, height:r.height, stroke:'#d93025', strokeWidth:2, dash:[4,3] })); }
+  });
+  $('warnInfo').innerHTML = n ? `<span class="bad">인쇄 영역 밖 요소 ${n}개 — 잘려서 인쇄됩니다</span>` : '모든 요소가 인쇄 영역 안에 있습니다';
+  uiLayer.batchDraw();
+}
+
+function wire(node){
+  node.on('dragmove transform', checkBounds);
+  node.on('dragend transformend', checkBounds);
+  node.on('mousedown touchstart', () => select(node));
+  objLayer.add(node); checkBounds();
+  return node;
+}
+async function addSticker(i, attrs){
+  const im = await stickerImg(i), a = PRODUCTS[product].area, s = Math.min(a.w, a.h) * .45;
+  return wire(new Konva.Image(Object.assign({ image:im, sticker:i, width:s, height:s, x:a.x + a.w/2 - s/2, y:a.y + a.h/2 - s/2, draggable:true }, attrs)));
+}
+function addText(attrs){
+  const a = PRODUCTS[product].area;
+  const t = new Konva.Text(Object.assign({ text:$('tText').value || '문구', fontFamily:$('tFont').value, fill:$('tColor').value,
+    fontSize: Math.round(a.h * .14), draggable:true }, attrs));
+  if (!attrs){
+    if (t.width() > a.w * .9) t.fontSize(Math.floor(t.fontSize() * a.w * .9 / t.width())); // 좁은 인쇄 영역에 맞춤
+    const nth = objLayer.find('Text').length; // 겹치지 않게 아래로 조금씩
+    t.x(a.x + (a.w - t.width())/2); t.y(Math.min(a.y + a.h*.72 + nth * t.fontSize() * 1.2 - (nth ? a.h*.35 : 0), a.y + a.h - t.height()));
+  }
+  return wire(t);
+}
+
+stage.on('mousedown touchstart', e => { if (e.target === stage || e.target.getLayer() === bgLayer) select(null); });
+
+// ---------- UI 바인딩 ----------
+for (const [k, p] of Object.entries(PRODUCTS)){
+  const b = document.createElement('button'); b.className = 'prod'; b.dataset.k = k;
+  b.innerHTML = `<span><b>${p.name}</b><br><small>${p.size}</small></span><small>${p.price.toLocaleString()}원</small>`;
+  b.onclick = () => setProduct(k); $('products').append(b);
+}
+STICKERS.forEach(([name, svg], i) => {
+  const b = document.createElement('button'); b.className = 'stk'; b.title = name; b.setAttribute('aria-label', `${name} 스티커 추가`);
+  b.innerHTML = `<img src="${svgUrl(svg, 100)}" alt="">`;
+  b.onclick = async () => { select(await addSticker(i)); showCanvas(); }; $('stickers').append(b);
+});
+
+const sel = () => tr.nodes()[0];
+$('bDel').onclick = () => { sel()?.destroy(); select(null); checkBounds(); };
+$('bFront').onclick = () => { sel()?.moveUp(); objLayer.draw(); };
+$('bBack').onclick = () => { sel()?.moveDown(); objLayer.draw(); };
+$('bClear').onclick = () => { objLayer.destroyChildren(); select(null); checkBounds(); };
+$('bText').onclick = () => { select(addText()); showCanvas(); };
+// 모바일: 캔버스가 화면 밖이면 추가한 요소가 보이도록 스크롤
+function showCanvas(){ const r = box.getBoundingClientRect(); if (r.bottom < 60 || r.top > innerHeight - 60) box.scrollIntoView({ behavior:'smooth', block:'center' }); }
+function editText(){
+  const n = sel(); if (!n || n.getClassName() !== 'Text') return;
+  n.setAttrs({ text:$('tText').value || ' ', fontFamily:$('tFont').value, fill:$('tColor').value }); tr.forceUpdate(); checkBounds();
+}
+['input','change'].forEach(ev => ['tText','tFont','tColor'].forEach(id => $(id).addEventListener(ev, editText)));
+document.addEventListener('keydown', e => { if ((e.key === 'Delete' || e.key === 'Backspace') && sel() && document.activeElement === document.body) $('bDel').click(); });
+
+// ---------- 인쇄 파일 ----------
+function printCanvas(){
+  const p = PRODUCTS[product], a = p.area, k = stage.scaleX();
+  const [tw, th] = p.mm.map(mm => Math.round(mm / 25.4 * 300));
+  const src = objLayer.toCanvas({ x:a.x*k, y:a.y*k, width:a.w*k, height:a.h*k, pixelRatio: tw / (a.w*k) });
+  const c = document.createElement('canvas'); c.width = tw; c.height = th; // 정확한 mm→px 크기로 맞춤
+  c.getContext('2d').drawImage(src, 0, 0, tw, th);
+  return c;
+}
+$('bPrint').onclick = () => {
+  const p = PRODUCTS[product], c = printCanvas();
+  c.toBlob(blob => {
+    const url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = `print_${product}_${c.width}x${c.height}_300dpi.png`; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    $('printOut').innerHTML = `인쇄 파일 생성 완료<br><b>${c.width}×${c.height}px</b> · 300dpi · ${p.size} · <b>${(blob.size/1024).toFixed(1)}KB</b><br>배경 투명 PNG (인쇄 영역만 포함)`;
+    toast('인쇄용 PNG를 내려받았습니다');
+  }, 'image/png');
+};
+
+// ---------- 저장 / 불러오기 ----------
+const KEY = 'custom-goods-editor:design';
+function serialize(){
+  return { product, items: objLayer.getChildren().map(n => {
+    const base = { x:n.x(), y:n.y(), rotation:n.rotation(), scaleX:n.scaleX(), scaleY:n.scaleY() };
+    return n.getClassName() === 'Text' ? Object.assign(base, { type:'text', text:n.text(), fontFamily:n.fontFamily(), fill:n.fill(), fontSize:n.fontSize() })
+      : Object.assign(base, { type:'sticker', sticker:n.getAttr('sticker'), width:n.width(), height:n.height() });
+  }) };
+}
+$('bSave').onclick = () => {
+  try { localStorage.setItem(KEY, JSON.stringify(serialize())); toast(`디자인을 저장했습니다 (요소 ${objLayer.getChildren().length}개)`); }
+  catch { toast('이 브라우저에서는 저장할 수 없습니다'); }
+};
+$('bLoad').onclick = async () => {
+  let d; try { d = JSON.parse(localStorage.getItem(KEY)); } catch {}
+  if (!d) return toast('저장된 디자인이 없습니다');
+  objLayer.destroyChildren(); select(null); setProduct(d.product in PRODUCTS ? d.product : 'keyring');
+  for (const it of d.items){ const { type, sticker, ...attrs } = it; type === 'text' ? addText(attrs) : await addSticker(sticker, attrs); }
+  toast('저장한 디자인을 불러왔습니다');
+};
+
+// ---------- 주문 ----------
+function renderSum(){
+  const p = PRODUCTS[product], q = +$('oQty').value, ship = $('oPick').value === '0' ? 3000 : 0;
+  $('oSum').innerHTML = `<tr><td>상품</td><td>${p.name} (${p.size})</td></tr><tr><td>디자인 요소</td><td>${objLayer.getChildren().length}개</td></tr>
+    <tr><td>단가 × 수량</td><td>${p.price.toLocaleString()}원 × ${q}</td></tr><tr><td>배송비</td><td>${ship.toLocaleString()}원</td></tr>
+    <tr class="total"><td>결제 예정 금액</td><td>${(p.price*q + ship).toLocaleString()}원</td></tr>`;
+}
+$('bOrder').onclick = () => {
+  const keep = tr.nodes(); tr.nodes([]); warnGroup.hide(); uiLayer.draw();
+  $('oThumb').src = stage.toDataURL({ pixelRatio: 640 / stage.width() });
+  tr.nodes(keep); warnGroup.show(); uiLayer.draw();
+  renderSum(); $('orderModal').classList.add('open');
+};
+$('oQty').onchange = $('oPick').onchange = renderSum;
+$('oClose').onclick = () => $('orderModal').classList.remove('open');
+$('orderModal').onclick = e => { if (e.target.id === 'orderModal') $('oClose').click(); };
+$('oPay').onclick = () => { $('oClose').click(); toast('데모입니다 — 실제 결제는 진행되지 않습니다'); };
+
+// ---------- 정품 인증 / QR ----------
+const SERIALS = {
+  'CG-2026-0001': ['ok', '정품입니다. 최초 인증이 완료되어 내 컬렉션에 등록되었습니다.'],
+  'CG-2026-0002': ['dup', '정품이지만 이미 다른 계정에 등록된 번호입니다 (2026-09-02 등록). 양도받으셨다면 이전 소유자에게 해제를 요청하세요.']
+};
+$('snForm').onsubmit = e => {
+  e.preventDefault();
+  const [cls, msg] = SERIALS[$('sn').value.trim().toUpperCase()] || ['no', '확인되지 않는 일련번호입니다. 번호를 다시 확인해 주세요.'];
+  const r = $('snResult'); r.className = 'result ' + cls; r.textContent = msg;
+};
+new QRCode($('qr'), { text:'DEMO-PICKUP:DEMO-1016-001', width:240, height:240, correctLevel: QRCode.CorrectLevel.M });
+
+let tt;
+function toast(msg){ const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 2200); }
+
+// 초기 상태: 키링 + 예시 스티커 2개 + 문구 (웹폰트 로드 후 그려야 글꼴이 맞음)
+setProduct('keyring');
+document.fonts.load('20px "Black Han Sans"').then(() => document.fonts.load('20px "Noto Sans KR"')).catch(() => {}).finally(async () => {
+  await addSticker(6, { width:120, height:120, x:190, y:160 });
+  await addSticker(1, { width:70, height:70, x:300, y:150, rotation:15 });
+  addText(); select(null); objLayer.draw();
+});
+</script>
+</body>
+</html>
