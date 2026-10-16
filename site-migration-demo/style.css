@@ -61,8 +61,10 @@ img{max-width:100%;display:block}
 .sub-hero .t{position:relative;color:#fff;padding:0 16px 160px}
 .sub-hero h1{font-size:72px;font-weight:400;line-height:1.1}
 .sub-hero p{font-weight:700;font-size:14px;margin-top:6px}
-.svc{background:#b7b7b7;padding:200px 16px 250px}
-.svc+.svc{padding-top:0}
+.svc{background:#b7b7b7;padding:140px 16px 190px}
+.svc{background-size:cover;background-position:center}
+.s1{background-image:linear-gradient(rgba(183,183,183,.9),rgba(183,183,183,.9)),url(img/svc1.jpg)}
+.s2{background-image:linear-gradient(rgba(183,183,183,.9),rgba(183,183,183,.9)),url(img/svc2.jpg)}
 .svc h2{text-align:center;color:#fff;font-size:34px;font-weight:400;letter-spacing:6px}
 .svc .sub2{text-align:center;color:#fff;font-size:14px;margin:2px 0 100px}
 .cards{max-width:977px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
