@@ -1,0 +1,95 @@
+:root{--red:#c8203f;--ink:#292929;--foot:#3b3b3b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--ink);background:#fff;font-size:14px;line-height:1.65;padding-top:28px}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.demo-bar{position:fixed;top:0;left:0;right:0;z-index:100;height:28px;line-height:28px;text-align:center;font-size:12px;font-weight:700;background:#ffd400;color:#111;letter-spacing:-.2px}
+.demo-foot{background:#ffd400;color:#111;text-align:center;font-size:12px;font-weight:700;padding:8px 16px}
+/* header */
+.hd{position:absolute;top:28px;left:0;right:0;z-index:10;color:#fff}
+.hd-top{height:101px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid rgba(255,255,255,.3)}
+.hd-top .logo img{width:190px}
+.hd-util{position:absolute;right:28px;top:0;height:101px;display:flex;align-items:center;gap:20px;font:700 12px Montserrat,sans-serif}
+.hd-util svg{display:block}
+.hd-nav{height:51px;display:flex;justify-content:center;position:relative;border-bottom:1px solid rgba(255,255,255,.3)}
+.hd-nav .ham{position:absolute;left:24px;top:15px}
+.hd-nav a.m{display:flex;align-items:center;padding:0 25px;font:500 16px Montserrat,"Noto Sans KR",sans-serif;height:50px}
+.hd-nav a.m.on{background:var(--red);padding:0 43px}
+.ham{background:none;border:0;color:#fff;cursor:pointer}
+.mob-only{display:none}
+/* hero */
+.hero{position:relative;height:900px;overflow:hidden;background:#333}
+.slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .8s;display:flex;align-items:center;justify-content:center}
+.slide.on{opacity:1}
+.slide::before{content:"";position:absolute;inset:0;background:rgba(20,40,60,.25)}
+.slide img{position:relative;width:700px;margin-top:10px}
+.hero .arr{position:absolute;top:50%;margin-top:-15px;width:30px;height:30px;border:1px solid #fff;border-radius:50%;background:none;color:#fff;cursor:pointer;z-index:2;font-size:14px}
+.hero .prev{left:20px}.hero .next{right:20px}
+.dots{position:absolute;bottom:28px;left:0;right:0;display:flex;justify-content:center;gap:14px;z-index:2}
+.dots button{width:10px;height:10px;border-radius:50%;border:1px solid #fff;background:none;cursor:pointer;padding:0}
+.dots button.on{background:#fff}
+.scroll-ico{position:absolute;left:50%;bottom:235px;margin-left:-9px;z-index:2;color:#fff;opacity:.8}
+/* greeting */
+.greet{max-width:880px;margin:0 auto;padding:62px 0 0;display:flex;justify-content:space-between;align-items:flex-end}
+.greet .txt{padding-bottom:80px;font-size:14px;line-height:1.62;letter-spacing:-.3px}
+.greet h2{font-size:20px;font-weight:700;margin-bottom:6px}
+.greet .quote{font-size:15px;font-weight:700;margin-bottom:30px}
+.greet p{margin-bottom:22px}
+.greet b{font-weight:700}
+.sign{display:flex;align-items:center;gap:6px;font-size:14px}
+.sign img{width:250px}
+.ceo{width:290px;margin-right:30px}
+.ceo-m{display:none}
+/* contact */
+.contact{background:#f4f4f4;padding:60px 16px}
+.contact h3{text-align:center;font:600 26px Montserrat,sans-serif;letter-spacing:3px}
+.contact .sub{text-align:center;color:#777;font-size:13px;margin:4px 0 26px}
+.contact form{max-width:560px;margin:0 auto;display:grid;gap:10px}
+.contact input,.contact textarea{width:100%;border:1px solid #ccc;padding:11px 12px;font:inherit;background:#fff}
+.contact button{background:var(--red);color:#fff;border:0;padding:13px;font:700 15px inherit;cursor:pointer}
+/* footer */
+.ft{background:var(--foot);color:#fff;text-align:center;padding:52px 16px 34px;font-size:12px;font-weight:500;line-height:1.55}
+.ft .flogo{width:140px;margin:0 auto 26px}
+.ft .links{margin-top:14px;display:flex;justify-content:center;gap:16px}
+.ft .links a:last-child{font-weight:700}
+/* toast */
+.toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%) translateY(20px);background:rgba(20,20,20,.92);color:#fff;padding:12px 20px;border-radius:6px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:200;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* sub page (consulting) */
+.sub-hero{height:900px;background:url(img/sub_hero.jpg) center/cover;position:relative;display:flex;align-items:flex-end}
+.sub-hero::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.3)}
+.sub-hero .t{position:relative;color:#fff;padding:0 16px 160px}
+.sub-hero h1{font-size:72px;font-weight:400;line-height:1.1}
+.sub-hero p{font-weight:700;font-size:14px;margin-top:6px}
+.svc{background:#b7b7b7;padding:200px 16px 250px}
+.svc+.svc{padding-top:0}
+.svc h2{text-align:center;color:#fff;font-size:34px;font-weight:400;letter-spacing:6px}
+.svc .sub2{text-align:center;color:#fff;font-size:14px;margin:2px 0 100px}
+.cards{max-width:977px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+.cards div{min-height:328px;padding:58px 20px 20px;color:#fff;font-size:14px;font-weight:500}
+.cards h4{font:italic 400 30px Georgia,"Times New Roman",serif;line-height:1}
+.cards em{display:block;font-style:normal;font-size:15px;margin:10px 0 36px}
+.c-red div:nth-child(1){background:#c24c66}.c-red div:nth-child(2){background:#b4475f}.c-red div:nth-child(3){background:#a7445a}
+.c-blue div:nth-child(1){background:#4d97c0}.c-blue div:nth-child(2){background:#4787ad}.c-blue div:nth-child(3){background:#447a98}
+@media (max-width:768px){
+  .hd-top{height:70px;border:0}
+  .hd-top .logo img{width:124px}
+  .hd-util{right:16px;height:70px;gap:16px}
+  .hd-util .pc-only,.hd-nav{display:none}
+  .mob-only{display:block}
+  .hd-top .ham{position:absolute;left:14px;top:22px}
+  .hero{height:670px}
+  .slide img{width:92%}
+  .hero .arr,.scroll-ico{display:none}
+  .greet{flex-direction:column;align-items:stretch;padding:40px 16px 0}
+  .greet .txt{padding-bottom:20px}
+  .greet .quote{font-size:16px}
+  .ceo{display:none}
+  .ceo-m{display:block;width:100%;margin-top:10px}
+  .sub-hero{height:600px}
+  .sub-hero h1{font-size:40px}
+  .svc{padding:100px 16px 120px}
+  .svc .sub2{margin-bottom:50px}
+  .cards{grid-template-columns:1fr}
+  .cards div{min-height:0;padding:34px 20px 40px}
+}
