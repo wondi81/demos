@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F4F5F7">
+<title>카밋 지역 카미팅 데모</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='7' fill='%2315181D'/%3E%3Cpath d='M5 15l1.6-4.2A2 2 0 0 1 8.5 9.5h7a2 2 0 0 1 1.9 1.3L19 15v2H5z' fill='%23F0552B'/%3E%3C/svg%3E">
+</head>
+<body>
+<div class="notice">샘플 데모 · 가상 데이터 · 실제 회원·모임 아님</div>
+<div class="phone">
+  <header class="hd">
+    <button class="region" id="regionBtn" aria-haspopup="dialog"><span id="regionName"></span><svg class="ic sm" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+    <button class="bell" id="bellBtn" aria-label="알림 1건"><svg class="ic" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span class="badge" id="badge">1</span></button>
+  </header>
+  <div class="views">
+    <section class="view on" id="v-home" aria-label="홈"></section>
+    <section class="view" id="v-meet" aria-label="모임"></section>
+    <section class="view" id="v-board" aria-label="게시판"></section>
+    <section class="view" id="v-me" aria-label="내 정보"></section>
+    <div class="page" id="page" hidden></div>
+    <div class="sheet-bg" id="sheet" hidden></div>
+  </div>
+  <nav class="tabs" aria-label="하단 메뉴">
+    <button class="on" data-tab="home" aria-current="page"><svg class="ic" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/></svg>홈</button>
+    <button data-tab="meet"><svg class="ic" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>모임</button>
+    <button data-tab="board"><svg class="ic" viewBox="0 0 24 24"><path d="M5 5h14v11H9l-4 4z"/><path d="M9 9.5h6M9 12.5h4"/></svg>게시판</button>
+    <button data-tab="me"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg>내 정보</button>
+  </nav>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
