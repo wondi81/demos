@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>실시간 Q&amp;A·투표 데모</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232f5bea'/%3E%3Cpath d='M6 8h12v7h-6l-4 3v-3H6z' fill='white'/%3E%3C/svg%3E">
+<style>
+:root{--ac:#2f5bea;--ac-soft:#eef2fe;--ink:#111827;--mut:#6b7280;--line:#e5e7eb;--soft:#f7f8fa;--bg:#fff;--ok:#127a46}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;overflow-x:hidden}
+button,input,textarea{font:inherit;color:inherit}
+.notice{background:var(--soft);border-bottom:1px solid var(--line);color:var(--mut);font-size:12.5px;text-align:center;padding:6px 16px}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);max-width:1200px;margin:0 auto}
+.brand{display:flex;gap:10px;align-items:center;min-width:0}
+.logo{width:30px;height:30px;border-radius:8px;background:var(--ac);flex:none;position:relative}
+.logo:after{content:"";position:absolute;inset:9px 7px 10px;background:#fff;border-radius:2px}
+.brand b{font-size:16px;display:block}
+.brand small{color:var(--mut);font-size:12.5px;display:block}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 13px;cursor:pointer;font-weight:600;font-size:14px;min-height:38px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;color:var(--ink)}
+.btn:hover{border-color:#cbd2dc}
+.btn.primary{background:var(--ac);border-color:var(--ac);color:#fff}
+.btn.primary:hover{background:#2449c9}
+.btn.sm{padding:4px 9px;min-height:30px;font-size:13px;font-weight:600}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--mut)}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+main{max-width:1200px;margin:0 auto;padding:20px 16px 32px}
+.narrow{max-width:640px;margin:0 auto}
+.card{border:1px solid var(--line);border-radius:12px;padding:18px;background:#fff;min-width:0}
+h1{font-size:22px;margin:0 0 4px;line-height:1.3}
+h2{font-size:16px;margin:0;display:flex;align-items:center;gap:8px}
+.mut{color:var(--mut)}
+label.f{display:block;font-size:13px;font-weight:600;margin:14px 0 6px}
+input[type=text],input[type=tel],textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:#fff;font-size:16px}
+textarea{resize:vertical;min-height:76px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row>input{flex:1;min-width:0}
+.evhead{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.code{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.code span{font-size:12.5px;color:var(--mut);line-height:1.3}
+.code b{font-size:26px;letter-spacing:.12em;font-variant-numeric:tabular-nums;color:var(--ac)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.stat{background:var(--soft);border-radius:10px;padding:12px 14px;min-width:0}
+.stat span{font-size:12.5px;color:var(--mut);display:block}
+.stat b{font-size:24px;font-variant-numeric:tabular-nums}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;cursor:pointer;font-size:14px}
+.tab[aria-selected=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.sessions{margin-bottom:16px}
+.sessions form{max-width:420px}
+.cols{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:900px){.cols{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}}
+@media(max-width:600px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.code b{font-size:22px}}
+.head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;padding:2px}
+.seg button{border:0;background:none;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:13px;color:var(--mut)}
+.seg button[aria-pressed=true]{background:var(--ac-soft);color:var(--ac);font-weight:700}
+ul.q{list-style:none;margin:0;padding:0}
+ul.q li{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line);animation:in .25s ease-out}
+ul.q li:first-child{border-top:0}
+@keyframes in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){ul.q li{animation:none}.bar i{transition:none!important}}
+.q .body{flex:1;min-width:0}
+.q p{margin:0 0 4px;overflow-wrap:anywhere;word-break:keep-all}
+.q .meta{font-size:12.5px;color:var(--mut);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.q .tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.q li.hidden{opacity:.5}
+.q li.done p{color:var(--mut)}
+.tag{font-size:11.5px;font-weight:700;border-radius:4px;padding:1px 6px}
+.tag.ok{background:#e7f6ee;color:var(--ok)}
+.tag.off{background:var(--soft);color:var(--mut)}
+.like{flex:none;width:52px;border:1px solid var(--line);border-radius:10px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 0;cursor:pointer;font-weight:700;font-variant-numeric:tabular-nums;height:52px}
+.like svg{width:14px;height:14px}
+.like[aria-pressed=true]{border-color:var(--ac);color:var(--ac);background:var(--ac-soft)}
+.like:disabled{cursor:default}
+.empty{color:var(--mut);font-size:14px;padding:18px 0;text-align:center}
+.poll{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
+.poll h3{font-size:15px;margin:0 0 10px;overflow-wrap:anywhere}
+.opt{margin-bottom:9px}
+.opt .lbl{display:flex;justify-content:space-between;gap:8px;font-size:14px;margin-bottom:3px}
+.opt .lbl span:first-child{overflow-wrap:anywhere;min-width:0}
+.opt .lbl span:last-child{font-variant-numeric:tabular-nums;color:var(--mut);flex:none}
+.bar{height:10px;background:var(--soft);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ac);border-radius:999px;transition:width .4s ease}
+.vote{display:block;width:100%;text-align:left;border:1px solid var(--line);border-radius:10px;background:#fff;padding:11px 13px;margin-bottom:8px;cursor:pointer;font-size:15px}
+.vote:hover{border-color:var(--ac)}
+.opts input{margin-bottom:6px}
+.radios{display:flex;gap:16px;flex-wrap:wrap;margin:4px 0 8px;font-size:14px}
+.radios label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.big{font-size:28px!important;letter-spacing:.3em;text-align:center;font-variant-numeric:tabular-nums}
+.stack>*+*{margin-top:16px}
+.err{color:#b42318;font-size:13.5px;min-height:20px;margin-top:6px}
+footer{border-top:1px solid var(--line);color:var(--mut);font-size:13px;text-align:center;padding:16px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:8px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100% - 32px)}
+.toast.on{opacity:1}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div class="notice" role="note">제안용 작동 데모 · 가상 데이터 · 실제 운영 실적 아님</div>
+<header class="top">
+  <div class="brand"><span class="logo" aria-hidden="true"></span><div><b>라이브 Q&amp;A·투표</b><small id="roleLbl"></small></div></div>
+  <div class="acts" id="acts"></div>
+</header>
+<main id="app"></main>
+<footer>데모는 브라우저 안에서만 동기화됩니다. 실제 개발은 Node 웹소켓 서버와 MySQL로 여러 기기에서 동시에 동작합니다.</footer>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const qs = new URLSearchParams(location.search);
+const VIEW = qs.get('view') === 'join' ? 'join' : 'host';
+const KEY = 'live-qa-poll-v1';
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Math.random().toString(36).slice(2, 10);
+const empty = () => ({v:0, event:null, sessions:[], sid:null, questions:[], polls:[], people:{}});
+
+// 모든 탭이 같은 리듀서로 같은 액션을 적용한다. 실제 개발에서는 이 역할을 서버가 맡는다.
+function reduce(s, a){
+  s = JSON.parse(JSON.stringify(s)); s.v++;
+  const q = s.questions.find(x => x.id === a.id), p = s.polls.find(x => x.id === a.id);
+  switch(a.t){
+    case 'event': return {...empty(), v:s.v, event:{name:a.name, code:a.code}, sessions:[{id:a.sid, name:a.session}], sid:a.sid};
+    case 'session': s.sessions.push({id:a.id, name:a.name}); s.sid = a.id; break;
+    case 'select': s.sid = a.id; break;
+    case 'join': s.people[a.pid] = a.name; break;
+    case 'ask': s.questions.push({id:a.id, sid:a.sid, text:a.text, by:a.by, at:a.at, likes:[], done:false, hidden:false}); break;
+    case 'like': if(q){ const i = q.likes.indexOf(a.pid); i < 0 ? q.likes.push(a.pid) : q.likes.splice(i, 1); } break;
+    case 'done': if(q) q.done = !q.done; break;
+    case 'hide': if(q) q.hidden = !q.hidden; break;
+    case 'poll': s.polls.push({id:a.id, sid:a.sid, q:a.q, opts:a.opts, votes:{}, open:true}); break;
+    case 'close': if(p) p.open = false; break;
+    case 'vote': if(p && p.open && a.opt >= 0 && a.opt < p.opts.length) p.votes[a.pid] = a.opt; break;
+    case 'reset': return {...empty(), v:s.v};
+  }
+  return s;
+}
+
+function load(){ try { return JSON.parse(localStorage.getItem(KEY)) || empty(); } catch(e){ return empty(); } }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
+let state = load();
+const ch = 'BroadcastChannel' in window ? new BroadcastChannel('live-qa-poll') : null;
+function dispatch(a){ state = reduce(state, a); save(); if(ch) ch.postMessage({type:'act', a}); render(); }
+if(ch){
+  ch.onmessage = ({data:m}) => {
+    if(m.type === 'act'){ state = reduce(state, m.a); save(); render(); }
+    else if(m.type === 'hello') ch.postMessage({type:'state', s:state});
+    else if(m.type === 'state' && m.s.v > state.v){ state = m.s; save(); render(); }
+  };
+  ch.postMessage({type:'hello'});
+}
+
+// 참여자 탭마다 고유 ID (탭을 닫으면 사라짐)
+let me = {pid:'p-' + uid(), code:qs.get('code') || ''};
+try { me = JSON.parse(sessionStorage.getItem(KEY + '-me')) || me; } catch(e){}
+const saveMe = () => { try { sessionStorage.setItem(KEY + '-me', JSON.stringify(me)); } catch(e){} };
+let sortBy = 'likes', screen = '';
+
+const ICON_UP = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3l5 6H9.5v4h-3V9H3z" fill="currentColor"/></svg>';
+function toast(t){ const el = $('toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('on'), 2200); }
+const cur = () => state.sessions.find(x => x.id === state.sid);
+const sessQs = () => state.questions.filter(x => x.sid === state.sid);
+const sessPolls = () => state.polls.filter(x => x.sid === state.sid);
+const sorted = list => [...list].sort(sortBy === 'likes' ? (a, b) => b.likes.length - a.likes.length || b.at - a.at : (a, b) => b.at - a.at);
+const ago = t => { const s = Math.max(0, Math.round((Date.now() - t) / 1000)); return s < 60 ? '방금' : s < 3600 ? Math.floor(s / 60) + '분 전' : Math.floor(s / 3600) + '시간 전'; };
+const joinUrl = () => location.pathname + '?view=join' + (state.event ? '&code=' + state.event.code : '');
+
+function pollResult(p){
+  const n = Object.keys(p.votes).length, cnt = p.opts.map((_, i) => Object.values(p.votes).filter(v => v === i).length);
+  return '<h3>' + esc(p.q) + '</h3>' + p.opts.map((o, i) => {
+    const pct = n ? Math.round(cnt[i] / n * 100) : 0;
+    return '<div class="opt"><div class="lbl"><span>' + esc(o) + '</span><span>' + cnt[i] + '표 · ' + pct + '%</span></div><div class="bar"><i style="width:' + pct + '%"></i></div></div>';
+  }).join('') + '<p class="mut" style="font-size:13px;margin:6px 0 0">응답 ' + n + '명 · ' + (p.open ? '진행 중' : '마감됨') + '</p>';
+}
+function qItem(x, host){
+  const liked = x.likes.includes(me.pid);
+  return '<li class="' + (x.hidden ? 'hidden ' : '') + (x.done ? 'done' : '') + '">' +
+    '<button class="like" data-like="' + x.id + '" aria-pressed="' + liked + '" aria-label="좋아요 ' + x.likes.length + '"' + (host ? ' disabled' : '') + '>' + ICON_UP + x.likes.length + '</button>' +
+    '<div class="body"><p>' + esc(x.text) + '</p><div class="meta"><span>' + esc(x.by) + '</span><span>' + ago(x.at) + '</span>' +
+    (x.done ? '<span class="tag ok">답변 완료</span>' : '') + (x.hidden ? '<span class="tag off">숨김</span>' : '') + '</div>' +
+    (host ? '<div class="tools"><button class="btn sm" data-done="' + x.id + '">' + (x.done ? '답변 취소' : '답변 완료') + '</button><button class="btn sm ghost" data-hide="' + x.id + '">' + (x.hidden ? '다시 보이기' : '숨기기') + '</button></div>' : '') +
+    '</div></li>';
+}
+const segHtml = () => '<div class="seg" role="group" aria-label="정렬"><button data-sort="likes" aria-pressed="' + (sortBy === 'likes') + '">좋아요순</button><button data-sort="new" aria-pressed="' + (sortBy === 'new') + '">최신순</button></div>';
+
+/* ---------- 화면 골격 (화면이 바뀔 때만 다시 그린다: 입력 중인 글이 지워지지 않게) ---------- */
+const SCREENS = {
+  setup: () => '<div class="narrow card"><h1>행사 만들기</h1><p class="mut" style="margin:0">행사를 만들면 참여자가 입력할 6자리 코드가 생깁니다.</p>' +
+    '<form id="fEvent"><label class="f" for="evName">행사 이름</label><input type="text" id="evName" required maxlength="60" value="2026 하반기 사내 타운홀">' +
+    '<label class="f" for="evSess">첫 세션 이름</label><input type="text" id="evSess" required maxlength="40" value="대표 인사말">' +
+    '<div style="margin-top:18px"><button class="btn primary">행사 만들고 코드 받기</button></div></form></div>',
+  host: () => '<div class="evhead"><div><h1 id="evTitle"></h1><p class="mut" style="margin:0">참여자는 코드를 입력해 질문하고 투표합니다.</p></div>' +
+    '<div class="code"><span>참여<br>코드</span><b id="evCode"></b></div></div>' +
+    '<div class="stats" id="stats"></div>' +
+    '<div class="sessions"><div class="tabs" id="stabs" role="tablist" aria-label="세션"></div>' +
+    '<form id="fSession" class="row"><label class="sr" for="sName">새 세션 이름</label><input type="text" id="sName" placeholder="새 세션 이름" maxlength="40" required><button class="btn">세션 추가</button></form></div>' +
+    '<div class="cols"><section class="card"><div class="head"><h2>질문 <span class="mut" id="qCount"></span></h2><span id="segH"></span></div><ul class="q" id="qlist" aria-live="polite"></ul></section>' +
+    '<section class="card"><h2>투표</h2><form id="fPoll"><label class="f" for="pQ">투표 질문</label><input type="text" id="pQ" maxlength="80" required placeholder="예: 다음 세션 주제로 무엇이 좋을까요?">' +
+    '<label class="f">보기</label><div class="opts" id="pOpts"><input type="text" placeholder="보기 1" maxlength="40"><input type="text" placeholder="보기 2" maxlength="40"><input type="text" placeholder="보기 3" maxlength="40"></div>' +
+    '<div class="row"><button type="button" class="btn sm" id="addOpt">보기 추가</button><button class="btn primary">투표 시작</button></div></form><div id="plist"></div></section></div>' +
+    '<p style="margin-top:20px"><button class="btn sm ghost" id="reset">데모 초기화</button></p>',
+  code: () => '<div class="narrow card"><h1>참여 코드 입력</h1><p class="mut" style="margin:0">진행자 화면에 보이는 6자리 숫자를 입력하세요.</p>' +
+    '<form id="fCode"><label class="f" for="cIn">참여 코드</label><input type="tel" id="cIn" class="big" inputmode="numeric" maxlength="6" autocomplete="off" value="' + esc(me.code) + '">' +
+    '<div class="err" id="cErr" role="alert"></div><button class="btn primary" style="width:100%;justify-content:center">입장하기</button></form></div>',
+  room: () => '<div class="narrow stack"><div><h1 id="jTitle"></h1><p class="mut" style="margin:0">지금 세션: <b id="jSess"></b></p></div>' +
+    '<section class="card"><h2>질문하기</h2><form id="fAsk"><div class="radios" role="radiogroup" aria-label="표시 이름">' +
+    '<label><input type="radio" name="who" value="anon" checked> 익명</label><label><input type="radio" name="who" value="name"> 이름 표시</label></div>' +
+    '<label class="sr" for="aName">이름</label><input type="text" id="aName" maxlength="20" placeholder="이름" hidden style="margin-bottom:8px">' +
+    '<label class="sr" for="aText">질문 내용</label><textarea id="aText" maxlength="200" required placeholder="궁금한 점을 적어 주세요"></textarea>' +
+    '<div class="row" style="justify-content:flex-end;margin-top:8px"><button class="btn primary">질문 보내기</button></div></form></section>' +
+    '<div id="jPolls"></div>' +
+    '<section class="card"><div class="head"><h2>질문 목록 <span class="mut" id="jCount"></span></h2><span id="segJ"></span></div><ul class="q" id="jq" aria-live="polite"></ul></section></div>'
+};
+
+function render(){
+  let want;
+  if(VIEW === 'host') want = state.event ? 'host' : 'setup';
+  else want = state.event && me.code === state.event.code ? 'room' : 'code';
+  if(want !== screen){ screen = want; $('app').innerHTML = SCREENS[want](); }
+  const s = state;
+  if(want === 'host'){
+    $('evTitle').textContent = s.event.name;
+    $('evCode').textContent = s.event.code;
+    const qsAll = s.questions, people = Object.keys(s.people).length, last = sessPolls().slice(-1)[0];
+    const voted = last ? Object.keys(last.votes).length : 0;
+    $('stats').innerHTML = [['참여자', people], ['질문 (전체)', qsAll.length], ['최근 투표 응답률', last && people ? Math.round(voted / people * 100) + '%' : '–'], ['답변 완료', qsAll.filter(x => x.done).length]]
+      .map(([k, v]) => '<div class="stat"><span>' + k + '</span><b>' + v + '</b></div>').join('');
+    $('stabs').innerHTML = s.sessions.map(x => '<button class="tab" role="tab" data-sid="' + x.id + '" aria-selected="' + (x.id === s.sid) + '">' + esc(x.name) + ' <span class="mut">' + s.questions.filter(q => q.sid === x.id).length + '</span></button>').join('');
+    const list = sorted(sessQs());
+    $('qCount').textContent = list.length;
+    $('segH').innerHTML = segHtml();
+    $('qlist').innerHTML = list.length ? list.map(x => qItem(x, true)).join('') : '<li class="empty">아직 질문이 없습니다. 참여자 화면을 열거나 가상 참여자를 투입해 보세요.</li>';
+    $('plist').innerHTML = sessPolls().slice().reverse().map(p => '<div class="poll">' + pollResult(p) + (p.open ? '<p style="margin:8px 0 0"><button class="btn sm" data-close="' + p.id + '">투표 마감</button></p>' : '') + '</div>').join('');
+  } else if(want === 'room'){
+    if(!(me.pid in s.people)) return dispatch({t:'join', pid:me.pid, name:'익명'});
+    $('jTitle').textContent = s.event.name;
+    $('jSess').textContent = cur() ? cur().name : '';
+    const list = sorted(sessQs().filter(x => !x.hidden));
+    $('jCount').textContent = list.length;
+    $('segJ').innerHTML = segHtml();
+    $('jq').innerHTML = list.length ? list.map(x => qItem(x, false)).join('') : '<li class="empty">첫 질문을 남겨 보세요.</li>';
+    $('jPolls').innerHTML = sessPolls().filter(p => p.open || p.votes[me.pid] !== undefined).reverse().map(p => {
+      const mine = p.votes[me.pid];
+      return '<section class="card"><h2>투표</h2><div class="poll" style="border:0;margin:0;padding-top:10px">' + (mine === undefined && p.open
+        ? '<h3>' + esc(p.q) + '</h3>' + p.opts.map((o, i) => '<button class="vote" data-vote="' + p.id + '" data-opt="' + i + '">' + esc(o) + '</button>').join('')
+        : pollResult(p) + (p.open ? '<p class="mut" style="font-size:13px;margin:4px 0 0">내 선택: ' + esc(p.opts[mine]) + ' · 다시 누르면 바꿀 수 있습니다</p>' + p.opts.map((o, i) => '<button class="btn sm" style="margin:6px 6px 0 0" data-vote="' + p.id + '" data-opt="' + i + '">' + esc(o) + '</button>').join('') : '')) + '</div></section>';
+    }).join('');
+  }
+}
+
+/* ---------- 상단 버튼 ---------- */
+if(VIEW === 'host'){
+  $('roleLbl').textContent = '진행자 화면';
+  $('acts').innerHTML = '<button class="btn primary" id="openJoin">참여자 화면 새 탭으로 열기</button><button class="btn" id="sim">가상 참여자 10명 투입</button>';
+  $('openJoin').onclick = () => window.open(joinUrl(), '_blank');
+  $('sim').onclick = simulate;
+} else {
+  $('roleLbl').textContent = '참여자 화면';
+  $('acts').innerHTML = '<a class="btn" href="' + location.pathname + '">진행자 화면</a>';
+}
+
+/* ---------- 이벤트 ---------- */
+document.addEventListener('submit', e => {
+  e.preventDefault();
+  const f = e.target.id;
+  if(f === 'fEvent'){
+    dispatch({t:'event', name:$('evName').value.trim(), session:$('evSess').value.trim(), sid:uid(), code:String(100000 + Math.floor(Math.random() * 900000))});
+    toast('행사가 만들어졌습니다. 참여 코드를 공유하세요.');
+  } else if(f === 'fSession'){
+    const n = $('sName').value.trim(); if(!n) return;
+    dispatch({t:'session', id:uid(), name:n}); $('sName').value = '';
+  } else if(f === 'fPoll'){
+    const opts = [...$('pOpts').querySelectorAll('input')].map(i => i.value.trim()).filter(Boolean);
+    if(opts.length < 2) return toast('보기를 2개 이상 입력하세요.');
+    dispatch({t:'poll', id:uid(), sid:state.sid, q:$('pQ').value.trim(), opts});
+    e.target.reset(); toast('투표가 시작됐습니다.');
+  } else if(f === 'fCode'){
+    const c = $('cIn').value.replace(/\D/g, '');
+    if(!state.event){ $('cErr').textContent = '진행 중인 행사가 없습니다. 진행자 화면에서 행사를 먼저 만들어 주세요.'; return; }
+    if(c !== state.event.code){ $('cErr').textContent = '코드가 맞지 않습니다. 다시 확인해 주세요.'; return; }
+    me.code = c; saveMe(); render();
+  } else if(f === 'fAsk'){
+    const text = $('aText').value.trim(); if(!text) return;
+    const named = document.querySelector('input[name=who]:checked').value === 'name' && $('aName').value.trim();
+    const by = named || '익명';
+    if(state.people[me.pid] !== by) dispatch({t:'join', pid:me.pid, name:by});
+    dispatch({t:'ask', id:uid(), sid:state.sid, text, by, at:Date.now()});
+    $('aText').value = ''; toast('질문을 보냈습니다.');
+  }
+});
+document.addEventListener('change', e => { if(e.target.name === 'who'){ $('aName').hidden = e.target.value !== 'name'; if(!$('aName').hidden) $('aName').focus(); } });
+document.addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  const d = b.dataset;
+  if(d.sort){ sortBy = d.sort; render(); }
+  else if(d.sid) dispatch({t:'select', id:d.sid});
+  else if(d.like) dispatch({t:'like', id:d.like, pid:me.pid});
+  else if(d.done) dispatch({t:'done', id:d.done});
+  else if(d.hide) dispatch({t:'hide', id:d.hide});
+  else if(d.close) dispatch({t:'close', id:d.close});
+  else if(d.vote) dispatch({t:'vote', id:d.vote, pid:me.pid, opt:+d.opt});
+  else if(b.id === 'addOpt'){ const o = $('pOpts'); if(o.children.length < 6) o.insertAdjacentHTML('beforeend', '<input type="text" placeholder="보기 ' + (o.children.length + 1) + '" maxlength="40">'); }
+  else if(b.id === 'reset' && confirm('모든 데이터를 지우고 처음으로 돌아갈까요?')) dispatch({t:'reset'});
+});
+
+/* ---------- 가상 참여자 ---------- */
+const NAMES = ['김민준', '이서연', '박지훈', '최유나', '정하준', '강수빈', '조도윤', '윤지아', '장현우', '임채원'];
+const SAMPLE_Q = ['신규 서비스 출시 일정은 언제쯤인가요?', '재택근무 제도는 내년에도 유지되나요?', '오늘 발표 자료를 따로 받을 수 있을까요?', '하반기 채용 계획이 궁금합니다.', '팀 간 협업 도구를 통일할 계획이 있나요?', '교육 지원 예산은 어떻게 신청하나요?', '이번 분기 목표 달성률은 어느 정도인가요?'];
+function simulate(){
+  if(!state.event) return toast('먼저 행사를 만들어 주세요.');
+  const btn = $('sim'); btn.disabled = true;
+  const sid = state.sid, tag = uid(), pids = NAMES.map((_, i) => 'sim-' + tag + '-' + i);
+  let poll = sessPolls().find(p => p.open);
+  if(!poll){
+    const id = uid();
+    dispatch({t:'poll', id, sid, q:'오늘 가장 듣고 싶은 주제는 무엇인가요?', opts:['신규 사업 방향', '조직·인사 제도', '복지·근무 환경', '성과 공유']});
+    poll = {id, opts:[0, 1, 2, 3]};
+  }
+  const at = (ms, fn) => setTimeout(fn, ms), rnd = n => Math.floor(Math.random() * n);
+  const qs7 = [...SAMPLE_Q].sort(() => Math.random() - .5).slice(0, 6);
+  pids.forEach((pid, i) => {
+    const name = i % 3 === 0 ? '익명' : NAMES[i];
+    at(i * 200, () => dispatch({t:'join', pid, name}));
+    if(i < qs7.length) at(700 + i * 650, () => dispatch({t:'ask', id:uid(), sid, text:qs7[i], by:name, at:Date.now()}));
+    at(1500 + rnd(4500), () => dispatch({t:'vote', id:poll.id, pid, opt:rnd(10) < 4 ? 0 : rnd(poll.opts.length)}));
+  });
+  for(let k = 0; k < 24; k++) at(2000 + k * 200, () => {
+    const list = state.questions.filter(x => x.sid === sid && !x.hidden); if(!list.length) return;
+    const q = list[rnd(list.length)], pid = pids[rnd(pids.length)];
+    if(!q.likes.includes(pid)) dispatch({t:'like', id:q.id, pid});
+  });
+  at(7200, () => { btn.disabled = false; toast('가상 참여자 10명이 질문·좋아요·투표를 마쳤습니다.'); });
+}
+
+setInterval(() => { if(screen === 'host' || screen === 'room') render(); }, 30000); // 'n분 전' 갱신
+render();
+</script>
+</body>
+</html>
