@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SFTS 위험예측 모바일 데모</title>
+<meta name="description" content="제주 4개 지점 SFTS 14일 위험예측 모바일 대시보드 데모(가상 데이터)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%230f766e'/%3E%3Cpath d='M5 16l4-5 3 3 5-7' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{--ac:#0f766e;--ac-soft:#e6f4f2;--ink:#111827;--mut:#6b7280;--line:#e5e7eb;--soft:#f7f8fa;--bg:#fff;
+--l0:#2563eb;--l0s:#eaf0fe;--l1:#a16207;--l1s:#fdf6d8;--l2:#c2410c;--l2s:#fdeee4;--l3:#b91c1c;--l3s:#fde8e8}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;overflow-x:hidden}
+button,input{font:inherit;color:inherit}
+.notice{background:#fff7e6;border-bottom:1px solid #f3dfb4;color:#7a5200;font-size:12.5px;font-weight:600;text-align:center;padding:6px 16px}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);max-width:1200px;margin:0 auto}
+.brand{display:flex;gap:10px;align-items:center;min-width:0}
+.logo{width:30px;height:30px;border-radius:8px;background:var(--ac);flex:none;display:grid;place-items:center}
+.brand b{font-size:16px;display:block;line-height:1.3}
+.brand small{color:var(--mut);font-size:12.5px;display:block}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 13px;cursor:pointer;font-weight:600;font-size:14px;min-height:40px;display:inline-flex;align-items:center;gap:6px;color:var(--ink)}
+.btn:hover{border-color:#cbd2dc}
+.btn.primary{background:var(--ac);border-color:var(--ac);color:#fff}
+.btn.primary:hover{background:#0b5f58}
+.btn:focus-visible,input:focus-visible,summary:focus-visible,.tab:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+main{max-width:1200px;margin:0 auto;padding:16px 16px 32px}
+.card{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fff;min-width:0;margin-bottom:14px}
+h2{font-size:16px;margin:0 0 2px}
+.sub{color:var(--mut);font-size:12.5px;margin:0 0 12px}
+.mut{color:var(--mut)}
+.sum{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+@media(min-width:760px){.sum{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.sc{border:1px solid var(--line);border-left:5px solid var(--c);border-radius:12px;padding:12px;background:var(--cs);min-width:0}
+.sc .nm{font-weight:700;font-size:15px}
+.sc .pct{font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.15;margin:4px 0 2px;color:var(--c)}
+.sc .pct small{font-size:15px;font-weight:700}
+.sc .wx{font-size:12.5px;color:#374151}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:700;color:var(--c);background:#fff;border:1px solid var(--c);border-radius:999px;padding:1px 8px 1px 6px;white-space:nowrap}
+.badge svg{flex:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12.5px;color:var(--mut);margin:0 0 10px;padding:0;list-style:none}
+.legend li{display:inline-flex;align-items:center;gap:5px}
+.grid2{display:grid;grid-template-columns:1fr;gap:0 14px}
+@media(min-width:960px){.grid2{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.chart{width:100%;min-height:40px}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font-size:11px;fill:var(--mut)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;cursor:pointer;font-size:14px;min-height:36px}
+.tab[aria-selected=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+details.card{padding:0}
+details.card>summary{list-style:none;cursor:pointer;padding:16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary:after{content:"";width:9px;height:9px;border-right:2px solid var(--mut);border-bottom:2px solid var(--mut);transform:rotate(45deg);flex:none;margin-top:-4px;transition:transform .15s}
+details[open].card>summary:after{transform:rotate(-135deg);margin-top:4px}
+details.card>summary .sub{margin:0}
+.body{padding:0 16px 16px}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{background:var(--soft);font-weight:600;color:#374151;position:sticky;top:0}
+th:first-child,td:first-child{text-align:left}
+td:last-child,th:last-child{text-align:left}
+tr:last-child td{border-bottom:0}
+@media(max-width:430px){th,td{padding:7px 5px;font-size:12.5px}.badge{padding:1px 6px 1px 5px}}
+.sim{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:760px){.sim{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:center}}
+.sl{margin-bottom:14px}
+.sl label{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600;margin-bottom:4px}
+.sl label output{font-variant-numeric:tabular-nums;color:var(--ac)}
+input[type=range]{width:100%;accent-color:var(--ac);height:28px;margin:0}
+.res{border-radius:12px;padding:16px;background:var(--cs);border:1px solid var(--line);border-left:5px solid var(--c);text-align:center}
+.res .pct{font-size:44px;font-weight:800;color:var(--c);font-variant-numeric:tabular-nums;line-height:1.1}
+.meter{height:10px;border-radius:5px;background:linear-gradient(90deg,var(--l0) 0 25%,#d4a017 25% 50%,var(--l2) 50% 75%,var(--l3) 75%);position:relative;margin:12px 0 4px}
+.meter i{position:absolute;top:-4px;width:4px;height:18px;background:var(--ink);border-radius:2px;transform:translateX(-2px);border:1px solid #fff;box-sizing:content-box}
+.ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--mut)}
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.presets .btn{min-height:34px;padding:4px 10px;font-size:13px}
+.foot{color:var(--mut);font-size:13px;border-top:1px solid var(--line);padding-top:14px;margin-top:6px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="notice">가상 데이터 데모 — 실제 예측값 아님</div>
+<header class="top">
+  <div class="brand">
+    <div class="logo" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M3 17l5-6 4 4 7-9" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div><b>제주 SFTS 위험예측</b><small id="basedate"></small></div>
+  </div>
+  <button class="btn primary" id="csv" type="button"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>CSV 다운로드</button>
+</header>
+<main>
+  <section class="sum" id="sum" aria-label="지점별 오늘 위험도 요약"></section>
+
+  <div class="grid2">
+    <section class="card">
+      <h2>지점별 경보등급 비교</h2>
+      <p class="sub">오늘 기준 SFTS 발생 위험 확률</p>
+      <ul class="legend" id="lvLegend"></ul>
+      <div class="chart" id="cmp"></div>
+    </section>
+    <section class="card">
+      <h2>14일 위험도 추이</h2>
+      <p class="sub">4개 지점 위험 확률 변화</p>
+      <ul class="legend" id="stLegend"></ul>
+      <div class="chart" id="trend"></div>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2>지점별 14일 발생확률</h2>
+    <p class="sub">막대 색과 모양 표시는 해당일 경보 단계</p>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="chart" id="bars"></div>
+  </section>
+
+  <details class="card" id="tblBox">
+    <summary><div><h2>일자별 기상·위험도 표</h2><p class="sub">선택한 지점의 14일 상세</p></div></summary>
+    <div class="body"><div class="tw" id="tbl"></div></div>
+  </details>
+
+  <details class="card" id="simBox">
+    <summary><div><h2>실시간 위험도 시뮬레이터</h2><p class="sub">기온·습도·강수량을 바꾸면 바로 계산합니다</p></div></summary>
+    <div class="body" id="sim"></div>
+  </details>
+
+  <p class="foot">실제 개발은 기존 파이썬 수집·예측 코드를 그대로 FastAPI로 감싸고, 예측 결과를 미리 계산해 캐시해 두어 모바일 첫 화면을 1초대로 여는 구조입니다.</p>
+</main>
+<script id="data" type="application/json">{"base":"2026-10-22","stations":[{"name":"제주","days":[["10-22",23.0,76,0.0,43],["10-23",23.1,79,0.7,49],["10-24",21.7,80,0.0,39],["10-25",22.2,82,17.9,74],["10-26",21.0,80,0.0,34],["10-27",22.4,83,8.8,64],["10-28",22.5,76,3.9,45],["10-29",21.5,81,0.0,39],["10-30",20.7,78,0.7,31],["10-31",19.3,77,0.2,21],["11-01",20.6,74,0.0,24],["11-02",19.8,69,0.2,16],["11-03",20.0,70,0.1,18],["11-04",18.2,75,1.4,15]]},{"name":"서귀포","days":[["10-22",25.9,79,23.6,87],["10-23",25.3,77,0,61],["10-24",24.7,81,0.5,63],["10-25",23.6,82,3.8,61],["10-26",24.2,88,23.8,88],["10-27",23.7,80,0.0,54],["10-28",22.3,78,23.2,69],["10-29",22.4,82,23.4,74],["10-30",22.0,74,0.0,33],["10-31",21.6,74,23.2,59],["11-01",21.6,72,0.0,28],["11-02",20.2,72,36.8,23],["11-03",21.4,72,11.2,45],["11-04",21.5,77,0,34]]},{"name":"성산","days":[["10-22",24.7,83,1.3,67],["10-23",23.7,87,0.3,65],["10-24",23.1,90,0.0,64],["10-25",21.9,83,0.0,45],["10-26",22.8,84,0.0,53],["10-27",23.1,86,0.0,59],["10-28",22.2,82,0.7,47],["10-29",22.3,84,1.5,51],["10-30",21.7,76,0.0,34],["10-31",22.1,81,0.1,44],["11-01",20.8,74,4.3,31],["11-02",19.1,75,0.0,18],["11-03",19.7,80,0.3,26],["11-04",20.6,75,0,26]]},{"name":"고산","days":[["10-22",21.3,68,0.0,22],["10-23",21.1,71,16.9,51],["10-24",20.7,78,0.0,30],["10-25",20.1,77,16.3,52],["10-26",20.5,82,0.5,34],["10-27",19.2,76,0.0,19],["10-28",20.3,75,1.4,25],["10-29",20.4,76,0,26],["10-30",18.2,68,6.9,15],["10-31",18.5,69,0.0,11],["11-01",19.6,67,0.0,14],["11-02",17.1,64,3.5,7],["11-03",18.9,63,0.1,9],["11-04",17.3,64,0.0,6]]}]}</script>
+<script>
+const D=JSON.parse(document.getElementById('data').textContent);
+const LV=[{n:'관심',c:'--l0',s:'--l0s'},{n:'주의',c:'--l1',s:'--l1s'},{n:'경고',c:'--l2',s:'--l2s'},{n:'위험',c:'--l3',s:'--l3s'}];
+const lvOf=p=>p<25?0:p<50?1:p<75?2:3;
+const SHAPE=['<circle cx="6" cy="6" r="4.5"/>','<path d="M6 1.2L11 10.5H1z"/>','<path d="M6 .8L11.2 6 6 11.2.8 6z"/>','<path d="M1 1h10v10H1z"/><path d="M6 3.2v3.6M6 8.4v.4" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>'];
+const icon=(l,sz=12)=>`<svg width="${sz}" height="${sz}" viewBox="0 0 12 12" fill="var(${LV[l].c})" aria-hidden="true">${SHAPE[l]}</svg>`;
+const badge=l=>`<span class="badge" style="--c:var(${LV[l].c})">${icon(l)}${LV[l].n}</span>`;
+const ST_STYLE=[{c:'#111827',d:''},{c:'#2f5bea',d:'7 4'},{c:'#0f766e',d:'2 3'},{c:'#9333ea',d:'10 3 2 3'}];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let sel=0;
+
+document.getElementById('basedate').textContent=`기준일 ${D.base} · ASOS 4개 지점 · 2주 시차 예측`;
+document.getElementById('sum').innerHTML=D.stations.map(s=>{const[d,t,h,r,p]=s.days[0],l=lvOf(p);
+  return `<article class="sc" style="--c:var(${LV[l].c});--cs:var(${LV[l].s})"><div class="nm">${esc(s.name)}</div>${badge(l)}<div class="pct">${p}<small>%</small></div><div class="wx">${t}℃ · 습도 ${h}% · ${r}mm</div></article>`}).join('');
+document.getElementById('lvLegend').innerHTML=LV.map((v,i)=>`<li>${icon(i)}${v.n} ${['0~24','25~49','50~74','75~100'][i]}%</li>`).join('');
+document.getElementById('stLegend').innerHTML=D.stations.map((s,i)=>`<li><svg width="22" height="8" aria-hidden="true"><line x1="0" y1="4" x2="22" y2="4" stroke="${ST_STYLE[i].c}" stroke-width="2.5" stroke-dasharray="${ST_STYLE[i].d}"/></svg>${esc(s.name)}</li>`).join('');
+
+function W(el){return Math.max(280,el.clientWidth)}
+function drawCmp(){
+  const el=document.getElementById('cmp'),w=W(el),L=58,R=12,rh=34,H=D.stations.length*rh+24,x=v=>L+(w-L-R)*v/100;
+  let g=[0,25,50,75].map((a,i)=>`<rect x="${x(a)}" y="0" width="${x(a+25)-x(a)}" height="${H-20}" fill="var(${LV[i].s})"/>`).join('');
+  g+=[0,25,50,75,100].map(v=>`<text x="${x(v)}" y="${H-6}" text-anchor="middle">${v}</text>`).join('');
+  D.stations.forEach((s,i)=>{const p=s.days[0][4],l=lvOf(p),y=i*rh+6,bw=x(p)-L,inside=bw>78;
+    g+=`<text x="${L-8}" y="${y+16}" text-anchor="end" style="fill:var(--ink);font-size:13px;font-weight:600">${esc(s.name)}</text>`;
+    g+=`<rect x="${L}" y="${y+2}" width="${bw}" height="20" rx="4" fill="var(${LV[l].c})"/>`;
+    g+=`<text x="${inside?x(p)-6:x(p)+6}" y="${y+16}" text-anchor="${inside?'end':'start'}" style="fill:${inside?'#fff':'var(--ink)'};font-size:12px;font-weight:700">${p}% ${LV[l].n}</text>`;});
+  el.innerHTML=`<svg viewBox="0 0 ${w} ${H}" width="${w}" height="${H}" role="img" aria-label="지점별 오늘 위험 확률 비교">${g}</svg>`;
+}
+function axes(w,H,L,B,T,R){
+  const y=v=>T+(H-T-B)*(1-v/100);
+  let g=[0,25,50,75].map((a,i)=>`<rect x="${L}" y="${y(a+25)}" width="${w-L-R}" height="${y(a)-y(a+25)}" fill="var(${LV[i].s})"/>`).join('');
+  g+=[0,25,50,75,100].map(v=>`<text x="${L-6}" y="${y(v)+4}" text-anchor="end">${v}</text>`).join('');
+  return{g,y};
+}
+function drawTrend(){
+  const el=document.getElementById('trend'),w=W(el),H=230,L=30,R=10,T=8,B=24,n=14,{g:g0,y}=axes(w,H,L,B,T,R),x=i=>L+(w-L-R)*i/(n-1);
+  let g=g0,step=w<500?3:1;
+  for(let i=0;i<n;i+=step)g+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle">${D.stations[0].days[i][0].replace('-','/')}</text>`;
+  D.stations.forEach((s,k)=>{const pts=s.days.map((d,i)=>`${x(i).toFixed(1)},${y(d[4]).toFixed(1)}`).join(' ');
+    g+=`<polyline points="${pts}" fill="none" stroke="${ST_STYLE[k].c}" stroke-width="2.4" stroke-dasharray="${ST_STYLE[k].d}" stroke-linejoin="round"/>`;
+    g+=`<circle cx="${x(0)}" cy="${y(s.days[0][4])}" r="3.5" fill="${ST_STYLE[k].c}"/>`;});
+  el.innerHTML=`<svg viewBox="0 0 ${w} ${H}" width="${w}" height="${H}" role="img" aria-label="4개 지점 14일 위험 확률 추이">${g}</svg>`;
+}
+function drawBars(){
+  const el=document.getElementById('bars'),w=W(el),H=230,L=30,R=6,T=22,B=24,n=14,{g:g0,y}=axes(w,H,L,B,T,R),cw=(w-L-R)/n,bw=Math.min(34,cw*.68);
+  let g=g0;
+  D.stations[sel].days.forEach((d,i)=>{const p=d[4],l=lvOf(p),cx=L+cw*i+cw/2;
+    g+=`<rect x="${cx-bw/2}" y="${y(p)}" width="${bw}" height="${y(0)-y(p)}" rx="3" fill="var(${LV[l].c})"><title>${d[0]} ${p}% ${LV[l].n}</title></rect>`;
+    g+=`<g transform="translate(${cx-5},${y(p)-26}) scale(.85)" fill="var(${LV[l].c})">${SHAPE[l]}</g>`;
+    g+=`<text x="${cx}" y="${y(p)-4}" text-anchor="middle" style="fill:var(--ink);font-size:10.5px;font-weight:600">${p}</text>`;
+    if(w>=500||i%2==0)g+=`<text x="${cx}" y="${H-6}" text-anchor="middle">${d[0].slice(3)}</text>`;});
+  el.innerHTML=`<svg viewBox="0 0 ${w} ${H}" width="${w}" height="${H}" role="img" aria-label="${esc(D.stations[sel].name)} 14일 발생확률">${g}</svg>`;
+}
+function drawTable(){
+  const s=D.stations[sel];
+  document.getElementById('tbl').innerHTML=`<table><caption class="sr">${esc(s.name)} 일자별 기상과 위험도</caption><thead><tr><th>일자</th><th>기온℃</th><th>습도%</th><th>강수mm</th><th>확률</th><th>단계</th></tr></thead><tbody>${s.days.map(d=>`<tr><td>${d[0]}</td><td>${d[1]}</td><td>${d[2]}</td><td>${d[3]}</td><td><b>${d[4]}%</b></td><td>${badge(lvOf(d[4]))}</td></tr>`).join('')}</tbody></table>`;
+}
+document.getElementById('tabs').innerHTML=D.stations.map((s,i)=>`<button class="tab" role="tab" type="button" aria-selected="${i==0}" data-i="${i}">${esc(s.name)}</button>`).join('');
+document.getElementById('tabs').onclick=e=>{const b=e.target.closest('.tab');if(!b)return;sel=+b.dataset.i;
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t===b));drawBars();if(document.getElementById('tblBox').open)drawTable();
+  document.querySelector('#tblBox .sub').textContent=`${D.stations[sel].name} 14일 상세`;};
+
+// ponytail: 로지스틱 근사식, 실제 서비스에서는 GBM 모델 API 호출로 교체
+const risk=(t,h,r)=>100/(1+Math.exp(-(-12+.3*t+.06*h+1.5*Math.exp(-(((r-20)/15)**2)))));
+function buildSim(){
+  const box=document.getElementById('sim'),d=D.stations[0].days[0];
+  const S=[['t','평균기온','℃',5,35,.5,d[1]],['h','상대습도','%',30,100,1,d[2]],['r','일강수량','mm',0,80,1,d[3]]];
+  box.innerHTML=`<div class="sim"><div><div class="presets">${D.stations.map((s,i)=>`<button class="btn" type="button" data-p="${i}">${esc(s.name)} 오늘 값</button>`).join('')}</div>${S.map(([k,n,u,a,b,st,v])=>`<div class="sl"><label for="s_${k}">${n}<output id="o_${k}"></output></label><input type="range" id="s_${k}" min="${a}" max="${b}" step="${st}" value="${v}" data-u="${u}"></div>`).join('')}</div><div class="res" id="res" aria-live="polite"></div></div>`;
+  const upd=()=>{const v=k=>+document.getElementById('s_'+k).value;
+    S.forEach(([k,,u])=>document.getElementById('o_'+k).textContent=v(k)+u);
+    const p=Math.round(risk(v('t'),v('h'),v('r'))),l=lvOf(p),r=document.getElementById('res');
+    r.style.cssText=`--c:var(${LV[l].c});--cs:var(${LV[l].s})`;
+    r.innerHTML=`<div class="mut" style="font-size:13px">예상 위험 확률</div><div class="pct" id="simPct">${p}%</div>${badge(l)}<div class="meter"><i style="left:${p}%"></i></div><div class="ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div><p class="mut" style="font-size:12.5px;margin:10px 0 0">기온과 습도가 높을수록, 강수량이 20mm 안팎일 때 위험이 커집니다.</p>`;};
+  box.addEventListener('input',upd);
+  box.addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;const d=D.stations[+b.dataset.p].days[0];
+    [['t',d[1]],['h',d[2]],['r',d[3]]].forEach(([k,v])=>document.getElementById('s_'+k).value=v);upd();});
+  upd();
+}
+document.getElementById('tblBox').addEventListener('toggle',e=>{if(e.target.open)drawTable()});
+document.getElementById('simBox').addEventListener('toggle',e=>{if(e.target.open&&!document.getElementById('res'))buildSim()});
+
+document.getElementById('csv').onclick=()=>{
+  const rows=[['지점','일자','평균기온(℃)','상대습도(%)','강수량(mm)','위험확률(%)','경보단계']];
+  const y=D.base.slice(0,4);
+  D.stations.forEach(s=>s.days.forEach(d=>rows.push([s.name,`${y}-${d[0]}`,d[1],d[2],d[3],d[4],LV[lvOf(d[4])].n])));
+  const blob=new Blob(['﻿'+rows.map(r=>r.join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`sfts_risk_${D.base}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+};
+const drawAll=()=>{drawCmp();drawTrend();drawBars()};
+drawAll();
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(drawAll,120)});
+</script>
+</body>
+</html>
