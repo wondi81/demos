@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fabric Finder</title>
+<style>
+:root{--bg:#f6f4ef;--card:#fff;--ink:#1d1c1a;--mute:#6b675f;--line:#e2ddd3;--acc:#2f5d50;--acc2:#e8f0ec;--warn:#9a5b13}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,"Segoe UI",Roboto,"Noto Sans KR",sans-serif}
+.band{position:sticky;top:0;z-index:50;background:rgba(29,28,26,.55);color:#fff;text-align:center;font-size:12px;letter-spacing:.08em;padding:3px 0;backdrop-filter:blur(4px)}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;max-width:1240px;margin:0 auto}
+.logo{font-weight:700;font-size:18px;letter-spacing:-.01em}.logo span{color:var(--acc)}
+.cartbtn{border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:20px;padding:7px 14px;font-size:14px;cursor:pointer}
+main{max-width:1240px;margin:0 auto;padding:0 16px 60px;display:grid;grid-template-columns:1fr 300px;gap:24px}
+@media (max-width:900px){main{grid-template-columns:1fr}}
+.hero h1{font-size:26px;line-height:1.2;margin:8px 0 6px;letter-spacing:-.02em}
+.hero p{margin:0 0 14px;color:var(--mute)}
+.tabs{display:flex;gap:6px;margin-bottom:8px}
+.tabs button{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:14px}
+.tabs button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.sbox{display:flex;gap:8px}
+.sbox input{flex:1;min-width:0;font-size:16px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.sbox button,.btn{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:0 18px;font-size:15px;cursor:pointer}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{border:1px dashed var(--line);background:#fff;border-radius:16px;padding:4px 10px;font-size:13px;cursor:pointer;color:var(--mute)}
+.photo{display:none;border:1px dashed #b9b2a4;border-radius:12px;padding:14px;background:#fff}
+.photo.on{display:block}
+.photo .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.photo canvas{width:96px;height:96px;border-radius:8px;border:1px solid var(--line);background:#eee}
+.dom{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--mute)}
+.dom i{display:inline-block;width:22px;height:22px;border-radius:50%;border:1px solid #0002}
+.filters{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);margin-bottom:12px;font-size:14px}
+.filters label{display:flex;gap:6px;align-items:center}
+.filters select,.filters input{font-size:14px;padding:5px 6px;border:1px solid var(--line);border-radius:6px;background:#fff}
+.filters input[type=number]{width:70px}
+.note{background:#fff7e8;color:var(--warn);border-radius:8px;padding:8px 12px;font-size:14px;margin-bottom:10px}
+.meta{color:var(--mute);font-size:13px;margin-bottom:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+@media (max-width:480px){.grid{grid-template-columns:1fr 1fr;gap:10px}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column}
+.sw{aspect-ratio:4/3;position:relative}
+.score{position:absolute;top:8px;left:8px;background:#fff;border-radius:12px;padding:2px 8px;font-size:12px;font-weight:600}
+.cb{padding:10px 12px;display:flex;flex-direction:column;gap:3px;flex:1}
+.cb b{font-size:14px;line-height:1.3}
+.cb small{color:var(--mute);font-size:12px}
+.why{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.why span{background:var(--acc2);color:var(--acc);border-radius:10px;padding:1px 7px;font-size:11px}
+.add{margin-top:auto;border:1px solid var(--acc);color:var(--acc);background:#fff;border-radius:8px;padding:6px;font-size:13px;cursor:pointer;margin-top:8px}
+.add.in{background:var(--acc);color:#fff}
+aside{display:flex;flex-direction:column;gap:16px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13.5px}
+.panel h3{margin:0 0 6px;font-size:14px}
+.panel p{margin:6px 0;color:#3c3a36}
+.flow{display:grid;gap:6px;margin:8px 0}
+.flow div{background:var(--bg);border-radius:8px;padding:6px 10px}
+dialog{border:0;border-radius:14px;padding:0;width:min(560px,calc(100vw - 32px));max-height:calc(100vh - 60px)}
+dialog::backdrop{background:#0006}
+.dlg{padding:18px}
+.dlg h2{margin:0 0 4px;font-size:19px}
+.close{float:right;border:0;background:none;font-size:22px;cursor:pointer;line-height:1}
+.spec{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+.spec td{border-bottom:1px solid var(--line);padding:6px 4px;vertical-align:top}
+.spec td:first-child{color:var(--mute);width:38%}
+form{display:grid;gap:8px}
+form input,form textarea,form select{font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:8px;width:100%}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns .btn{padding:10px 16px}
+.ghost{background:#fff;color:var(--acc);border:1px solid var(--acc);border-radius:10px;padding:10px 16px;cursor:pointer;font-size:15px}
+.mail{background:var(--bg);border-radius:10px;padding:12px;font:12.5px/1.5 ui-monospace,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+.cartlist{list-style:none;padding:0;margin:8px 0;display:grid;gap:6px}
+.cartlist li{display:flex;gap:8px;align-items:center;font-size:14px}
+.cartlist i{width:28px;height:28px;border-radius:6px;flex:none}
+.cartlist button{margin-left:auto;border:0;background:none;color:var(--mute);cursor:pointer}
+</style>
+</head>
+<body>
+<div class="band">SAMPLE · ZTW 시연용</div>
+<header><div class="logo">Fabric<span>Finder</span></div><button class="cartbtn" id="cartBtn">Swatches (0)</button></header>
+<main>
+<section>
+  <div class="hero">
+    <h1>Describe the fabric you need, or show us a photo.</h1>
+    <p>No spec sheet needed. Plain English or Korean works.</p>
+  </div>
+  <div class="tabs"><button class="on" data-m="text">Text search</button><button data-m="photo">Photo search</button></div>
+  <div id="textMode">
+    <form class="sbox" id="qform" style="display:flex"><input id="q" placeholder="e.g. breathable summer linen blend" autocomplete="off"><button>Search</button></form>
+    <div class="chips" id="ex"></div>
+  </div>
+  <div class="photo" id="photoMode">
+    <div class="row">
+      <canvas id="cv" width="96" height="96"></canvas>
+      <div>
+        <input type="file" id="file" accept="image/*"><br>
+        <div class="chips" id="samples"></div>
+        <div class="dom" id="dom">Upload a photo of a garment or fabric.</div>
+      </div>
+    </div>
+  </div>
+  <div class="filters">
+    <label>Fiber <select id="fiber"><option value="">Any</option></select></label>
+    <label>min <input type="number" id="fmin" value="0" min="0" max="100" step="5">%</label>
+    <label>Weight <input type="number" id="wmin" placeholder="60" min="0"> – <input type="number" id="wmax" placeholder="420" min="0"> gsm</label>
+  </div>
+  <div id="note"></div>
+  <div class="meta" id="meta"></div>
+  <div class="grid" id="grid"></div>
+</section>
+<aside>
+  <div class="panel">
+    <h3>실제 구축에서는 이렇게 동작합니다</h3>
+    <p>이 화면은 동의어 사전과 필드 가중치로 순위를 흉내 낸 것입니다. 실제 제안 구성은 아래와 같습니다.</p>
+    <div class="flow">
+      <div>문장 → 텍스트 임베딩 의미 검색 + BM25 키워드 검색을 합쳐 순위 결정(하이브리드)</div>
+      <div>"부드러운·여름용" 같은 표현 → 관리자 드롭다운 태그(촉감·계절)와 연결해 가점</div>
+      <div>사진 → 이미지 임베딩으로 색감·패턴·질감 유사 후보. 여기선 대표 색만 비교</div>
+      <div>정답 질의 50개로 상위 5개 적중률을 재서 합격 기준 확인</div>
+    </div>
+    <p>원단 데이터 240건은 모두 가상입니다. 문의·스와치 신청은 전송되지 않습니다.</p>
+  </div>
+  <div class="panel" id="sideCart"></div>
+</aside>
+</main>
+
+<dialog id="dDetail"><div class="dlg" id="detail"></div></dialog>
+<dialog id="dCart"><div class="dlg" id="cart"></div></dialog>
+
+<script>
+// ---------- fake catalog (seeded, ~240 rows) ----------
+let s=20261022;const rnd=()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const pick=a=>a[Math.floor(rnd()*a.length)], rint=(a,b)=>Math.round(a+rnd()*(b-a));
+const T=[ // name, construction, comp variants, gsm range, width, uses, seasons, hand, stretch, functions, colors
+ ['Linen Slub Plain','plain weave',[{linen:100},{linen:55,cotton:45},{linen:70,viscose:30}],[120,200],[140,150],['shirt','dress','pants'],['summer','spring'],['natural','crisp'],'none',['breathable','cool'],['white','beige','sand','sage','sky','navy','terracotta']],
+ ['Cotton Poplin','plain weave',[{cotton:100},{cotton:97,elastane:3}],[100,140],[145,150],['shirt','blouse','dress'],['spring','summer','allseason'],['smooth','crisp'],'comfort',['breathable'],['white','sky','pink','navy','black','mint']],
+ ['Stretch Chino Twill','twill',[{cotton:98,elastane:2},{cotton:97,elastane:3}],[230,310],[145,150],['pants','jacket'],['allseason','fall'],['sturdy','smooth'],'comfort',['durable'],['khaki','beige','navy','olive','black','stone']],
+ ['Denim 3x1','twill',[{cotton:100},{cotton:98,elastane:2}],[300,420],[150,160],['jeans','jacket'],['allseason','fall'],['sturdy'],'comfort',['durable'],['indigo','denimlight','black']],
+ ['Nylon Ripstop','ripstop',[{nylon:100}],[70,140],[145,150],['jacket','outdoor','hiking'],['spring','fall'],['crisp','light'],'none',['waterrepellent','windproof','durable','light'],['black','olive','orange','navy','red']],
+ ['3-Layer Softshell','bonded knit',[{polyester:92,elastane:8}],[280,360],[145,150],['jacket','outdoor','hiking'],['winter','fall'],['soft','brushed'],'4way',['waterrepellent','windproof','warm'],['black','charcoal','navy','olive','red']],
+ ['Polar Fleece','knit, brushed',[{polyester:100},{rpolyester:100}],[200,320],[150,160],['jacket','outdoor','lining'],['winter'],['soft','brushed'],'2way',['warm','light'],['grey','navy','cream','black','forest']],
+ ['Wool Flannel','twill, milled',[{wool:100},{wool:70,polyester:30}],[260,380],[148,150],['suit','coat','pants'],['winter','fall'],['soft','brushed'],'none',['warm'],['charcoal','grey','camel','navy','brown']],
+ ['Viscose Crepe','crepe',[{viscose:100},{viscose:95,elastane:5}],[100,160],[140,145],['dress','blouse'],['summer','spring'],['drapey','soft'],'comfort',['cool'],['black','terracotta','sage','pink','cream','navy']],
+ ['Tencel Twill','twill',[{lyocell:100},{lyocell:70,linen:30},{lyocell:96,elastane:4}],[150,220],[145,150],['pants','shirt','dress'],['summer','spring'],['soft','smooth','drapey'],'none',['cool','breathable','moisturewicking'],['sand','olive','sky','black','stone']],
+ ['Cotton Jersey','single jersey knit',[{cotton:95,elastane:5},{cotton:100}],[160,220],[160,180],['tshirt','dress','leggings'],['allseason','summer'],['soft'],'2way',['breathable'],['white','black','grey','pink','mint','navy']],
+ ['Nylon Spandex Interlock','warp knit',[{nylon:80,elastane:20},{nylon:75,elastane:25}],[180,260],[150,155],['activewear','leggings','swimwear'],['allseason','summer'],['smooth','soft'],'4way',['quickdry','moisturewicking','uv'],['black','navy','red','mint','grey']],
+ ['Silk Charmeuse','satin',[{silk:100}],[60,110],[112,140],['blouse','evening','dress'],['spring','summer'],['lustrous','smooth','drapey'],'none',['cool'],['cream','champagne','black','pink','navy']],
+ ['Recycled Mesh','knit mesh',[{rpolyester:100}],[90,150],[150,160],['activewear','lining'],['summer'],['light'],'2way',['breathable','quickdry','light'],['black','white','grey','sky']],
+ ['Corduroy 14W','corduroy',[{cotton:100},{cotton:98,elastane:2}],[280,380],[145,150],['pants','jacket'],['fall','winter'],['soft','brushed'],'comfort',['warm'],['camel','brown','forest','navy','cream']],
+ ['Seersucker Stripe','seersucker',[{cotton:100},{cotton:65,polyester:35}],[110,160],[145,150],['shirt','pants','dress'],['summer'],['crisp','light'],'none',['breathable','cool','wrinkleresistant'],['sky','white','navy','pink']]
+];
+const COL={white:'#f3f1ea',cream:'#ece2cc',beige:'#d8c6a6',sand:'#cdb68f',stone:'#b4ab9b',khaki:'#a8956b',camel:'#b88a54',brown:'#6d4a32',terracotta:'#b75f3e',orange:'#d9722b',red:'#b3322f',pink:'#e3aeb0',champagne:'#e6d2b0',sage:'#a4b29a',mint:'#a9d6c3',olive:'#6e6b3e',forest:'#2f4a36',sky:'#9fc3e0',denimlight:'#7d9cbf',indigo:'#2e3f66',navy:'#24304a',grey:'#9a9a98',charcoal:'#45474a',black:'#1e1e20'};
+const FAM={white:'white',cream:'white beige',beige:'beige brown',sand:'beige',stone:'grey beige',khaki:'beige green',camel:'brown',brown:'brown',terracotta:'orange red brown',orange:'orange',red:'red',pink:'pink',champagne:'beige gold',sage:'green',mint:'green',olive:'green',forest:'green',sky:'blue',denimlight:'blue',indigo:'blue navy',navy:'navy blue',grey:'grey',charcoal:'grey black',black:'black'};
+const PAT=['solid','solid','solid','solid','melange','stripe','check','herringbone'];
+const FIBER={cotton:'Cotton',linen:'Linen',polyester:'Polyester',rpolyester:'Recycled Polyester',nylon:'Nylon',wool:'Wool',viscose:'Viscose',elastane:'Elastane',silk:'Silk',lyocell:'Lyocell (Tencel)'};
+const DATA=[];
+T.forEach((t,ti)=>{for(let k=0;k<15;k++){
+  const comp=pick(t[2]),color=pick(t[10]),gsm=rint(...t[3]),pat=t[0].includes('Stripe')?'stripe':t[0].includes('Denim')?'twill':pick(PAT);
+  const stretch=comp.elastane>=15?'4way':comp.elastane?(t[8]==='none'?'comfort':t[8]):t[8];
+  DATA.push({id:'FB-'+(10100+ti*15+k),name:t[0]+(pat!=='solid'&&!t[0].includes('Stripe')?' '+pat[0].toUpperCase()+pat.slice(1):''),construction:t[1],comp,gsm,width:pick(t[4]),
+   uses:t[5],season:t[6],hand:t[7],stretch,func:t[9],color,hex:COL[color],pattern:pat,moq:pick([300,500,800,1000])});
+}});
+
+// ---------- query understanding: synonyms -> canonical tags (EN + KO) ----------
+const SYN=[
+ [/breath|airy|ventilat|통기|숨쉬|바람/, 'func:breathable'],[/cool|시원|냉감/, 'func:cool'],
+ [/summer|hot|여름|하계/, 'season:summer'],[/spring|봄/, 'season:spring'],[/fall|autumn|가을/, 'season:fall'],[/winter|cold|겨울|동계/, 'season:winter'],
+ [/warm|따뜻|보온|방한/, 'func:warm'],[/soft|부드럽|부드러운|말랑/, 'hand:soft'],[/smooth|매끈|매끄/, 'hand:smooth'],[/crisp|빳빳|바삭/, 'hand:crisp'],
+ [/drap|flow|찰랑|드레이프/, 'hand:drapey'],[/shin|lustr|glossy|광택/, 'hand:lustrous'],[/natural|내추럴|자연스러/, 'hand:natural'],[/sturdy|tough|strong|튼튼|탄탄/, 'func:durable'],
+ [/^stretch|elastic|spandex|스판|신축|늘어나/, 'stretch:any'],[/4.?way|high.?stretch|사방/, 'stretch:4way'],
+ [/pant|trouser|slack|바지|팬츠|슬랙스/, 'use:pants'],[/shirt|셔츠/, 'use:shirt'],[/blouse|블라우스/, 'use:blouse'],[/dress|원피스|드레스/, 'use:dress'],
+ [/jacket|parka|자켓|재킷|점퍼/, 'use:jacket'],[/coat|코트/, 'use:coat'],[/suit|정장|수트/, 'use:suit'],[/jean|denim|청바지|데님/, 'use:jeans'],
+ [/hik|trek|mountain|등산|산행/, 'use:hiking'],[/outdoor|아웃도어|캠핑/, 'use:outdoor'],[/sport|gym|yoga|active|운동|요가|스포츠|레깅스/, 'use:activewear'],
+ [/swim|수영/, 'use:swimwear'],[/tee|t-?shirt|티셔츠/, 'use:tshirt'],[/lining|안감/, 'use:lining'],[/evening|party|wedding|파티|웨딩/, 'use:evening'],
+ [/water|rain|방수|발수/, 'func:waterrepellent'],[/wind|방풍/, 'func:windproof'],[/quick|dry|속건|빨리 마르/, 'func:quickdry'],[/sweat|wick|흡습|땀/, 'func:moisturewicking'],
+ [/light|thin|가벼|얇/, 'func:light'],[/wrinkle|구김/, 'func:wrinkleresistant'],[/uv|sun|자외선/, 'func:uv'],
+ [/linen|린넨|리넨/, 'fiber:linen'],[/cotton|^면$|코튼/, 'fiber:cotton'],[/wool|^울$|모직/, 'fiber:wool'],[/silk|실크/, 'fiber:silk'],[/nylon|나일론/, 'fiber:nylon'],
+ [/polyester|폴리/, 'fiber:polyester'],[/recycl|eco|sustain|리사이클|친환경/, 'fiber:rpolyester'],[/tencel|lyocell|텐셀/, 'fiber:lyocell'],[/viscose|rayon|레이온|비스코스/, 'fiber:viscose'],
+ ...Object.keys({white:1,beige:1,brown:1,orange:1,red:1,pink:1,green:1,blue:1,navy:1,grey:1,black:1}).map(c=>[new RegExp('^'+c), 'color:'+c]),
+ [/흰|화이트/, 'color:white'],[/베이지/, 'color:beige'],[/검정|블랙/, 'color:black'],[/네이비|남색/, 'color:navy'],[/파란|블루/, 'color:blue'],[/초록|그린|카키/, 'color:green'],[/회색|그레이/, 'color:grey']
+];
+const W={use:3,season:3,hand:2.5,stretch:2.5,func:2.5,fiber:2,color:1.5};
+const LABEL={breathable:'breathable',cool:'cool touch',warm:'warm',waterrepellent:'water-repellent',windproof:'windproof',quickdry:'quick-dry',moisturewicking:'moisture-wicking',light:'lightweight',wrinkleresistant:'wrinkle-resistant',uv:'UV protection',durable:'durable'};
+
+function parse(q){
+  const toks=q.toLowerCase().split(/[^a-z0-9가-힣\-]+/).filter(Boolean), tags=new Map(), free=[];
+  toks.forEach(tok=>{let hit=false;SYN.forEach(([re,tag])=>{if(re.test(tok)){hit=true;tags.set(tag,tok)}});if(!hit&&tok.length>2&&!/^(for|and|the|with|fabric|blend|good|nice|원단|좋은|용)$/.test(tok))free.push(tok)});
+  return {tags,free};
+}
+function scoreRow(r,{tags,free}){
+  let sc=0,max=0;const why=[];
+  tags.forEach((tok,tag)=>{const [f,v]=tag.split(':');max+=W[f];let g=0,lab=v;
+    if(f==='use')g=r.uses.includes(v)?1:(v==='outdoor'&&r.uses.includes('hiking')||v==='hiking'&&r.uses.includes('outdoor'))?.7:0;
+    if(f==='season'){g=r.season.includes(v)?1:r.season.includes('allseason')?.6:0;
+      if(v==='summer')g=Math.max(0,g-(r.gsm>220?.5:0));if(v==='winter')g=Math.max(0,g-(r.gsm<200?.5:0))}
+    if(f==='hand')g=r.hand.includes(v)?1:(v==='soft'&&r.hand.includes('brushed'))?.8:0;
+    if(f==='func'){g=r.func.includes(v)?1:0;lab=LABEL[v]||v;if(v==='light'&&!g)g=r.gsm<140?.8:0;if(v==='warm'&&!g)g=r.season.includes('winter')?.6:0}
+    if(f==='stretch'){g=v==='4way'?(r.stretch==='4way'?1:r.stretch!=='none'?.4:0):({none:0,comfort:.7,'2way':.9,'4way':1})[r.stretch];lab=v==='4way'?'4-way stretch':'stretch'}
+    if(f==='fiber'){const p=r.comp[v]||0;g=p?.5+p/200:0;lab=FIBER[v]+' '+p+'%'}
+    if(f==='color')g=FAM[r.color].split(' ').includes(v)?1:0;
+    if(g){sc+=W[f]*g;why.push(lab)}
+  });
+  const text=(r.name+' '+r.construction+' '+r.color+' '+r.pattern+' '+Object.keys(r.comp).join(' ')).toLowerCase(); // ponytail: substring keyword match; BM25 over the full row in the real build
+  free.forEach(t=>{max+=1;if(text.includes(t)){sc+=1;why.push(t)}});
+  return {sc,pct:max?sc/max:0,why};
+}
+
+// ---------- photo: dominant color in Lab, nearest swatches ----------
+function lab(hex){let [r,g,b]=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(c=>c>.04045?((c+.055)/1.055)**2.4:c/12.92);
+  let x=(r*.4124+g*.3576+b*.1805)/.95047,y=r*.2126+g*.7152+b*.0722,z=(r*.0193+g*.1192+b*.9505)/1.08883;
+  [x,y,z]=[x,y,z].map(v=>v>.008856?Math.cbrt(v):7.787*v+16/116);return [116*y-16,500*(x-y),200*(y-z)]}
+const hex2=(r,g,b)=>'#'+[r,g,b].map(v=>Math.round(v).toString(16).padStart(2,'0')).join('');
+function dominant(ctx,w,h){ // ponytail: 4-bit histogram mode of center crop; image embeddings (pattern/texture) in the real build
+  const d=ctx.getImageData(w*.15,h*.15,w*.7,h*.7).data,bins={};
+  for(let i=0;i<d.length;i+=4){const k=(d[i]>>4)+'_'+(d[i+1]>>4)+'_'+(d[i+2]>>4);(bins[k]=bins[k]||[0,0,0,0]);bins[k][0]++;bins[k][1]+=d[i];bins[k][2]+=d[i+1];bins[k][3]+=d[i+2]}
+  const b=Object.values(bins).sort((a,b)=>b[0]-a[0])[0];return hex2(b[1]/b[0],b[2]/b[0],b[3]/b[0]);
+}
+let photoHex=null;
+function loadImg(src){const im=new Image();im.onload=()=>{const c=document.getElementById('cv'),x=c.getContext('2d');x.drawImage(im,0,0,96,96);photoHex=dominant(x,96,96);render()};im.src=src}
+function sampleImg(hex){const c=document.createElement('canvas');c.width=c.height=200;const x=c.getContext('2d');x.fillStyle='#ddd';x.fillRect(0,0,200,200);
+  x.fillStyle=hex;x.beginPath();x.ellipse(100,110,72,85,0,0,7);x.fill();for(let i=0;i<4000;i++){const v=rnd()*40-20;x.fillStyle=`rgba(${v>0?255:0},${v>0?255:0},${v>0?255:0},${Math.abs(v)/200})`;x.fillRect(rnd()*200,rnd()*200,2,2)}
+  return c.toDataURL()}
+
+// ---------- render ----------
+const $=id=>document.getElementById(id);
+let mode='text',cart=[];
+function swatchCss(r){const c=r.hex,l=lab(c)[0]>55?'#0000001f':'#ffffff26';
+  const p={stripe:`repeating-linear-gradient(90deg,${l} 0 6px,transparent 6px 18px)`,check:`repeating-linear-gradient(0deg,${l} 0 8px,transparent 8px 22px),repeating-linear-gradient(90deg,${l} 0 8px,transparent 8px 22px)`,
+   herringbone:`repeating-linear-gradient(45deg,${l} 0 3px,transparent 3px 9px)`,melange:`radial-gradient(${l} 1px,transparent 1.5px) 0 0/5px 5px`,twill:`repeating-linear-gradient(-55deg,${l} 0 2px,transparent 2px 6px)`}[r.pattern];
+  return `background:${p?p+',':''}${c}`}
+const compStr=r=>Object.entries(r.comp).map(([k,v])=>v+'% '+FIBER[k]).join(' / ');
+function filtered(){const f=$('fiber').value,fm=+$('fmin').value||0,a=+$('wmin').value||0,b=+$('wmax').value||9999;
+  return DATA.filter(r=>(!f||(r.comp[f]||0)>=Math.max(fm,1))&&r.gsm>=a&&r.gsm<=b)}
+function render(){
+  let rows=filtered(),list,note='',meta;
+  if(mode==='photo'){
+    if(!photoHex){list=rows.slice(0,24).map(r=>({r}));meta='Upload a photo to rank by color.'}
+    else{const p=lab(photoHex);list=rows.map(r=>{const q=lab(r.hex),de=Math.hypot(p[0]-q[0],p[1]-q[1],p[2]-q[2]);return {r,pct:Math.max(0,1-de/60),why:['color ΔE '+de.toFixed(0)]}}).sort((a,b)=>b.pct-a.pct).slice(0,24);
+      $('dom').innerHTML=`<i style="background:${photoHex}"></i> Dominant color ${photoHex} · closest swatches below`;meta='Ranked by color distance. Pattern and texture need the image model.'}
+  }else{
+    const q=$('q').value.trim(),P=parse(q);
+    if(!q){list=rows.slice(0,24).map(r=>({r}));meta=rows.length+' fabrics. Try a sentence above.'}
+    else{list=rows.map(r=>({r,...scoreRow(r,P)})).filter(x=>x.sc>0).sort((a,b)=>b.sc-a.sc||a.r.gsm-b.r.gsm).slice(0,24);
+      const top=list[0]?list[0].pct:0;
+      meta=`Understood: ${[...P.tags.keys()].map(t=>t==='stretch:any'?'stretch':t.split(':')[1]).concat(P.free).join(', ')||'—'} · ${list.length} shown`;
+      if(!list.length)note='Nothing matched. Try fewer words or loosen the filters.';
+      else if(top<.75)note='No fabric matches every condition. These are the closest alternatives, with what each one matches.'}
+  }
+  $('note').innerHTML=note?`<div class="note">${note}</div>`:'';$('meta').textContent=meta;
+  $('grid').innerHTML=list.map(({r,pct,why})=>`<div class="card" data-id="${r.id}"><div class="sw" style="${swatchCss(r)}">${pct!=null?`<span class="score">${Math.round(pct*100)}% match</span>`:''}</div>
+   <div class="cb"><b>${r.name}</b><small>${r.id} · ${compStr(r)}</small><small>${r.gsm} gsm · ${r.width} cm · ${r.color}</small>
+   ${why&&why.length?`<div class="why">${why.map(w=>`<span>${w}</span>`).join('')}</div>`:''}
+   <button class="add ${cart.includes(r.id)?'in':''}" data-add="${r.id}">${cart.includes(r.id)?'In swatch list':'+ Request swatch'}</button></div></div>`).join('');
+  renderCart();
+}
+function toggle(id){cart=cart.includes(id)?cart.filter(x=>x!==id):cart.length>=10?(alert('Up to 10 swatches per request.'),cart):[...cart,id];render()}
+function detail(id){const r=DATA.find(x=>x.id===id);
+  $('detail').innerHTML=`<button class="close" onclick="dDetail.close()" aria-label="Close">×</button><h2>${r.name}</h2><div class="meta">${r.id}</div>
+  <div style="height:150px;border-radius:10px;${swatchCss(r)}"></div>
+  <table class="spec"><tr><td>Composition</td><td>${compStr(r)}</td></tr><tr><td>Weight</td><td>${r.gsm} gsm</td></tr><tr><td>Width</td><td>${r.width} cm</td></tr>
+  <tr><td>Construction</td><td>${r.construction}, ${r.pattern}</td></tr><tr><td>Color</td><td>${r.color}</td></tr><tr><td>Use</td><td>${r.uses.join(', ')}</td></tr>
+  <tr><td>Season</td><td>${r.season.join(', ')}</td></tr><tr><td>Hand feel</td><td>${r.hand.join(', ')}</td></tr><tr><td>Stretch</td><td>${r.stretch}</td></tr>
+  <tr><td>Function</td><td>${r.func.map(f=>LABEL[f]||f).join(', ')}</td></tr><tr><td>MOQ</td><td>${r.moq} m</td></tr><tr><td>Price</td><td>On request</td></tr></table>
+  <div class="btns"><button class="btn" onclick="toggle('${r.id}');dDetail.close()">${cart.includes(r.id)?'Remove swatch':'Request swatch'}</button><button class="ghost" onclick="if(!cart.includes('${r.id}'))toggle('${r.id}');dDetail.close();openCart()">Request a quote</button></div>`;
+  dDetail.showModal()}
+function cartItems(){return cart.map(id=>{const r=DATA.find(x=>x.id===id);return `<li><i style="${swatchCss(r)}"></i>${r.id} ${r.name}<button onclick="toggle('${id}')" aria-label="Remove">×</button></li>`}).join('')}
+function renderCart(){$('cartBtn').textContent=`Swatches (${cart.length})`;
+  $('sideCart').innerHTML=`<h3>Swatch request (${cart.length}/10)</h3>${cart.length?`<ul class="cartlist">${cartItems()}</ul><button class="btn" style="padding:9px 14px" onclick="openCart()">Send request / quote</button>`:'<p>Add fabrics from the results. Swatches are free, shipped freight collect.</p>'}`;
+  if(dCart.open&&!$('cart').dataset.sent)fillCart()}
+function fillCart(){$('cart').dataset.sent='';
+  $('cart').innerHTML=`<button class="close" onclick="dCart.close()" aria-label="Close">×</button><h2>Swatch &amp; quote request</h2><div class="meta">No payment. Swatches ship freight collect.</div>
+  ${cart.length?`<ul class="cartlist">${cartItems()}</ul>`:'<p class="meta">No fabrics selected. You can still send a general inquiry.</p>'}
+  <form id="rq"><select name="type"><option>Swatch request</option><option>Quote request</option><option>Swatch + quote</option></select>
+  <input name="name" placeholder="Your name *" required><input name="company" placeholder="Company *" required>
+  <input name="email" type="email" placeholder="Email *" required><input name="country" placeholder="Country *" required>
+  <input name="qty" placeholder="Expected quantity (m), optional"><textarea name="addr" rows="2" placeholder="Shipping address for swatches"></textarea>
+  <textarea name="msg" rows="2" placeholder="Message"></textarea><button class="btn" style="padding:11px">Submit (demo, not sent)</button></form>`;
+  $('rq').onsubmit=e=>{e.preventDefault();const esc=v=>String(v).replace(/[&<>"]/g,c=>'&#'+c.charCodeAt(0)+';'),f=Object.fromEntries([...new FormData(e.target)].map(([k,v])=>[k,esc(v)]));$('cart').dataset.sent='1';
+    $('cart').innerHTML=`<button class="close" onclick="dCart.close()" aria-label="Close">×</button><h2>Request received</h2><p>In the live site this email goes to the sales team. Nothing was sent from this demo.</p>
+    <div class="mail">To: sales@(company)\nSubject: [${f.type}] ${f.company} (${f.country}) · ${cart.length} items\n\nFrom: ${f.name} &lt;${f.email}&gt;\nQty: ${f.qty||'-'}\nShip to: ${f.addr||'-'}\n\n${cart.join(', ')||'(general inquiry)'}\n\n${f.msg||''}</div>
+    <div class="btns" style="margin-top:12px"><button class="btn" onclick="cart=[];dCart.close();render()">Done</button></div>`}}
+function openCart(){fillCart();dCart.showModal()}
+
+// ---------- wiring ----------
+['breathable summer linen blend','soft stretch fabric for summer pants','부드러운 여름용 바지 원단','등산용 겨울 자켓 원단','water repellent light jacket navy','silk for evening dress'].forEach(t=>$('ex').insertAdjacentHTML('beforeend',`<button class="chip">${t}</button>`));
+$('ex').onclick=e=>{if(e.target.matches('.chip')){$('q').value=e.target.textContent;render()}};
+$('qform').onsubmit=e=>{e.preventDefault();render()};
+Object.entries(FIBER).forEach(([k,v])=>$('fiber').insertAdjacentHTML('beforeend',`<option value="${k}">${v}</option>`));
+['fiber','fmin','wmin','wmax'].forEach(i=>$(i).oninput=render);
+document.querySelector('.tabs').onclick=e=>{const m=e.target.dataset.m;if(!m)return;mode=m;document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+  $('textMode').style.display=m==='text'?'':'none';$('photoMode').classList.toggle('on',m==='photo');render()};
+[['Navy jacket photo','#27324c'],['Beige linen photo','#cbb48e'],['Olive cargo photo','#6c6a40'],['Blush dress photo','#dfa9ab']].forEach(([n,h])=>$('samples').insertAdjacentHTML('beforeend',`<button class="chip" data-h="${h}">${n}</button>`));
+$('samples').onclick=e=>{if(e.target.dataset.h)loadImg(sampleImg(e.target.dataset.h))};
+$('file').onchange=e=>{const f=e.target.files[0];if(f)loadImg(URL.createObjectURL(f))};
+$('grid').onclick=e=>{const a=e.target.dataset.add;if(a)return toggle(a);const c=e.target.closest('.card');if(c)detail(c.dataset.id)};
+$('cartBtn').onclick=openCart;
+const dDetail=$('dDetail'),dCart=$('dCart');
+$('q').value='breathable summer linen blend';render();
+</script>
+</body>
+</html>
