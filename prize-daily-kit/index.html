@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>데일리 회차 키트</title>
+<meta name="description" content="경품응모 앱 회차 이미지 9장 자동 배치, 배너 매체별 리사이즈, 앱 화면 샘플 데모">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='7' fill='%2316150F'/%3E%3Ccircle cx='12' cy='12' r='4' fill='%23C9A04E'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#F2EFE8;--ink:#16150F;--mut:#6E6A60;--line:rgba(22,21,15,.09);--card:#FBFAF6;--gold:#B8913F;--L:#C9512B;--R:#2B4AA0;--ease:cubic-bezier(.32,.72,0,1)}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Pretendard","Apple SD Gothic Neo","Malgun Gothic",-apple-system,sans-serif;overflow-x:hidden;letter-spacing:-.01em;word-break:keep-all}
+svg text{font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",-apple-system,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+.notice{background:var(--ink);color:#E9E4D8;font-size:12.5px;text-align:center;padding:7px 16px;letter-spacing:.02em}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.eyebrow{display:inline-block;border-radius:999px;padding:4px 12px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;background:rgba(22,21,15,.06);color:var(--mut)}
+header.hero{padding:72px 0 40px}
+h1{font-size:clamp(32px,5.4vw,60px);line-height:1.12;letter-spacing:-.035em;margin:18px 0 18px;font-weight:800}
+h1 em{font-style:normal;color:var(--gold)}
+.lead{max-width:620px;color:var(--mut);font-size:16.5px;margin:0}
+.brandline{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px}
+.brandline i{width:10px;height:10px;border-radius:50%;background:var(--gold);display:inline-block}
+.picker{position:fixed;bottom:16px;left:0;right:0;z-index:5;display:flex;justify-content:center;pointer-events:none;padding:0 12px}
+.seg .sl{align-self:center;font-size:11px;letter-spacing:.14em;color:var(--mut);font-weight:700;padding:0 8px 0 12px}
+.seg{pointer-events:auto;display:inline-flex;gap:4px;padding:5px;border-radius:999px;background:rgba(251,250,246,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:0 12px 30px -18px rgba(22,21,15,.35);max-width:100%}
+.seg button{border:0;background:transparent;border-radius:999px;padding:9px 16px;font-size:14px;font-weight:700;white-space:nowrap;transition:background .5s var(--ease),color .5s var(--ease),transform .2s var(--ease)}
+.seg button small{font-weight:500;opacity:.65;margin-left:6px}
+.seg button.on{background:var(--ink);color:#F2EFE8}
+.seg button:active{transform:scale(.97)}
+.seg button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.perf{margin-top:22px;font-size:12.5px;color:var(--mut);font-variant-numeric:tabular-nums}
+section{padding:72px 0}
+section+section{border-top:1px solid var(--line)}
+.sh{display:flex;flex-wrap:wrap;gap:16px 40px;align-items:flex-end;justify-content:space-between;margin-bottom:32px}
+h2{font-size:clamp(24px,3.4vw,36px);letter-spacing:-.03em;line-height:1.2;margin:12px 0 0;font-weight:800}
+.sh p{max-width:460px;margin:0;color:var(--mut)}
+.num{font-variant-numeric:tabular-nums;color:var(--gold);font-weight:700;margin-right:8px}
+/* pipeline */
+.pipe{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:0 0 32px;padding:0;list-style:none}
+.pipe li{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;min-width:0}
+.pipe b{display:block;font-size:14px}
+.pipe small{color:var(--mut);font-size:12.5px;display:block;line-height:1.45;margin-top:2px}
+.pipe .t{font-variant-numeric:tabular-nums;font-size:11px;letter-spacing:.12em;color:var(--gold);font-weight:700}
+.pipe li.auto{background:var(--ink);color:#F2EFE8;border-color:var(--ink)}
+.pipe li.auto small{color:#B9B3A6}
+/* tiles */
+.set{display:grid;grid-template-columns:1fr 1.18fr 1fr;gap:20px;align-items:start}
+.col{min-width:0}
+.lbl{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);font-weight:600;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.lbl i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.shell{background:rgba(22,21,15,.04);border:1px solid rgba(22,21,15,.06);padding:5px;border-radius:18px}
+.core{border-radius:13px;overflow:hidden;background:#fff;box-shadow:0 18px 36px -26px rgba(22,21,15,.4)}
+.tile{margin:0}
+.tile svg{display:block;width:100%;height:auto;aspect-ratio:1}
+.tile figcaption{font-size:11.5px;color:var(--mut);padding:6px 4px 0;display:flex;justify-content:space-between;gap:6px}
+.fade{animation:fade .7s var(--ease)}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* banners */
+.bwrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px;align-items:start;margin-bottom:24px}
+.master .stage{aspect-ratio:1200/628}
+.mnote{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+.mnote h3{margin:0 0 8px;font-size:17px;letter-spacing:-.02em}
+.mnote p{margin:0 0 14px;color:var(--mut);font-size:14px}
+.toggle{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px 6px 6px;font-size:13.5px;font-weight:600}
+.toggle .sw{width:38px;height:22px;border-radius:999px;background:#D8D3C7;position:relative;transition:background .4s var(--ease)}
+.toggle .sw:after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .4s var(--ease);box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.toggle[aria-pressed=true] .sw{background:#C8402F}
+.toggle[aria-pressed=true] .sw:after{transform:translateX(16px)}
+.legend{font-size:12.5px;color:var(--mut);margin-top:12px;display:flex;align-items:center;gap:8px}
+.legend i{width:22px;border-top:2px dashed #C8402F;display:inline-block}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.bn{margin:0}
+.stage{height:230px;display:flex;align-items:center;justify-content:center;background:repeating-conic-gradient(#EFEBE2 0 25%,#F7F4EE 0 50%) 0 0/16px 16px;padding:14px}
+.master .stage{height:auto;padding:0}
+.stage svg{display:block;box-shadow:0 10px 24px -14px rgba(22,21,15,.45)}
+.bn figcaption{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;padding:8px 4px 0;color:var(--mut)}
+.bn figcaption b{color:var(--ink);font-variant-numeric:tabular-nums}
+.sa{display:none}
+.safe-on .sa{display:inline}
+/* phones */
+.phones{display:flex;flex-wrap:wrap;gap:40px;justify-content:center}
+.phone{width:min(100%,340px)}
+.phone .shell{border-radius:52px;padding:8px;background:#1C1B18;border-color:#000}
+.phone .core{border-radius:44px;background:#0E0E11}
+.sw2{position:relative;aspect-ratio:375/812;overflow:hidden}
+.screen{position:absolute;top:0;left:0;width:375px;height:812px;transform-origin:0 0}
+.phone p{text-align:center;color:var(--mut);font-size:13px;margin:12px 0 0}
+footer{padding:40px 0 120px;border-top:1px solid var(--line);color:var(--mut);font-size:14px}
+/* app */
+.ap{--a-bg:#0E0E11;--a-s:#18181D;--a-s2:#202027;--a-l:rgba(255,255,255,.08);--a-t:#F4F1EA;--a-m:#9A978F;--a-g:#D9B56C;--a-L:#E06A43;--a-R:#5A7BE0;height:100%;background:var(--a-bg);color:var(--a-t);display:flex;flex-direction:column;padding:0 18px;font-size:14px;position:relative;overflow:hidden}
+.ap small{color:var(--a-m);font-size:11.5px}
+.sb{height:46px;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px;padding:6px 10px 0;flex:none}
+.sbi{display:flex;gap:3px;align-items:flex-end}
+.sbi i{width:4px;background:var(--a-t);border-radius:1px}
+.sbi i:nth-child(1){height:5px}.sbi i:nth-child(2){height:8px}.sbi i:nth-child(3){height:11px}
+.sbi b{width:22px;height:11px;border:1.5px solid var(--a-t);border-radius:3px;margin-left:5px;position:relative}
+.sbi b:after{content:"";position:absolute;inset:1.5px 5px 1.5px 1.5px;background:var(--a-t);border-radius:1px}
+.ah{display:flex;justify-content:space-between;align-items:center;height:52px;flex:none}
+.wm{font-weight:800;font-size:19px;letter-spacing:-.03em;display:flex;align-items:center;gap:6px}
+.wm i{width:7px;height:7px;border-radius:50%;background:var(--a-g)}
+.chip{display:flex;align-items:center;gap:6px;background:var(--a-s);border:1px solid var(--a-l);border-radius:999px;padding:6px 12px;font-size:12.5px;color:var(--a-m)}
+.chip b{color:var(--a-g)}
+.card{background:var(--a-s);border:1px solid var(--a-l);border-radius:20px;padding:14px 16px}
+.streak{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px}
+.streak b{display:block;font-size:16px}
+.dots{display:flex;gap:5px}
+.dots i{width:18px;height:18px;border-radius:6px;background:var(--a-s2);border:1px solid var(--a-l)}
+.dots i.on{background:var(--a-g);border-color:var(--a-g)}
+.dots i.nx{border:1px dashed var(--a-g)}
+.rh{display:flex;justify-content:space-between;align-items:flex-end;margin:22px 0 12px}
+.rh small{letter-spacing:.16em;font-weight:600}
+.rh h3{margin:2px 0 0;font-size:24px;letter-spacing:-.03em}
+.cd{text-align:right}
+.cd b{display:block;font-size:20px;font-variant-numeric:tabular-nums;color:var(--a-g);letter-spacing:.02em}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:relative}
+.pk{background:var(--a-s);border:1.5px solid var(--a-l);border-radius:22px;padding:12px 12px 14px;text-align:left;position:relative;transition:border-color .5s var(--ease),transform .25s var(--ease),background .5s var(--ease)}
+.pk:active{transform:scale(.98)}
+.pk .pi{background:#F3EEE4;border-radius:15px;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.pk .pi svg{width:86%;height:86%}
+.pk b{display:block;margin-top:10px;font-size:15.5px;letter-spacing:-.02em}
+.pk .side{position:absolute;top:20px;left:20px;font-size:10px;font-weight:800;letter-spacing:.14em;color:#16150F;opacity:.55}
+.pk .ck{position:absolute;top:18px;right:18px;width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(22,21,15,.25);background:rgba(255,255,255,.6);transition:all .4s var(--ease)}
+.pk.on.L{border-color:var(--a-L);background:#22191A}
+.pk.on.R{border-color:var(--a-R);background:#191C25}
+.pk.on .ck{border-color:transparent}
+.pk.on.L .ck{background:var(--a-L)}.pk.on.R .ck{background:var(--a-R)}
+.pk.on .ck:after{content:"";position:absolute;left:7px;top:4px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.vsb{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:#0E0E11;border:1.5px solid var(--a-g);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--a-g);letter-spacing:.04em}
+.ratio{margin-top:16px}
+.rl{display:flex;justify-content:space-between;font-size:12px;color:var(--a-m);margin-bottom:7px;font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:99px;background:var(--a-R);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--a-L);border-radius:99px 0 0 99px;transition:width .8s var(--ease)}
+.bar.gold{background:var(--a-s2)}
+.bar.gold i{background:var(--a-g);border-radius:99px}
+.cta{margin-top:18px;border:0;border-radius:999px;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 22px;font-weight:800;font-size:16px;background:var(--a-t);color:#0E0E11;transition:transform .2s var(--ease);flex:none}
+.cta:active{transform:scale(.98)}
+.cta span{font-size:12px;font-weight:700;background:#0E0E11;color:var(--a-g);border-radius:999px;padding:10px 14px}
+.cta.gold{background:var(--a-g);justify-content:center;padding:0}
+.cta2{margin-top:10px;height:50px;border-radius:999px;border:1px solid var(--a-l);background:transparent;color:var(--a-t);font-weight:700;flex:none}
+.tab{display:flex;justify-content:space-around;height:74px;align-items:center;border-top:1px solid var(--a-l);margin:auto -18px 0;padding-bottom:14px;flex:none}
+.tab span{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10.5px;color:var(--a-m)}
+.tab span.on{color:var(--a-t)}
+.tab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.4}
+.game{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px 14px}
+.game b{display:block;font-size:14.5px}
+.game .gi{width:40px;height:40px;border-radius:50%;flex:none;background:conic-gradient(var(--a-g) 0 25%,var(--a-L) 0 50%,var(--a-g) 0 75%,var(--a-R) 0);box-shadow:inset 0 0 0 4px var(--a-s)}
+.game .go{margin-left:auto;border:1px solid var(--a-g);color:var(--a-g);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700}
+.res{text-align:center}
+.res .ah{justify-content:center;font-weight:700;font-size:15px}
+.win{margin-top:30px;position:relative;z-index:1}
+.win small{letter-spacing:.24em;color:var(--a-g);font-weight:700}
+.win h2{margin:8px 0 6px;font-size:30px;letter-spacing:-.04em;line-height:1.2}
+.win p{margin:0;color:var(--a-m);font-size:13px}
+.ticket{margin:26px 4px 0;background:#F3EEE4;color:#16150F;border-radius:22px;text-align:left;position:relative;z-index:1}
+.tk-top{display:flex;gap:14px;align-items:center;padding:16px}
+.tk-ill{width:92px;height:92px;border-radius:16px;background:#E6DFD1;flex:none;display:flex;align-items:center;justify-content:center}
+.tk-ill svg{width:84%;height:84%}
+.ticket small{color:#7A7466;font-size:11px;display:block}
+.tk-top b{display:block;font-size:17px;letter-spacing:-.02em;margin:2px 0}
+.tk-top span{font-size:12.5px;color:#9A6B2C;font-weight:700}
+.tk-cut{height:0;border-top:1.5px dashed rgba(22,21,15,.2);margin:0 18px;position:relative}
+.tk-cut:before,.tk-cut:after{content:"";position:absolute;top:-11px;width:22px;height:22px;border-radius:50%;background:#0E0E11}
+.tk-cut:before{left:-29px}.tk-cut:after{right:-29px}
+.tk-bot{display:grid;grid-template-columns:1fr 1fr;padding:14px 16px 16px}
+.tk-bot b{font-variant-numeric:tabular-nums;font-size:15px}
+.xp{margin-top:18px;text-align:left}
+.xp .rl b{color:var(--a-g)}
+.xp small{display:block;margin-top:8px}
+.cf{position:absolute;inset:0;pointer-events:none;z-index:0}
+.cf i{position:absolute;top:-20px;width:7px;height:12px;border-radius:2px;opacity:.9;animation:fall 5.5s linear infinite}
+@keyframes fall{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(420px) rotate(520deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.cf i{animation:none;top:auto}.fade{animation:none}}
+@media (max-width:1080px){
+  .set{grid-template-columns:1fr 1fr}
+  .colM{grid-column:1/-1;max-width:560px;width:100%;justify-self:center}
+  .colM{order:-1}
+  .bwrap{grid-template-columns:1fr}
+  .pipe{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:720px){
+  .wrap{padding:0 16px}
+  header.hero{padding:44px 0 28px}
+  section{padding:52px 0}
+  .set{grid-template-columns:1fr;gap:28px}
+  .pipe{grid-template-columns:1fr 1fr}
+  .pipe li:last-child{grid-column:1/-1}
+  .seg button{padding:8px 11px;font-size:13px}
+  .seg button small{display:none}
+  .stage{height:200px}
+}
+</style>
+</head>
+<body>
+<div class="notice">가상 데이터 데모 · 앱 이름, 상품, 수치는 모두 지어낸 것이며 실존 브랜드와 관계없습니다</div>
+
+<header class="hero"><div class="wrap">
+  <div class="brandline"><i></i>데일리픽(데모)</div>
+  <h1>매일 9장, 매체별 규격까지<br><em>하나의 템플릿</em>으로.</h1>
+  <p class="lead">회차를 바꾸면 같은 템플릿에 상품, 카피, 응모 마감 배지가 자동으로 다시 놓입니다. 배치는 기계가 하고 사람은 누끼 보정과 검수에 시간을 씁니다.</p>
+  <div class="picker"><div class="seg" id="seg" role="tablist" aria-label="회차 선택"></div></div>
+  <div class="perf" id="perf"></div>
+</div></header>
+
+<main>
+<section id="s1"><div class="wrap">
+  <div class="sh">
+    <div><span class="eyebrow">B · Daily 응모 상품 이미지</span><h2><span class="num">01</span>오늘의 회차 9장 세트</h2></div>
+    <p>메인 1장과 좌우 대결 상품 각 4장(대표컷, 디테일, 특징, 응모 유도)입니다. 모든 장은 1080 x 1080 기준으로 만들어집니다.</p>
+  </div>
+  <ol class="pipe">
+    <li><span class="t">전일 12:00</span><b>원본 수령</b><small>상품 사진, 로고, 회차 카피</small></li>
+    <li class="auto"><span class="t">자동</span><b>누끼 1차</b><small>배경 제거 결과를 바로 템플릿으로</small></li>
+    <li class="auto"><span class="t">자동</span><b>9장 배치</b><small>상품명, 카피, 마감 배지 위치 계산</small></li>
+    <li><span class="t">사람</span><b>보정·검수</b><small>가장자리, 색감, 오탈자, 겹침 확인</small></li>
+    <li><span class="t">전일 18:00</span><b>납품</b><small>9장 PNG와 원본 소스</small></li>
+  </ol>
+  <div class="set">
+    <div class="col colL"><div class="lbl"><i style="background:var(--L)"></i>왼쪽 대결 상품 · 4장</div><div class="g2" id="tL"></div></div>
+    <div class="col colM"><div class="lbl"><i style="background:var(--gold)"></i>메인 · 1장</div><div id="tM"></div></div>
+    <div class="col colR"><div class="lbl"><i style="background:var(--R)"></i>오른쪽 대결 상품 · 4장</div><div class="g2" id="tR"></div></div>
+  </div>
+</div></section>
+
+<section id="s2"><div class="wrap">
+  <div class="sh">
+    <div><span class="eyebrow">C · 광고 배너</span><h2><span class="num">02</span>마스터 1개, 규격 7개 자동 재배치</h2></div>
+    <p>비율에 따라 띠형, 가로형, 정사각, 세로형 배치 규칙이 골라지고 모든 요소는 규격별 안전영역 안에 들어갑니다.</p>
+  </div>
+  <div class="bwrap">
+    <figure class="bn master" style="margin:0"><div class="shell"><div class="core"><div class="stage" id="bMaster"></div></div></div>
+      <figcaption><b>1200 x 628</b><span>마스터 시안</span></figcaption></figure>
+    <div class="mnote">
+      <h3>리사이즈는 검수만 남깁니다</h3>
+      <p>마스터 시안이 확정되면 규격별 산출물은 같은 규칙으로 한 번에 만들어집니다. 사람은 규격마다 안전영역 침범, 글자 크기 하한, 매체 텍스트 비중만 확인합니다.</p>
+      <button class="toggle" id="safeBtn" aria-pressed="false"><span class="sw"></span>안전영역 표시</button>
+      <div class="legend"><i></i>점선 안쪽이 잘리거나 UI에 가려지지 않는 영역</div>
+    </div>
+  </div>
+  <div class="bgrid" id="bGrid"></div>
+</div></section>
+
+<section id="s3"><div class="wrap">
+  <div class="sh">
+    <div><span class="eyebrow">A · 앱 UI</span><h2><span class="num">03</span>앱 화면 샘플 2종</h2></div>
+    <p>이벤트 응모 화면과 당첨 결과 화면입니다. 응모 화면의 두 상품 카드는 눌러서 선택을 바꿀 수 있습니다.</p>
+  </div>
+  <div class="phones">
+    <div class="phone"><div class="shell"><div class="core"><div class="sw2"><div class="screen" id="scr1"></div></div></div></div><p>이벤트 응모 · 375 x 812</p></div>
+    <div class="phone"><div class="shell"><div class="core"><div class="sw2"><div class="screen" id="scr2"></div></div></div></div><p>당첨 결과 · 375 x 812</p></div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">실제 작업에서는 보내 주시는 원본 사진과 브랜드 가이드로 같은 템플릿을 만들어 매일 회차와 매체별 규격을 처리합니다.</div></footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const C={cream:'#F3EEE4',ink:'#16150F',mut:'#7A7466',gold:'#C49A45',L:'#C9512B',R:'#2B4AA0',Lt:'#F0DCCF',Rt:'#DCE2F0'};
+const G='#2A2926',G2='#4A4740';
+const SH=(rx)=>`<ellipse cx="100" cy="174" rx="${rx}" ry="7" fill="#000" opacity=".09"/>`;
+const ILL={
+headphone:a=>SH(60)+`<path d="M48 118V96a52 52 0 0 1 104 0v22" fill="none" stroke="${G}" stroke-width="11" stroke-linecap="round"/><rect x="30" y="102" width="38" height="62" rx="18" fill="${G}"/><rect x="132" y="102" width="38" height="62" rx="18" fill="${G}"/><rect x="58" y="112" width="14" height="42" rx="7" fill="${a}"/><rect x="128" y="112" width="14" height="42" rx="7" fill="${a}"/>`,
+speaker:a=>SH(46)+`<rect x="62" y="34" width="76" height="138" rx="38" fill="${G}"/><ellipse cx="100" cy="47" rx="30" ry="8" fill="${a}"/>`+[0,1,2,3,4,5,6].map(i=>`<line x1="74" x2="126" y1="${72+i*12}" y2="${72+i*12}" stroke="${G2}" stroke-width="3.5" stroke-linecap="round"/>`).join('')+`<circle cx="100" cy="159" r="5" fill="${a}"/>`,
+espresso:a=>SH(56)+`<rect x="52" y="28" width="96" height="12" rx="6" fill="${G2}"/><rect x="46" y="36" width="108" height="122" rx="16" fill="${G}"/><circle cx="126" cy="60" r="12" fill="#F3EEE4"/><path d="M126 60l6-6" stroke="${a}" stroke-width="3" stroke-linecap="round"/><rect x="60" y="78" width="56" height="14" rx="5" fill="${G2}"/><rect x="64" y="92" width="48" height="10" rx="5" fill="${a}"/><rect x="110" y="94" width="36" height="6" rx="3" fill="${a}"/><path d="M70 120h36v16a10 10 0 0 1-10 10H80a10 10 0 0 1-10-10z" fill="#F3EEE4"/><rect x="54" y="150" width="92" height="16" rx="5" fill="${G2}"/>`,
+drip:a=>SH(70)+`<path d="M38 112c-18 0-20 38 0 42" stroke="${G}" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M108 140c18-4 22-40 40-52" stroke="${G}" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M34 166V118a32 32 0 0 1 32-32h12a32 32 0 0 1 32 32v48z" fill="${G}"/><rect x="34" y="150" width="76" height="6" fill="${a}"/><rect x="52" y="78" width="40" height="10" rx="5" fill="${G2}"/><circle cx="72" cy="73" r="6" fill="${a}"/><path d="M140 112h40l-12 22h-16z" fill="${a}"/><path d="M147 136h26v24a8 8 0 0 1-8 8h-10a8 8 0 0 1-8-8z" fill="#F3EEE4" stroke="${G}" stroke-width="4"/>`,
+lantern:a=>SH(46)+`<path d="M78 48a22 22 0 0 1 44 0" stroke="${G}" stroke-width="6" fill="none"/><path d="M64 60h72l-10-14H74z" fill="${G}"/><rect x="72" y="60" width="56" height="86" rx="10" fill="${a}" opacity=".22"/><path d="M100 80c11 15 13 23 13 31a13 13 0 0 1-26 0c0-8 2-16 13-31z" fill="${a}"/><rect x="72" y="60" width="56" height="86" rx="10" fill="none" stroke="${G}" stroke-width="6"/><rect x="60" y="144" width="80" height="24" rx="8" fill="${G}"/><rect x="92" y="152" width="16" height="6" rx="3" fill="${a}"/>`,
+tent:a=>SH(80)+`<path d="M22 166L100 46l78 120z" fill="${G}"/><path d="M100 46L72 166h56z" fill="${G2}"/><path d="M100 94L80 166h40z" fill="${a}"/><line x1="100" y1="46" x2="100" y2="28" stroke="${G}" stroke-width="4"/><path d="M100 28l18 7-18 7z" fill="${a}"/><line x1="12" y1="167" x2="188" y2="167" stroke="${G}" stroke-width="4" stroke-linecap="round"/>`
+};
+const ROUNDS=[
+ {no:271,date:'10.23 금',win:30,ratio:58,
+  L:{name:'노이즈캔슬링 헤드폰',short:'헤드폰',ill:'headphone',val:'34만원 상당',copy:'출퇴근길을 조용하게',feats:['최대 30시간 재생','접이식 하우징','두 기기 동시 연결']},
+  R:{name:'360도 블루투스 스피커',short:'스피커',ill:'speaker',val:'29만원 상당',copy:'방 전체를 채우는 소리',feats:['생활 방수','12시간 연속 재생','두 대 페어링']}},
+ {no:272,date:'10.24 토',win:20,ratio:46,
+  L:{name:'반자동 에스프레소 머신',short:'에스프레소 머신',ill:'espresso',val:'52만원 상당',copy:'아침 한 잔을 카페처럼',feats:['15바 추출 압력','스팀 노즐 포함','예열 40초']},
+  R:{name:'핸드드립 입문 세트',short:'드립 세트',ill:'drip',val:'18만원 상당',copy:'천천히 내리는 주말',feats:['구스넥 주전자','드리퍼와 서버','원두 200g 동봉']}},
+ {no:273,date:'10.25 일',win:50,ratio:63,
+  L:{name:'충전식 캠핑 랜턴',short:'캠핑 랜턴',ill:'lantern',val:'12만원 상당',copy:'밤이 길어지는 캠핑장',feats:['밝기 3단계','완충 시 20시간','방수 손잡이']},
+  R:{name:'2인용 원터치 텐트',short:'원터치 텐트',ill:'tent',val:'27만원 상당',copy:'펴는 데 1분이면 충분',feats:['원터치 설치','이중 방수 원단','수납 가방 포함']}}
+];
+let cur=0,pick='L',uid=0;
+
+function est(t){let w=0;for(const ch of t){w+=/[가-힣]/.test(ch)?.98:ch===' '?.3:/[0-9A-Z#%]/.test(ch)?.62:.5}return w}
+const fit=(t,maxW,base)=>Math.min(base,maxW/est(t));
+function T(x,y,fs,t,o={}){return `<text x="${x}" y="${y}" font-size="${fs.toFixed(1)}" font-weight="${o.w||700}" fill="${o.f||C.ink}"${o.a?` text-anchor="${o.a}"`:''}${o.ls!=null?` letter-spacing="${o.ls}"`:` letter-spacing="${(-fs*.02).toFixed(2)}"`}${o.op?` opacity="${o.op}"`:''}>${t}</text>`}
+const place=(ill,a,x,y,s)=>`<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${(s/200).toFixed(4)})">${ILL[ill](a)}</g>`;
+const svg=(w,h,inner)=>`<svg viewBox="0 0 ${w} ${h}" data-w="${w}" data-h="${h}" xmlns="http://www.w3.org/2000/svg" role="img">${inner}</svg>`;
+function badge(xr,y,fs,t,dark=true){const p=fs*.9,w=est(t)*fs+p*2+fs*.9,h=fs*2;const x=xr-w;
+ return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${h/2}" fill="${dark?C.ink:C.cream}"/><circle cx="${x+p+fs*.25}" cy="${y+h/2}" r="${fs*.22}" fill="${C.gold}"/>`+T(x+p+fs*.8,y+h/2+fs*.36,fs,t,{f:dark?C.cream:C.ink,w:700})}
+function head(d,light){const f=light?C.cream:C.ink;return T(60,104,34,'데일리픽',{f,w:800})+T(60+est('데일리픽')*34+16,104,26,'#'+d.no,{f,w:600,op:.6})+badge(1020,66,26,'응모 마감 23:59',!light)}
+
+function tileMain(d){const L=d.L,R=d.R;
+ return svg(1080,1080,`<rect width="1080" height="1080" fill="${C.cream}"/><path d="M0 300H600L480 1080H0z" fill="${C.Lt}"/><path d="M600 300H1080V1080H480z" fill="${C.Rt}"/><path d="M600 300L480 1080" stroke="${C.gold}" stroke-width="6"/>`+
+ head(d)+T(540,214,72,'오늘의 대결',{a:'middle',w:800})+T(540,262,30,`${d.date} · 하나를 골라 응모하세요`,{a:'middle',w:500,f:C.mut})+
+ place(L.ill,C.L,70,350,400)+place(R.ill,C.R,610,350,400)+
+ `<circle cx="540" cy="560" r="78" fill="${C.ink}" stroke="${C.gold}" stroke-width="6"/>`+T(540,584,64,'VS',{a:'middle',w:900,f:C.cream,ls:2})+
+ T(270,830,fit(L.short,400,52),L.short,{a:'middle',w:800})+T(270,878,32,L.val,{a:'middle',f:C.L})+
+ T(810,830,fit(R.short,400,52),R.short,{a:'middle',w:800})+T(810,878,32,R.val,{a:'middle',f:C.R})+
+ `<rect x="250" y="940" width="580" height="80" rx="40" fill="${C.ink}"/>`+T(540,992,32,`응모 마감 오늘 23:59 · 당첨 ${d.win}명`,{a:'middle',f:C.cream}))}
+
+function tileSide(d,s,k){const P=d[s],a=C[s],tint=C[s+'t'],tag=s==='L'?'A PICK':'B PICK';
+ if(k===0)return svg(1080,1080,`<rect width="1080" height="1080" fill="${tint}"/><circle cx="540" cy="540" r="320" fill="${C.cream}"/>`+head(d)+place(P.ill,a,210,190,660)+
+  T(60,930,fit(P.name,960,62),P.name,{w:800})+T(60,995,34,P.val,{f:a})+T(1020,995,26,tag,{a:'end',f:C.mut,ls:4,w:700}));
+ if(k===1){const id='c'+(++uid);return svg(1080,1080,`<rect width="1080" height="1080" fill="${C.cream}"/><clipPath id="${id}"><rect x="60" y="150" width="960" height="680" rx="44"/></clipPath><g clip-path="url(#${id})"><rect x="60" y="150" width="960" height="680" fill="${tint}"/>${place(P.ill,a,-170,-280,1400)}</g>`+head(d)+
+  T(60,912,26,'DETAIL',{f:a,ls:6})+T(60,990,fit(P.copy,960,58),P.copy,{w:800}))}
+ if(k===2)return svg(1080,1080,`<rect width="1080" height="1080" fill="${C.ink}"/>`+head(d,true)+T(60,250,60,'이런 점이 좋아요',{f:C.cream,w:800})+
+  P.feats.map((f,i)=>{const y=400+i*150;return `<line x1="60" x2="1020" y1="${y-90}" y2="${y-90}" stroke="#fff" stroke-opacity=".12" stroke-width="2"/>`+T(60,y,40,'0'+(i+1),{f:a==C.R?'#7F9BE8':'#E58A66',w:800,ls:2})+T(160,y,fit(f,600,50),f,{f:C.cream,w:600})}).join('')+
+  `<circle cx="880" cy="900" r="140" fill="${C.cream}"/>`+place(P.ill,a,770,790,220));
+ return svg(1080,1080,`<rect width="1080" height="1080" fill="${a}"/>`+head(d,true)+T(60,320,112,'이 상품에',{f:C.cream,w:800})+T(60,446,112,'응모하기',{f:C.cream,w:800})+
+  T(60,530,fit(P.short,520,44),P.short,{f:C.cream,w:600,op:.8})+`<circle cx="780" cy="790" r="230" fill="${C.cream}"/>`+place(P.ill,a,580,590,400)+
+  T(60,910,48,`당첨 ${d.win}명`,{f:C.cream,w:800})+T(60,964,28,'참여 무료 · 응모권 1장',{f:C.cream,w:500,op:.8}))}
+
+function pair(d,x,y,s){return place(d.L.ill,C.L,x,y,s)+T(x+s*1.075,y+s*.6,s*.16,'VS',{a:'middle',w:900,f:C.gold,ls:0})+place(d.R.ill,C.R,x+s*1.15,y,s)}
+function cta(x,y,ch,t='무료 응모'){const fs=ch*.38,cw=est(t)*fs+ch*1.5;
+ return {w:cw,s:`<rect x="${x}" y="${y}" width="${cw}" height="${ch}" rx="${ch/2}" fill="${C.ink}"/>`+T(x+ch*.5,y+ch/2+fs*.36,fs,t,{f:C.cream,w:700})+
+ `<circle cx="${x+cw-ch*.5}" cy="${y+ch/2}" r="${ch*.32}" fill="${C.gold}"/><path d="M${x+cw-ch*.62} ${y+ch/2}h${ch*.24}m-${ch*.1}-${ch*.1}l${ch*.1} ${ch*.1}l-${ch*.1} ${ch*.1}" stroke="${C.ink}" stroke-width="${Math.max(1,ch*.05)}" fill="none" stroke-linecap="round"/>`}}
+function banner(w,h,d){const r=w/h;let sb;
+ if(w===1080&&h===1920)sb={x:64,y:250,w:952,h:1330};
+ else{const ix=Math.round(Math.min(w,h)*.08);sb={x:ix,y:ix,w:w-2*ix,h:h-2*ix}}
+ const M=Math.max(w,h);let g=`<rect width="${w}" height="${h}" fill="${C.cream}"/><circle cx="${w*.08}" cy="${h*.95}" r="${M*.32}" fill="${C.Lt}"/><circle cx="${w*.95}" cy="${h*.05}" r="${M*.3}" fill="${C.Rt}"/>`;
+ const H1=['오늘의 대결,','하나만 고르세요'],sub=`#${d.no} ${d.L.short} vs ${d.R.short} · 당첨 ${d.win}명`;
+ if(r>=5){const H=sb.h,s=H*1.1,py=sb.y+(H-s)/2;g+=pair(d,sb.x,py,s);
+  const ch=H*.6,c=cta(0,0,ch),cx=sb.x+sb.w-c.w;g+=cta(cx,sb.y+(H-ch)/2,ch).s;
+  const tx=sb.x+s*2.15+H*.3,av=cx-tx-H*.3;
+  const line=`${d.L.short} vs ${d.R.short}`;
+  if(h>=80){const s2=`오늘의 대결 · 당첨 ${d.win}명`,fs=fit(line,av,H*.36),fss=fit(s2,av,H*.2);g+=T(tx,sb.y+H*.48,fs,line,{w:800})+T(tx,sb.y+H*.48+fss*1.5,fss,s2,{w:500,f:C.mut})}
+  else{const fs=fit(line,av,H*.42);g+=T(tx,sb.y+H/2+fs*.36,fs,line,{w:800})}
+ }else if(r>=1.4){const aw=sb.w*.52,fl=sb.h*.06;g+=T(sb.x,sb.y+fl,fl,'데일리픽',{w:800});
+  const fs=Math.min(sb.h*.2,aw/Math.max(...H1.map(est))),y1=sb.y+sb.h*.38;g+=T(sb.x,y1,fs,H1[0],{w:800})+T(sb.x,y1+fs*1.16,fs,H1[1],{w:800});
+  const fss=fit(sub,aw,sb.h*.05);g+=T(sb.x,y1+fs*1.16+fss*2.3,fss,sub,{w:500,f:C.mut});
+  const ch=Math.min(sb.h*.18,sb.w*.08);g+=cta(sb.x,sb.y+sb.h-ch,ch).s;
+  const s=Math.min(sb.h*.66,sb.w*.46/2.15);g+=pair(d,sb.x+sb.w-s*2.15,sb.y+(sb.h-s)/2+sb.h*.04,s);
+ }else{const fl=Math.min(sb.w*.05,sb.h*.05);g+=T(sb.x,sb.y+fl,fl,'데일리픽',{w:800});
+  const fs=Math.min(sb.w*(r<.8?.13:.115),sb.h*.11,sb.w/Math.max(...H1.map(est))),y1=sb.y+fl*1.2+fs*1.5;g+=T(sb.x,y1,fs,H1[0],{w:800})+T(sb.x,y1+fs*1.15,fs,H1[1],{w:800});
+  const fss=fit(sub,sb.w,Math.min(sb.w*.045,sb.h*.045)),ys=y1+fs*1.15+fss*1.9;g+=T(sb.x,ys,fss,sub,{w:500,f:C.mut});
+  const ch=Math.min(sb.w*.12,sb.h*.13),cy=sb.y+sb.h-ch;g+=cta(sb.x,cy,ch).s;
+  const top=ys+fss*.6,bot=cy-ch*.25,s=Math.min(bot-top,sb.w/(r<.8?1.95:2.15));g+=pair(d,sb.x+(sb.w-s*2.15)/2,top+(bot-top-s)/2,s)}
+ const sw=Math.max(1,Math.min(w,h)*.008);
+ g+=`<g class="sa">`+(sb.y>100?`<rect width="${w}" height="${sb.y}" fill="#C8402F" opacity=".1"/><rect y="${sb.y+sb.h}" width="${w}" height="${h-sb.y-sb.h}" fill="#C8402F" opacity=".1"/>`:'')+`<rect x="${sb.x}" y="${sb.y}" width="${sb.w}" height="${sb.h}" fill="none" stroke="#C8402F" stroke-width="${sw}" stroke-dasharray="${sw*4} ${sw*3}"/></g>`;
+ return svg(w,h,g)}
+
+const SPECS=[[1080,1080,'정사각 피드'],[1080,1920,'세로 스토리'],[300,250,'중형 사각'],[970,250,'빌보드'],[728,90,'리더보드'],[640,100,'모바일 띠'],[320,50,'모바일 소형']];
+const CAP=['대표컷','디테일','특징','응모 유도'];
+
+function renderTiles(d){$('#tM').innerHTML=`<figure class="tile fade"><div class="shell"><div class="core">${tileMain(d)}</div></div><figcaption><span>M-1 메인</span><span>1080 x 1080</span></figcaption></figure>`;
+ for(const s of['L','R'])$('#t'+s).innerHTML=CAP.map((c,k)=>`<figure class="tile fade"><div class="shell"><div class="core">${tileSide(d,s,k)}</div></div><figcaption><span>${s}-${k+1} ${c}</span></figcaption></figure>`).join('')}
+function renderBanners(d){$('#bMaster').innerHTML=banner(1200,628,d);
+ $('#bGrid').innerHTML=SPECS.map(([w,h,n])=>`<figure class="bn fade"><div class="shell"><div class="core"><div class="stage">${banner(w,h,d)}</div></div></div><figcaption><b>${w} x ${h}</b><span>${n}</span></figcaption></figure>`).join('')}
+
+const pi=(P,a)=>`<svg viewBox="0 0 200 200">${ILL[P.ill](a)}</svg>`;
+function renderApp(d){const L=d.L,R=d.R,P=d[pick];
+ const ic=['<path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/>','<rect x="4" y="6" width="16" height="12" rx="2"/><path d="M14 6v12" stroke-dasharray="2 2"/>','<rect x="3" y="7" width="18" height="10" rx="5"/><path d="M8 10v4M6 12h4"/><circle cx="16" cy="12" r="1"/>','<circle cx="12" cy="9" r="4"/><path d="M4 20c1.5-4 4.5-5 8-5s6.5 1 8 5"/>'];
+ const tab=['홈','응모','게임','내 정보'].map((t,i)=>`<span class="${i===1?'on':''}"><svg viewBox="0 0 24 24">${ic[i]}</svg>${t}</span>`).join('');
+ const sb='<div class="sb"><span>9:41</span><span class="sbi"><i></i><i></i><i></i><b></b></span></div>';
+ $('#scr1').innerHTML=`<div class="ap">${sb}
+  <div class="ah"><div class="wm">데일리픽<i></i></div><div class="chip">응모권 <b>3</b>장</div></div>
+  <div class="card streak"><div><small>연속 출석</small><b>5일째</b></div><div class="dots">${[1,1,1,1,1,0,0].map((o,i)=>`<i class="${o?'on':i===5?'nx':''}"></i>`).join('')}</div></div>
+  <div class="rh"><div><small>DAILY PICK #${d.no}</small><h3>오늘의 대결</h3></div><div class="cd"><small>마감까지</small><b id="cd">--:--:--</b></div></div>
+  <div class="vs">${['L','R'].map(s=>`<button class="pk ${s}${pick===s?' on':''}" data-s="${s}"><div class="pi">${pi(d[s],C[s])}</div><span class="side">${s==='L'?'A':'B'}</span><span class="ck"></span><b>${d[s].short}</b><small>${d[s].val}</small></button>`).join('')}<div class="vsb">VS</div></div>
+  <div class="ratio"><div class="rl"><span>${L.short} ${d.ratio}%</span><span>실시간 선택 비율</span><span>${100-d.ratio}% ${R.short}</span></div><div class="bar"><i style="width:${d.ratio}%"></i></div></div>
+  <button class="cta">${P.short}에 응모하기<span>응모권 1장</span></button>
+  <div class="card game"><span class="gi"></span><div><b>행운 룰렛</b><small>오늘 1회 남음 · 응모권 최대 3장</small></div><span class="go">돌리기</span></div>
+  <nav class="tab">${tab}</nav></div>`;
+ document.querySelectorAll('.pk').forEach(b=>b.onclick=()=>{pick=b.dataset.s;renderApp(ROUNDS[cur]);tick();fitAll()});
+ const pv=ROUNDS[(cur+2)%3].R,cols=['#D9B56C','#E06A43','#5A7BE0','#F4F1EA'];
+ const cf=Array.from({length:18},(_,i)=>`<i style="left:${(i*53)%100}%;background:${cols[i%4]};animation-delay:${(i*0.37)%5.5}s;animation-duration:${4.5+(i%4)}s"></i>`).join('');
+ $('#scr2').innerHTML=`<div class="ap res">${sb}<div class="cf">${cf}</div>
+  <div class="ah">#${d.no-1} 결과 발표</div>
+  <div class="win"><small>CONGRATULATIONS</small><h2>당첨되셨어요</h2><p>참여 12,480명 중 ${d.win}명에 뽑혔어요</p></div>
+  <div class="ticket"><div class="tk-top"><div class="tk-ill">${pi(pv,C.R)}</div><div><small>당첨 상품</small><b>${pv.name}</b><span>${pv.val}</span></div></div><div class="tk-cut"></div>
+   <div class="tk-bot"><div><small>당첨 번호</small><b>DP-${d.no-1}-0815</b></div><div><small>당첨 확률</small><b>${(d.win/12480*100).toFixed(2)}%</b></div></div></div>
+  <div class="card xp"><div class="rl"><span>Lv.6 → Lv.7</span><b>+120 XP</b></div><div class="bar gold"><i style="width:72%"></i></div><small>레벨 7까지 80 XP 남았어요 · 레벨 7부터 응모권 매일 +1</small></div>
+  <button class="cta gold" style="margin-top:auto">배송지 입력하기</button>
+  <button class="cta2">친구에게 자랑하기</button><div style="height:26px;flex:none"></div></div>`}
+
+function tick(){const n=new Date(),e=new Date(n);e.setHours(23,59,59,0);let s=Math.max(0,Math.floor((e-n)/1000));
+ const el=$('#cd');if(el)el.textContent=[s/3600|0,(s%3600)/60|0,s%60].map(v=>String(v).padStart(2,'0')).join(':')}
+function fitAll(){document.querySelectorAll('.stage').forEach(st=>{const v=st.firstElementChild;if(!v)return;const cs=getComputedStyle(st),
+  W=st.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),H=st.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),
+  w=+v.dataset.w,h=+v.dataset.h,s=Math.min(W/w,H/h);v.style.width=w*s+'px';v.style.height=h*s+'px'});
+ document.querySelectorAll('.sw2').forEach(x=>{x.firstElementChild.style.transform=`scale(${x.clientWidth/375})`})}
+function renderAll(){const t0=performance.now(),d=ROUNDS[cur];renderTiles(d);renderBanners(d);renderApp(d);fitAll();tick();
+ $('#perf').textContent=`#${d.no} 회차: 이미지 9장과 배너 8규격을 ${(performance.now()-t0).toFixed(1)}ms에 다시 배치했습니다`;
+ document.querySelectorAll('#seg button').forEach((b,i)=>{b.classList.toggle('on',i===cur);b.setAttribute('aria-selected',i===cur)})}
+$('#seg').innerHTML='<span class="sl">회차</span>'+ROUNDS.map((r,i)=>`<button role="tab" data-i="${i}">#${r.no}<small>${r.date}</small></button>`).join('');
+$('#seg').onclick=e=>{const b=e.target.closest('button');if(b){cur=+b.dataset.i;renderAll()}};
+$('#safeBtn').onclick=e=>{const b=e.currentTarget,on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);$('#s2').classList.toggle('safe-on',on)};
+addEventListener('resize',fitAll);setInterval(tick,1000);renderAll();
+</script>
+</body>
+</html>
