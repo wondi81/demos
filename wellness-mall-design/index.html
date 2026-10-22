@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>온기 쇼핑몰 시안</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='%23e9e2d6'/%3E%3Ccircle cx='12' cy='12' r='6' fill='none' stroke='%233a342e' stroke-width='1.5'/%3E%3C/svg%3E">
+<style>
+:root{--paper:#f3efe8;--stone:#e6dfd3;--sand:#d8ccb8;--wood:#9c7b5b;--char:#2f2a26;--mut:#7a7066;--line:#d9d0c3;--steam:rgba(255,255,255,.55)}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--char);font:15px/1.8 "Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;overflow-x:hidden;letter-spacing:.01em}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--wood);outline-offset:3px}
+.sample{position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(47,42,38,.6);color:#f3efe8;font-size:11.5px;letter-spacing:.14em;text-align:center;padding:4px;pointer-events:none}
+.switch{position:sticky;top:0;z-index:50;background:#2f2a26;padding:28px 12px 8px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.switch button{flex:none;border:1px solid #5a524a;background:transparent;color:#cfc6ba;font-size:12.5px;padding:5px 12px;border-radius:20px}
+.switch button.on{background:#f3efe8;color:#2f2a26;border-color:#f3efe8}
+.switch span{color:#8f857a;font-size:11.5px;align-self:center;margin-right:6px;flex:none}
+header{display:flex;align-items:center;justify-content:space-between;padding:20px clamp(16px,4vw,48px);border-bottom:1px solid var(--line);background:var(--paper)}
+.logo{font-family:"Times New Roman",serif;font-size:22px;letter-spacing:.32em;font-weight:400}
+.logo small{display:block;font-family:inherit;font-size:9.5px;letter-spacing:.3em;color:var(--mut);margin-top:-4px}
+header nav{display:flex;gap:28px;font-size:13px;letter-spacing:.12em}
+header nav a{text-decoration:none;color:var(--mut);cursor:pointer}
+header nav a.on{color:var(--char)}
+.cart{font-size:13px;letter-spacing:.1em}
+.scr{display:none}
+.scr.on{display:block}
+.blk{position:relative}
+.tag{position:absolute;top:10px;left:10px;z-index:3;font:600 10.5px/1 monospace;background:rgba(47,42,38,.78);color:#f3efe8;padding:4px 7px;letter-spacing:.04em}
+.pad{padding:clamp(56px,9vw,120px) clamp(16px,6vw,96px)}
+.en{font-family:"Times New Roman",serif;letter-spacing:.3em;font-size:12px;color:var(--mut);text-transform:uppercase}
+h1,h2,h3{font-weight:400;letter-spacing:.02em}
+h2{font-size:clamp(24px,3.2vw,34px);line-height:1.5;margin:14px 0 20px}
+.body{color:var(--mut);max-width:520px}
+/* 무드 면: 사진 대신 색면·그라데이션·텍스처 */
+.m-hall{background:radial-gradient(ellipse 60% 40% at 50% 18%,rgba(255,250,240,.75),transparent 70%),linear-gradient(180deg,#cdbfa9 0%,#a88d6f 46%,#6e5640 47%,#5b4634 100%)}
+.m-steam{background:radial-gradient(circle at 30% 40%,rgba(255,255,255,.7),transparent 40%),radial-gradient(circle at 70% 60%,rgba(255,255,255,.5),transparent 45%),linear-gradient(160deg,#d9d2c7,#b7aea2)}
+.m-wood{background:repeating-linear-gradient(90deg,rgba(0,0,0,.05) 0 2px,transparent 2px 38px),linear-gradient(180deg,#b89574,#8a6a4c)}
+.m-water{background:radial-gradient(ellipse at 50% 120%,#7f9aa0,transparent 60%),linear-gradient(180deg,#c9d3d1,#8ea2a3)}
+.m-stone{background:radial-gradient(circle at 20% 30%,rgba(0,0,0,.06) 1px,transparent 2px) 0 0/7px 7px,linear-gradient(135deg,#a9a299,#77706a)}
+.m-night{background:radial-gradient(circle at 75% 25%,rgba(255,224,170,.35),transparent 30%),linear-gradient(180deg,#3d3631,#221e1b)}
+.m-linen{background:repeating-linear-gradient(0deg,rgba(255,255,255,.18) 0 1px,transparent 1px 4px),repeating-linear-gradient(90deg,rgba(0,0,0,.04) 0 1px,transparent 1px 4px),var(--c,#e8e1d4)}
+.hero{height:min(82vh,760px);display:flex;align-items:flex-end;padding:0 clamp(16px,6vw,96px) clamp(40px,7vw,80px);color:#fbf8f2}
+.hero h1{font-size:clamp(30px,5.4vw,60px);line-height:1.35;margin:10px 0 0}
+.hero .en{color:rgba(251,248,242,.8)}
+.split{display:grid;grid-template-columns:1fr 1fr;min-height:520px}
+.split>div:first-of-type{min-height:320px}
+.split .txt{display:flex;flex-direction:column;justify-content:center}
+.link{display:inline-block;margin-top:28px;font-size:13px;letter-spacing:.18em;border-bottom:1px solid var(--char);padding-bottom:4px;cursor:pointer;background:none;border-top:0;border-left:0;border-right:0}
+.strip{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,2vw,24px)}
+.tile{aspect-ratio:3/4;position:relative;cursor:pointer;border:0;padding:0;width:100%;text-align:left}
+.tile span{position:absolute;left:16px;bottom:14px;color:#fbf8f2;font-size:13px;letter-spacing:.14em}
+.goods{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,2vw,28px)}
+.item{cursor:pointer;background:none;border:0;padding:0;text-align:left;width:100%}
+.item .ph{aspect-ratio:4/5;display:grid;place-items:center}
+.item .ph i{font-style:normal;font-family:"Times New Roman",serif;letter-spacing:.3em;font-size:11px;color:rgba(47,42,38,.45)}
+.item b{display:block;font-weight:400;margin-top:12px;font-size:14px}
+.item small{color:var(--mut);font-size:13px}
+.filter{display:flex;gap:22px;font-size:13px;letter-spacing:.1em;margin-bottom:32px;flex-wrap:wrap}
+.filter button{background:none;border:0;padding:0 0 4px;color:var(--mut);border-bottom:1px solid transparent}
+.filter button.on{color:var(--char);border-color:var(--char)}
+.quote{text-align:center;font-size:clamp(18px,2.4vw,24px);line-height:2;max-width:640px;margin:0 auto}
+.ruler{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+.ruler div{padding:28px 20px 0 0}
+.ruler b{display:block;font-weight:400;font-size:18px;margin:6px 0}
+.ruler p{margin:0;color:var(--mut);font-size:14px}
+.reserve{border:1px dashed var(--wood);padding:28px;display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}
+.pd{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(24px,5vw,72px);align-items:start}
+.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+.thumbs button{aspect-ratio:1;border:1px solid transparent;padding:0}
+.thumbs button.on{border-color:var(--char)}
+.opt{margin:22px 0}
+.opt label{display:block;font-size:12px;letter-spacing:.14em;color:var(--mut);margin-bottom:8px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips button{border:1px solid var(--line);background:transparent;padding:7px 16px;font-size:13px}
+.chips button.on{border-color:var(--char);background:var(--char);color:var(--paper)}
+.qty{display:inline-flex;border:1px solid var(--line)}
+.qty button{width:40px;border:0;background:none;font-size:18px}
+.qty output{width:44px;text-align:center;line-height:40px}
+.buy{display:block;width:100%;border:0;background:var(--char);color:var(--paper);padding:16px;font-size:14px;letter-spacing:.2em;margin-top:24px}
+.total{display:flex;justify-content:space-between;border-top:1px solid var(--line);margin-top:24px;padding-top:16px}
+.note{background:#2f2a26;color:#cfc6ba;font-size:13px;line-height:1.75;padding:28px clamp(16px,6vw,96px) 40px}
+.note h4{color:#f3efe8;font-weight:500;letter-spacing:.06em;margin:0 0 10px;font-size:14px}
+.note ol{margin:0;padding-left:20px}
+.note code{color:#e9c99a;font-size:12px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--char);color:var(--paper);padding:12px 22px;font-size:13.5px;transition:.3s;z-index:70;pointer-events:none;max-width:calc(100% - 32px)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+dialog{border:0;padding:0;max-width:760px;width:calc(100% - 32px);background:var(--paper)}
+dialog::backdrop{background:rgba(34,30,27,.6)}
+.dlg{display:grid;grid-template-columns:1fr 1fr}
+.dlg>div:first-child{min-height:300px}
+.dlg .in{padding:32px}
+.x{position:absolute;right:10px;top:8px;background:none;border:0;font-size:22px;color:#fbf8f2;z-index:2}
+footer{padding:48px clamp(16px,6vw,96px);font-size:12.5px;color:var(--mut);border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media (max-width:820px){
+  header nav{display:none}
+  .split,.pd,.dlg{grid-template-columns:1fr}
+  .split .txt{order:2}
+  .strip{grid-template-columns:1fr 1fr}
+  .strip .tile:last-child{display:none}
+  .goods{grid-template-columns:1fr 1fr}
+  .ruler{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="sample">SAMPLE · ZTW 시연용</div>
+<div class="switch" role="tablist"><span>시안 화면</span>
+  <button data-go="main">01 메인</button><button data-go="brand">02 브랜드</button><button data-go="space">03 공간·시설</button><button data-go="list">04 상품목록</button><button data-go="detail">05 상품상세</button>
+</div>
+<header>
+  <div class="logo">ONGI<small>온기 · 사우나와 휴식</small></div>
+  <nav><a data-go="brand">BRAND</a><a data-go="space">SPACE</a><a data-go="list">SHOP</a></nav>
+  <div class="cart">CART (<span id="cc">0</span>)</div>
+</header>
+
+<!-- 01 메인 -->
+<section class="scr" id="s-main">
+  <div class="blk hero m-hall"><span class="tag">A · 풀스크린 이미지</span>
+    <div><div class="en">Busan · Sauna &amp; Rest</div><h1>뜨거움 다음에 오는<br>고요를 팝니다</h1></div>
+  </div>
+  <div class="blk split"><span class="tag">B · 이미지+텍스트 2단</span>
+    <div class="m-steam"></div>
+    <div class="txt pad"><div class="en">Our Ritual</div><h2>땀을 내고, 물에 들어가고,<br>가만히 앉아 있는 시간</h2><p class="body">온기는 사우나에서 시작해 집으로 이어지는 휴식을 만듭니다. 공간에서 쓰던 타월과 가운을 그대로 판매합니다.</p><button class="link" data-go="brand">브랜드 이야기</button></div>
+  </div>
+  <div class="blk pad" style="padding-top:0"><span class="tag">C · 갤러리 3열</span>
+    <div class="en" style="margin-bottom:20px">Space</div>
+    <div class="strip">
+      <button class="tile m-wood" data-sp="0"><span>SAUNA</span></button>
+      <button class="tile m-water" data-sp="1"><span>COLD BATH</span></button>
+      <button class="tile m-stone" data-sp="2"><span>REST</span></button>
+    </div>
+  </div>
+  <div class="blk pad" style="background:var(--stone)"><span class="tag">D · 상품 목록 (4개)</span>
+    <div class="en" style="margin-bottom:20px">Goods</div>
+    <div class="goods" id="g-main"></div>
+    <button class="link" data-go="list">전체 상품</button>
+  </div>
+</section>
+
+<!-- 02 브랜드 -->
+<section class="scr" id="s-brand">
+  <div class="blk hero m-night" style="height:min(64vh,560px)"><span class="tag">A · 풀스크린 이미지</span>
+    <div><div class="en">About Ongi</div><h1>온기, 몸이 기억하는<br>따뜻함</h1></div>
+  </div>
+  <div class="blk pad"><span class="tag">B · 텍스트 중앙 정렬</span>
+    <p class="quote">빠르게 사는 도시에서<br>일부러 느려지는 한 시간을 만들고 싶었습니다.<br>열기, 냉기, 그리고 쉼. 그 순서를 지키는 곳.</p>
+  </div>
+  <div class="blk pad" style="padding-top:0"><span class="tag">C · 3단 텍스트 리스트</span>
+    <div class="ruler">
+      <div><span class="en">01</span><b>열기</b><p>80도의 건식 사우나에서 8분에서 12분.</p></div>
+      <div><span class="en">02</span><b>냉기</b><p>16도의 냉탕에서 숨을 고르며 1분.</p></div>
+      <div><span class="en">03</span><b>쉼</b><p>외기욕 의자에서 아무것도 하지 않는 10분.</p></div>
+    </div>
+  </div>
+  <div class="blk split"><span class="tag">D · 이미지+텍스트 2단</span>
+    <div class="m-linen" style="--c:#ddd3c3"></div>
+    <div class="txt pad"><div class="en">Material</div><h2>공간에서 먼저 써 보고<br>고른 소재</h2><p class="body">타월은 무연사 면 100%, 가운은 와플 조직으로 가볍게 만들었습니다. 매일 세탁해도 버티는지 공간에서 먼저 확인합니다.</p><button class="link" data-go="list">상품 보기</button></div>
+  </div>
+</section>
+
+<!-- 03 공간·시설 -->
+<section class="scr" id="s-space">
+  <div class="blk hero m-wood" style="height:min(70vh,620px)"><span class="tag">A · 풀스크린 이미지</span>
+    <div><div class="en">Space · Busan (2027 Open)</div><h1>바다 가까운 골목,<br>세 개의 방</h1></div>
+  </div>
+  <div class="blk pad"><span class="tag">B · 갤러리 + 팝업(상세)</span>
+    <p class="body" style="margin:0 0 28px">사진을 누르면 시설 설명이 팝업으로 열립니다. 촬영 전에는 색면으로 자리를 잡아 두고, 사진이 나오면 그대로 교체합니다.</p>
+    <div class="strip" id="spaces"></div>
+  </div>
+  <div class="blk pad" style="padding-top:0"><span class="tag">C · 예약 영역 (향후 활성화)</span>
+    <div class="reserve">
+      <div><div class="en">Reservation</div><b style="font-weight:400;font-size:18px">방문 예약은 오픈과 함께 열립니다</b><p class="body" style="margin:4px 0 0">지금은 알림 신청만 받습니다. 나중에 아임웹 예약 기능이나 외부 예약 버튼으로 이 블록만 바꿉니다.</p></div>
+      <button class="link" style="margin:0" onclick="toast('오픈 알림 신청이 접수됐습니다 (시연)')">오픈 알림 받기</button>
+    </div>
+  </div>
+</section>
+
+<!-- 04 상품목록 -->
+<section class="scr" id="s-list">
+  <div class="blk pad" style="padding-bottom:24px"><span class="tag">A · 텍스트 헤더</span>
+    <div class="en">Shop</div><h2 style="margin-bottom:0">공간에서 쓰는 것을 집으로</h2>
+  </div>
+  <div class="blk pad" style="padding-top:24px"><span class="tag">B · 상품 목록 (카테고리 필터)</span>
+    <div class="filter" id="flt"></div>
+    <div class="goods" id="g-list"></div>
+  </div>
+</section>
+
+<!-- 05 상품상세 -->
+<section class="scr" id="s-detail">
+  <div class="blk pad"><span class="tag">A · 상품 상세 기본 레이아웃</span>
+    <div class="pd">
+      <div><div id="pv" class="m-linen" style="aspect-ratio:1"></div><div class="thumbs" id="th"></div></div>
+      <div>
+        <div class="en" id="dcat"></div>
+        <h2 id="dname" style="margin-top:6px"></h2>
+        <div id="dprice" style="font-size:17px"></div>
+        <p class="body" id="ddesc" style="margin-top:18px"></p>
+        <div class="opt"><label>COLOR</label><div class="chips" id="oc"></div></div>
+        <div class="opt"><label>SIZE</label><div class="chips" id="os"></div></div>
+        <div class="opt"><label>QUANTITY</label><div class="qty"><button aria-label="수량 줄이기" onclick="setQ(-1)">−</button><output id="q">1</output><button aria-label="수량 늘리기" onclick="setQ(1)">+</button></div></div>
+        <div class="total"><span>합계</span><b id="dtotal" style="font-weight:500"></b></div>
+        <button class="buy" onclick="addCart()">장바구니 담기</button>
+      </div>
+    </div>
+  </div>
+  <div class="blk split"><span class="tag">B · 상세 설명 (이미지+텍스트)</span>
+    <div class="m-steam"></div>
+    <div class="txt pad"><div class="en">Detail</div><h2>사우나에서 나와<br>바로 걸치는 무게</h2><p class="body">상세 이미지는 촬영본을 받아 이 블록 구조에 맞춰 배치합니다. 실 콘텐츠가 적을 때는 텍스트와 색면 위주로 먼저 오픈하고 나중에 사진을 채웁니다.</p></div>
+  </div>
+</section>
+
+<div class="note" id="note"></div>
+<footer><span>ONGI 온기 · 가상의 브랜드입니다</span><span>시안 · 이미지 자리는 색면으로 표현</span></footer>
+
+<dialog id="dlg"><div style="position:relative"><button class="x" aria-label="닫기" onclick="dlg.close()">×</button><div class="dlg"><div id="dimg"></div><div class="in"><div class="en" id="den"></div><h2 id="dt" style="margin:8px 0 12px"></h2><p class="body" id="dd" style="margin:0"></p></div></div></div></dialog>
+<div class="toast" id="toastEl"></div>
+
+<script>
+const P=[
+ {n:'사우나 타월 L',c:'TOWEL',p:32000,m:'#e3dccf',d:'무연사 면 100%, 80×150cm. 물을 빨리 머금고 빨리 마릅니다.',col:['오트','차콜','세이지'],sz:['L']},
+ {n:'핸드 타월 2P',c:'TOWEL',p:18000,m:'#d5cdbf',d:'얼굴과 목에 두르기 좋은 34×80cm 두 장 묶음.',col:['오트','차콜'],sz:['FREE']},
+ {n:'와플 가운',c:'ROBE',p:89000,m:'#cfc5b4',d:'와플 조직의 가벼운 가운. 사우나와 외기욕 사이에 걸칩니다.',col:['오트','차콜'],sz:['S','M','L']},
+ {n:'린넨 라운지 가운',c:'ROBE',p:118000,m:'#bdb2a1',d:'린넨 혼방으로 집에서도 입는 긴 가운.',col:['샌드','먹색'],sz:['M','L']},
+ {n:'울 사우나 햇',c:'HAT',p:42000,m:'#a99b87',d:'울 펠트 모자. 머리를 열기에서 지켜 오래 앉아 있게 합니다.',col:['내추럴','그레이'],sz:['FREE']},
+ {n:'코튼 비니',c:'HAT',p:26000,m:'#8f8576',d:'외기욕 때 쓰는 얇은 면 비니.',col:['차콜','오트'],sz:['FREE']},
+ {n:'히노키 버킷',c:'GOODS',p:54000,m:'#c2a27c',d:'편백나무 바가지와 통 세트.',col:['내추럴'],sz:['FREE']},
+ {n:'파우치',c:'GOODS',p:22000,m:'#b8ad9c',d:'젖은 타월을 넣는 방수 안감 파우치.',col:['샌드','먹색'],sz:['FREE']}];
+const SP=[
+ {k:'m-wood',en:'Sauna',t:'건식 사우나',d:'편백으로 마감한 6인실. 80도 전후를 유지하고 로우리 시간은 매시 정각입니다.'},
+ {k:'m-water',en:'Cold Bath',t:'냉탕',d:'16도의 지하수 냉탕. 두 사람이 나란히 앉을 수 있는 깊이입니다.'},
+ {k:'m-stone',en:'Rest',t:'외기욕 테라스',d:'바다 바람이 드는 테라스에 누울 수 있는 의자 여덟 개를 둡니다.'}];
+const NOTES={
+ main:['A 풀스크린 이미지 블록: 아임웹 "이미지" 섹션 전체폭, 텍스트 오버레이 하단 정렬','B 2단 블록: "이미지+텍스트" 섹션, 모바일에서 이미지 위·글 아래로 자동 전환','C 갤러리: "갤러리" 섹션 3열, 클릭 시 공간·시설 페이지로 연결','D 상품: "상품 목록" 섹션 4개 노출, 모바일 2열'],
+ brand:['A 풀스크린 이미지 블록','B 텍스트 섹션 가운데 정렬, 줄간격 2.0','C 3단 텍스트: "텍스트" 섹션 3열 그리드','D 이미지+텍스트 2단 (메인 B와 같은 블록 재사용)'],
+ space:['A 풀스크린 이미지 블록','B 갤러리 + 팝업: 갤러리 섹션의 "클릭 시 팝업" 설정, 또는 이미지마다 팝업 위젯 연결','C 예약 영역: 지금은 버튼 하나짜리 텍스트 블록. 오픈 시 아임웹 예약 상품이나 외부 예약 링크로 교체'],
+ list:['A 텍스트 헤더 섹션','B "상품 목록" 섹션, 카테고리 탭 사용. 카드 비율 4:5, 상품명·가격만 노출'],
+ detail:['A 아임웹 상품 상세 기본 레이아웃: 이미지 갤러리 좌, 옵션·수량·장바구니 우. 옵션은 상품 관리에서 색상·사이즈로 등록','B 상세 설명 영역: 이미지+텍스트를 상세 에디터 안에 배치. 장바구니·결제·로그인·마이페이지는 아임웹 기본 화면에 색과 서체만 맞춤']};
+const won=n=>n.toLocaleString('ko-KR')+'원';
+let cur=0,col=0,sz=0,qn=1,cart=0,cat='ALL';
+const card=(p,i)=>`<button class="item" onclick="openP(${i})"><div class="ph m-linen" style="--c:${p.m}"><i>${p.c}</i></div><b>${p.n}</b><small>${won(p.p)}</small></button>`;
+function renderGoods(){
+  document.getElementById('g-main').innerHTML=P.slice(0,4).map(card).join('');
+  flt.innerHTML=['ALL','TOWEL','ROBE','HAT','GOODS'].map(c=>`<button class="${c===cat?'on':''}" onclick="cat='${c}';renderGoods()">${c}</button>`).join('');
+  document.getElementById('g-list').innerHTML=P.map((p,i)=>cat==='ALL'||p.c===cat?card(p,i):'').join('');
+}
+function openP(i){cur=i;col=0;sz=0;qn=1;renderDetail();go('detail')}
+function renderDetail(){
+  const p=P[cur];
+  dcat.textContent=p.c;dname.textContent=p.n;dprice.textContent=won(p.p);ddesc.textContent=p.d;
+  pv.style.setProperty('--c',p.m);
+  th.innerHTML=[0,1,2,3].map(k=>`<button class="m-linen ${k?'':'on'}" style="--c:${p.m};filter:brightness(${1-k*.07})" aria-label="이미지 ${k+1}" onclick="[...th.children].forEach((b,j)=>b.classList.toggle('on',j===${k}));pv.style.filter='brightness(${1-k*.07})'"></button>`).join('');
+  pv.style.filter='';
+  oc.innerHTML=p.col.map((c,k)=>`<button class="${k===col?'on':''}" onclick="col=${k};renderDetail()">${c}</button>`).join('');
+  os.innerHTML=p.sz.map((c,k)=>`<button class="${k===sz?'on':''}" onclick="sz=${k};renderDetail()">${c}</button>`).join('');
+  q.textContent=qn;dtotal.textContent=won(p.p*qn);
+}
+function setQ(d){qn=Math.min(9,Math.max(1,qn+d));renderDetail()}
+function addCart(){cart+=qn;cc.textContent=cart;const p=P[cur];toast(`${p.n} · ${p.col[col]} · ${p.sz[sz]} ${qn}개를 담았습니다`)}
+let tt;function toast(m){toastEl.textContent=m;toastEl.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>toastEl.classList.remove('on'),2200)}
+function openSpace(i){const s=SP[i];dimg.className=s.k;den.textContent=s.en;dt.textContent=s.t;dd.textContent=s.d;dlg.showModal()}
+spaces.innerHTML=SP.map((s,i)=>`<button class="tile ${s.k}" data-sp="${i}"><span>${s.en.toUpperCase()}</span></button>`).join('');
+function go(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.toggle("on",s.id==="s-"+id));
+  document.querySelectorAll('.switch button').forEach(b=>b.classList.toggle('on',b.dataset.go===id));
+  document.querySelectorAll('header nav a').forEach(a=>a.classList.toggle('on',a.dataset.go===id));
+  note.innerHTML=`<h4>아임웹 구현 메모 · 이 화면은 아래 블록 단위로 만들 수 있습니다</h4><ol>${NOTES[id].map(n=>`<li>${n}</li>`).join('')}</ol><p style="margin:12px 0 0">화면 위 검은 꼬리표(A, B, C…)가 블록 경계입니다. 납품 시 Figma에서 같은 이름의 프레임으로 나눠 드립니다.</p>`;
+  history.replaceState(null,'','#'+id);scrollTo(0,0);
+}
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return}
+  const s=e.target.closest('[data-sp]');if(s)openSpace(+s.dataset.sp);
+});
+dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
+renderGoods();renderDetail();
+const fromHash=()=>go(NOTES[location.hash.slice(1)]?location.hash.slice(1):'main');
+addEventListener('hashchange',fromHash);fromHash();
+</script>
+</body>
+</html>
