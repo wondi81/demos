@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>산지바로 멀티셀러 시연</title>
+<meta name="description" content="농수산물 산지직송 멀티셀러 커머스 제안용 시연 화면">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--bg:#f4f5f2;--sf:#fff;--sf2:#f0f2ee;--ln:#e2e5df;--tx:#1d2420;--mu:#5d6862;--ac:#2f6b45;--ac2:#e6efe8;--warn:#a5521c;--warn2:#fbeee4;--bad:#b3352b;--r:12px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121513;--sf:#1a1e1b;--sf2:#222724;--ln:#2e3430;--tx:#e8ece9;--mu:#9aa59f;--ac:#6fbf8a;--ac2:#1f3326;--warn:#e2965f;--warn2:#3a2a1d;--bad:#e5786e}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--tx);font:15px/1.5 Pretendard,system-ui,sans-serif;padding-bottom:40px;-webkit-tap-highlight-color:transparent}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+button:active{transform:scale(.98)}
+.top{position:sticky;top:0;z-index:20;background:var(--sf);border-bottom:1px solid var(--ln)}
+.top .in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:10px 16px;flex-wrap:wrap}
+.logo{font-weight:800;font-size:18px;color:var(--ac);letter-spacing:-.02em}
+.logo small{font-weight:500;color:var(--mu);font-size:12px;margin-left:6px}
+.roles{display:flex;gap:4px;background:var(--sf2);padding:4px;border-radius:999px;margin-left:auto}
+.roles button{padding:6px 14px;border-radius:999px;font-weight:600;font-size:14px;color:var(--mu)}
+.roles button.on{background:var(--sf);color:var(--tx);box-shadow:0 1px 3px rgb(30 50 35/.15)}
+.reset{font-size:13px;color:var(--mu);text-decoration:underline}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 16px}
+.cust{display:grid;grid-template-columns:420px 1fr;gap:28px;align-items:start}
+.phone{background:var(--sf);border:1px solid var(--ln);border-radius:28px;overflow:hidden;height:min(820px,calc(100dvh - 120px));display:flex;flex-direction:column;box-shadow:0 12px 40px rgb(30 50 35/.08)}
+.pbody{flex:1;overflow-y:auto;padding:16px}
+.pnav{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ln)}
+.pnav button{padding:10px 0 12px;font-size:13px;color:var(--mu);font-weight:600;position:relative}
+.pnav button.on{color:var(--ac)}
+.badge{display:inline-block;min-width:18px;padding:0 5px;border-radius:9px;background:var(--ac);color:#fff;font-size:11px;line-height:18px;margin-left:3px}
+.guide{background:var(--sf);border:1px solid var(--ln);border-radius:var(--r);padding:20px 22px}
+.guide h2{font-size:18px;margin-bottom:6px}
+.guide ol{padding-left:20px;color:var(--mu);font-size:14px}
+.guide li{margin:6px 0}
+.guide li b{color:var(--tx)}
+h1{font-size:22px;letter-spacing:-.02em}
+h3{font-size:16px;margin:18px 0 8px}
+.mu{color:var(--mu);font-size:13px}
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px;background:var(--sf2);color:var(--mu)}
+.tag.ac{background:var(--ac2);color:var(--ac)}
+.tag.warn{background:var(--warn2);color:var(--warn)}
+.tag.bad{background:var(--warn2);color:var(--bad)}
+.demo{font-size:11px;font-weight:700;color:var(--warn);border:1px solid currentColor;border-radius:5px;padding:0 5px;margin-left:4px;vertical-align:1px}
+.search{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--ln);background:var(--sf2);font-size:16px}
+.chips{display:flex;gap:6px;overflow-x:auto;margin:12px 0;scrollbar-width:none}
+.chips button{flex:none;padding:6px 13px;border-radius:999px;border:1px solid var(--ln);font-size:13px;font-weight:600;color:var(--mu)}
+.chips button.on{background:var(--tx);color:var(--sf);border-color:var(--tx)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px}
+.pc{text-align:left}
+.thumb{aspect-ratio:4/3;border-radius:10px;display:grid;place-items:center;font-size:30px;font-weight:800;color:rgb(255 255 255/.92);margin-bottom:7px}
+.pc .sel{font-size:12px;color:var(--mu)}
+.pc .nm{font-size:14px;font-weight:600;line-height:1.35;margin:1px 0 2px}
+.price{font-weight:800}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:10px;background:var(--ac);color:#fff;font-weight:700;font-size:14px;white-space:nowrap}
+.btn.ghost{background:var(--sf2);color:var(--tx)}
+.btn.sm{padding:6px 11px;font-size:13px;border-radius:8px}
+.btn.line{background:none;border:1px solid var(--ln);color:var(--tx)}
+.btn.full{width:100%;padding:14px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.box{border:1px solid var(--ln);border-radius:var(--r);padding:14px;margin-bottom:12px;background:var(--sf)}
+.row{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.line{display:flex;justify-content:space-between;font-size:14px;padding:3px 0}
+.line.tot{font-weight:800;font-size:16px;border-top:1px solid var(--ln);margin-top:6px;padding-top:9px}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--ln);border-radius:8px}
+.qty button{width:30px;height:28px;font-weight:700}
+.qty span{min-width:22px;text-align:center;font-size:14px}
+label{display:block;font-size:13px;font-weight:600;margin:10px 0 4px}
+input[type=text],input[type=number],select{width:100%;padding:9px 11px;border-radius:8px;border:1px solid var(--ln);background:var(--sf);font-size:16px}
+input:focus,select:focus{outline:2px solid var(--ac);outline-offset:1px}
+.pay{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pay button{border:1px solid var(--ln);border-radius:8px;padding:10px;font-size:14px;font-weight:600}
+.pay button.on{border-color:var(--ac);background:var(--ac2);color:var(--ac)}
+.steps{display:flex;gap:4px;margin:10px 0 4px}
+.steps div{flex:1;text-align:center;font-size:11px;color:var(--mu);padding-top:7px;border-top:3px solid var(--ln)}
+.steps div.on{border-color:var(--ac);color:var(--ac);font-weight:700}
+.sheet{position:fixed;inset:0;background:rgb(10 20 14/.45);display:none;align-items:flex-end;justify-content:center;z-index:50}
+.sheet.on{display:flex}
+.sheet .card{background:var(--sf);width:100%;max-width:440px;border-radius:20px 20px 0 0;padding:20px 18px 56px;max-height:88dvh;overflow-y:auto;animation:up .25s cubic-bezier(.16,1,.3,1)}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.sheet .card{animation:none}}
+.toast{position:fixed;left:50%;bottom:56px;transform:translateX(-50%);background:var(--tx);color:var(--sf);padding:10px 18px;border-radius:10px;font-size:14px;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+.cust>*,.console>*{min-width:0}
+.console{display:grid;grid-template-columns:220px 1fr;gap:24px;align-items:start}
+.side{background:var(--sf);border:1px solid var(--ln);border-radius:var(--r);padding:10px}
+.side button{display:block;width:100%;text-align:left;padding:10px 12px;border-radius:8px;font-weight:600;font-size:14px;color:var(--mu)}
+.side button.on{background:var(--ac2);color:var(--ac)}
+.side .who{padding:6px 4px 12px;border-bottom:1px solid var(--ln);margin-bottom:8px}
+.panel{background:var(--sf);border:1px solid var(--ln);border-radius:var(--r);padding:20px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.kpi{background:var(--sf2);border-radius:10px;padding:12px 14px}
+.kpi b{display:block;font-size:19px;margin-top:2px;font-variant-numeric:tabular-nums}
+.tw{overflow-x:auto;margin:0 -4px}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+th{text-align:left;font-size:12px;color:var(--mu);font-weight:600;padding:8px 8px;border-bottom:1px solid var(--ln);white-space:nowrap}
+td{padding:10px 8px;border-bottom:1px solid var(--ln);vertical-align:top;white-space:nowrap}
+td.n,th.n{text-align:right;white-space:nowrap}
+.inl{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.inl select,.inl input{width:auto;padding:6px 8px;font-size:14px}
+.note{background:var(--warn2);color:var(--warn);border-radius:10px;padding:10px 12px;font-size:13px;margin:10px 0}
+.empty{text-align:center;color:var(--mu);padding:36px 10px;font-size:14px}
+.formgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:0 10px;align-items:end}
+@media (max-width:900px){.cust,.console{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr 1fr}.side{display:flex;flex-wrap:wrap;gap:4px;padding:8px}.side .who{width:100%;margin-bottom:4px;padding:4px}.side button{width:auto;flex:none}}
+@media (max-width:520px){.wrap{padding:12px 0}.phone{border-radius:0;border-left:0;border-right:0;height:calc(100dvh - 140px)}.guide{margin:0 16px}.console{padding:0 16px}.top .in{gap:8px}.roles{margin-left:0}.logo small{display:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <div class="logo">산지바로<small>산지직송 멀티셀러 마켓 · 제안용 시연</small></div>
+  <div class="roles" id="roles"></div>
+  <button class="reset" onclick="resetAll()">처음 상태로</button>
+</div></header>
+<main class="wrap" id="app"></main>
+<div class="sheet" id="sheet" onclick="if(event.target===this)closeSheet()"><div class="card" id="sheetc"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const CATS=['전체','과일','채소','수산','축산·가공'];
+const COURIERS=['CJ대한통운','롯데택배','한진택배','우체국택배'];
+const FLOW=['결제완료','배송준비','배송중','배송완료'];
+const COL=['#3f7d55','#b8662f','#2f6a8a','#8a4b6a','#6b7a2f','#a3473b','#4f5f9a','#7a6a3a'];
+function seed(){return{
+  feeRate:10,
+  sellers:[
+    {id:'s1',name:'해남 햇살농장',region:'전남 해남',status:'승인',fee:null,ship:3500,free:30000},
+    {id:'s2',name:'완도 바다수산',region:'전남 완도',status:'승인',fee:null,ship:4000,free:50000},
+    {id:'s3',name:'청송 사과마을',region:'경북 청송',status:'승인',fee:8,ship:3000,free:40000},
+    {id:'s4',name:'제주 귤빛농원',region:'제주 서귀포',status:'대기',fee:null,ship:3500,free:30000}],
+  products:[
+    {id:'p1',sid:'s1',name:'해남 꿀고구마 3kg',price:15900,cat:'채소',stock:40},
+    {id:'p2',sid:'s1',name:'햇양파 5kg',price:12900,cat:'채소',stock:25},
+    {id:'p3',sid:'s1',name:'무농약 배추 2포기',price:9800,cat:'채소',stock:18},
+    {id:'p4',sid:'s2',name:'완도 활전복 1kg(10~12미)',price:42000,cat:'수산',stock:12},
+    {id:'p5',sid:'s2',name:'자연산 돌김 100매',price:16500,cat:'수산',stock:30},
+    {id:'p6',sid:'s2',name:'손질 생물 고등어 4마리',price:19800,cat:'수산',stock:20},
+    {id:'p7',sid:'s3',name:'청송 부사 사과 5kg',price:32000,cat:'과일',stock:22},
+    {id:'p8',sid:'s3',name:'사과즙 50포',price:24900,cat:'축산·가공',stock:35},
+    {id:'p9',sid:'s4',name:'서귀포 노지 감귤 5kg',price:18900,cat:'과일',stock:50}],
+  cart:[],
+  orders:[
+    {id:'O-1018-031',date:'10.18',buyer:'김서연',pay:'카카오페이',subs:[
+      {sid:'s1',items:[{pid:'p1',name:'해남 꿀고구마 3kg',price:15900,qty:2}],ship:0,rate:10,st:'배송완료',inv:{c:'CJ대한통운',no:'6812 3345 0912'},settled:false},
+      {sid:'s2',items:[{pid:'p5',name:'자연산 돌김 100매',price:16500,qty:1}],ship:4000,rate:10,st:'배송완료',inv:{c:'롯데택배',no:'2405 7781 3310'},settled:false}]},
+    {id:'O-1021-077',date:'10.21',buyer:'김서연',pay:'신용카드',subs:[
+      {sid:'s3',items:[{pid:'p7',name:'청송 부사 사과 5kg',price:32000,qty:1}],ship:3000,rate:8,st:'배송중',inv:{c:'한진택배',no:'4589 2210 7764'},settled:false}]}],
+  charges:[{sid:'s1',type:'입점료',amt:30000,date:'10.01',done:false},{sid:'s2',type:'광고비',amt:15000,date:'10.15',done:false}],
+  payouts:[]
+}}
+let S;try{S=JSON.parse(localStorage.getItem('farmms'))}catch(e){}
+if(!S||!S.sellers)S=seed();
+const V={role:'cust',ctab:'home',cat:'전체',q:'',pay:'신용카드',seller:'s1',stab:'orders',atab:'sellers'};
+function save(){try{localStorage.setItem('farmms',JSON.stringify(S))}catch(e){}}
+function resetAll(){S=seed();save();toast('처음 상태로 되돌렸습니다');render()}
+const won=n=>Math.round(n).toLocaleString('ko-KR')+'원';
+const neg=n=>n?'-'+won(n):'0원';
+const sel=id=>S.sellers.find(s=>s.id===id);
+const prod=id=>S.products.find(p=>p.id===id);
+const rateOf=s=>s.fee??S.feeRate;
+const today=()=>{const d=new Date();return (d.getMonth()+1)+'.'+String(d.getDate()).padStart(2,'0')};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),1800)}
+function thumb(p){const i=S.products.indexOf(p);return `<div class="thumb" style="background:${COL[i%COL.length]}">${esc(p.name[0])}</div>`}
+
+/* 정산 계산: 수수료는 상품금액에만, 배송비는 판매자 몫. 환불되면 지급액 0 */
+function itemsAmt(sub){return sub.items.reduce((a,i)=>a+i.price*i.qty,0)}
+function calc(sub){const it=itemsAmt(sub),gross=it+sub.ship;
+  if(sub.st==='환불완료')return{it,gross,fee:0,refund:gross,pay:0};
+  const fee=Math.round(it*sub.rate/100);return{it,gross,fee,refund:0,pay:gross-fee}}
+function subsOf(sid){const r=[];S.orders.forEach(o=>o.subs.forEach((s,i)=>{if(s.sid===sid)r.push({o,s,i})}));return r}
+function pending(sid){const rows=subsOf(sid).filter(x=>!x.s.settled&&(x.s.st==='배송완료'||x.s.st==='환불완료'));
+  const ch=S.charges.filter(c=>c.sid===sid&&!c.done);
+  const sales=rows.reduce((a,x)=>a+calc(x.s).gross,0),fee=rows.reduce((a,x)=>a+calc(x.s).fee,0),refund=rows.reduce((a,x)=>a+calc(x.s).refund,0),chg=ch.reduce((a,c)=>a+c.amt,0);
+  return{rows,ch,sales,fee,refund,chg,net:sales-fee-refund-chg}}
+
+/* 장바구니를 판매자별로 쪼갠다 */
+function cartGroups(){const g={};S.cart.forEach(c=>{const p=prod(c.pid);(g[p.sid]=g[p.sid]||[]).push({p,qty:c.qty})});
+  return Object.entries(g).map(([sid,items])=>{const s=sel(sid),it=items.reduce((a,x)=>a+x.p.price*x.qty,0),ship=it>=s.free?0:s.ship;return{s,items,it,ship}})}
+
+function render(){
+  document.getElementById('roles').innerHTML=[['cust','고객 앱'],['seller','판매자'],['admin','운영자']].map(([k,l])=>`<button class="${V.role===k?'on':''}" onclick="V.role='${k}';render()">${l}</button>`).join('');
+  document.getElementById('app').innerHTML=V.role==='cust'?custView():V.role==='seller'?sellerView():adminView();
+  const pb=document.querySelector('.pbody');if(pb&&V.keepTop!==true)pb.scrollTop=0;V.keepTop=false;
+}
+
+/* ---------- 고객 ---------- */
+function custView(){
+  const n=S.cart.reduce((a,c)=>a+c.qty,0);
+  const body=V.ctab==='home'?homeView():V.ctab==='cart'?cartView():V.ctab==='checkout'?checkoutView():ordersView();
+  const nav=[['home','홈'],['cart','장바구니'],['orders','주문·배송']].map(([k,l])=>`<button class="${V.ctab===k||(k==='cart'&&V.ctab==='checkout')?'on':''}" onclick="V.ctab='${k}';render()">${l}${k==='cart'&&n?`<span class="badge">${n}</span>`:''}</button>`).join('');
+  return `<div class="cust"><div class="phone"><div class="pbody">${body}</div><nav class="pnav">${nav}</nav></div>${guideView()}</div>`}
+function guideView(){return `<aside class="guide"><h2>이렇게 눌러 보세요</h2><p class="mu">한 주문이 판매자별로 나뉘고, 정산까지 숫자가 이어지는지 확인하는 순서입니다. 결제·택배 연동은 시연용이라 실제로 일어나지 않습니다.</p><ol>
+<li><b>고객 앱</b>에서 해남 햇살농장 고구마와 완도 바다수산 전복을 담습니다. 장바구니가 판매자별로 나뉘고 배송비가 따로 붙습니다.</li>
+<li>주문서에서 간편결제를 고르고 결제합니다. 주문·배송 탭에 판매자별 주문이 따로 보입니다.</li>
+<li><b>판매자</b>로 바꿔 해남 햇살농장을 고르고 주문 확인, 송장 입력, 배송완료 처리를 합니다.</li>
+<li>고객 앱에서 완도 바다수산 주문을 취소 요청하고, 판매자 화면에서 승인하면 환불완료로 바뀝니다.</li>
+<li>판매자 정산 탭에서 판매액, 수수료, 환불, 입점료·광고비 차감이 줄마다 계산된 것을 봅니다.</li>
+<li><b>운영자</b>에서 수수료율을 바꾸거나 광고비를 청구하고, 정산 지급을 처리합니다. 판매자 정산 탭의 지급 내역과 금액이 같습니다.</li>
+<li>운영자 판매자 탭에서 제주 귤빛농원 입점을 승인하면 고객 앱에 감귤이 올라옵니다.</li></ol></aside>`}
+function homeView(){
+  const ok=S.sellers.filter(s=>s.status==='승인').map(s=>s.id);
+  const list=S.products.filter(p=>ok.includes(p.sid)&&(V.cat==='전체'||p.cat===V.cat)&&(!V.q||(p.name+sel(p.sid).name).includes(V.q)));
+  return `<h1>오늘 산지에서 바로</h1><p class="mu" style="margin-bottom:12px">농가·어가 ${ok.length}곳이 직접 보내 드립니다</p>
+  <input class="search" type="search" placeholder="상품이나 농장 이름 검색" aria-label="검색" value="${esc(V.q)}" oninput="V.q=this.value;V.keepTop=true;const p=this.selectionStart;render();const e=document.querySelector('.search');e.focus();e.setSelectionRange(p,p)">
+  <div class="chips">${CATS.map(c=>`<button class="${V.cat===c?'on':''}" onclick="V.cat='${c}';render()">${c}</button>`).join('')}</div>
+  ${list.length?`<div class="grid">${list.map(p=>`<button class="pc" onclick="openProd('${p.id}')">${thumb(p)}<div class="sel">${esc(sel(p.sid).name)}</div><div class="nm">${esc(p.name)}</div><div class="price">${won(p.price)}</div></button>`).join('')}</div>`:`<div class="empty">조건에 맞는 상품이 없습니다.<br>검색어를 지우거나 다른 분류를 골라 보세요.</div>`}`}
+function openProd(id){const p=prod(id),s=sel(p.sid);V.pq=1;
+  document.getElementById('sheetc').innerHTML=`${thumb(p).replace('class="thumb"','class="thumb" style="aspect-ratio:16/9;font-size:44px;background:'+COL[S.products.indexOf(p)%COL.length]+'"')}
+  <div class="mu">${esc(s.name)} · ${esc(s.region)}</div><h1 style="margin:2px 0 6px">${esc(p.name)}</h1><div class="price" style="font-size:20px">${won(p.price)}</div>
+  <div class="box" style="margin-top:12px"><div class="line"><span class="mu">배송비</span><span>${won(s.ship)} (${won(s.free)} 이상 무료)</span></div><div class="line"><span class="mu">출고</span><span>농장에서 직접 발송</span></div><div class="line"><span class="mu">재고</span><span>${p.stock}개</span></div></div>
+  <p class="mu" style="margin-bottom:14px">같은 농장 상품을 함께 담으면 배송비가 한 번만 붙습니다. 다른 농장 상품은 농장마다 따로 발송됩니다.</p>
+  <div class="row"><div class="qty"><button onclick="V.pq=Math.max(1,V.pq-1);document.getElementById('pq').textContent=V.pq" aria-label="수량 빼기">-</button><span id="pq">1</span><button onclick="V.pq=Math.min(${p.stock},V.pq+1);document.getElementById('pq').textContent=V.pq" aria-label="수량 더하기">+</button></div><button class="btn" style="flex:1" onclick="addCart('${p.id}')">장바구니 담기</button></div>`;
+  document.getElementById('sheet').classList.add('on')}
+function closeSheet(){document.getElementById('sheet').classList.remove('on')}
+function addCart(id){const c=S.cart.find(c=>c.pid===id);c?c.qty+=V.pq:S.cart.push({pid:id,qty:V.pq});save();closeSheet();toast('장바구니에 담았습니다');V.keepTop=true;render()}
+function setQty(id,d){const c=S.cart.find(c=>c.pid===id);c.qty+=d;if(c.qty<1)S.cart=S.cart.filter(x=>x!==c);save();V.keepTop=true;render()}
+function cartView(){
+  const g=cartGroups();if(!g.length)return `<h1>장바구니</h1><div class="empty">담긴 상품이 없습니다.<br><br><button class="btn" onclick="V.ctab='home';render()">상품 보러 가기</button></div>`;
+  const it=g.reduce((a,x)=>a+x.it,0),sh=g.reduce((a,x)=>a+x.ship,0);
+  return `<h1>장바구니</h1><p class="mu" style="margin-bottom:12px">농장 ${g.length}곳에서 따로 발송됩니다</p>${g.map(x=>`<div class="box"><div class="row" style="margin-bottom:8px"><b>${esc(x.s.name)}</b><span class="tag">${esc(x.s.region)}</span></div>
+  ${x.items.map(i=>`<div class="row" style="padding:6px 0"><div style="flex:1;min-width:0"><div style="font-size:14px">${esc(i.p.name)}</div><div class="price" style="font-size:14px">${won(i.p.price*i.qty)}</div></div><div class="qty"><button onclick="setQty('${i.p.id}',-1)" aria-label="빼기">-</button><span>${i.qty}</span><button onclick="setQty('${i.p.id}',1)" aria-label="더하기">+</button></div></div>`).join('')}
+  <div class="line" style="border-top:1px solid var(--ln);margin-top:6px;padding-top:8px"><span class="mu">배송비</span><span>${x.ship?won(x.ship):'무료'}</span></div>${x.ship?`<div class="mu">${won(x.s.free-x.it)} 더 담으면 이 농장 배송비 무료</div>`:''}</div>`).join('')}
+  <div class="box"><div class="line"><span>상품금액</span><span>${won(it)}</span></div><div class="line"><span>배송비 합계 (농장 ${g.length}곳)</span><span>${won(sh)}</span></div><div class="line tot"><span>결제 예정</span><span>${won(it+sh)}</span></div></div>
+  <button class="btn full" onclick="V.ctab='checkout';render()">주문하기</button>`}
+function checkoutView(){
+  const g=cartGroups();if(!g.length){V.ctab='cart';return cartView()}
+  const tot=g.reduce((a,x)=>a+x.it+x.ship,0);
+  return `<button class="mu" onclick="V.ctab='cart';render()">‹ 장바구니</button><h1 style="margin:4px 0 10px">주문서</h1>
+  <div class="box"><b>배송지</b><label for="rcv">받는 분</label><input type="text" id="rcv" value="김서연"><label for="adr">주소</label><input type="text" id="adr" value="서울 마포구 월드컵북로 12, 302호"></div>
+  <div class="box"><b>주문 상품</b>${g.map(x=>`<div style="margin-top:10px"><div class="row"><span style="font-weight:600;font-size:14px">${esc(x.s.name)}</span><span class="mu">배송비 ${x.ship?won(x.ship):'무료'}</span></div>${x.items.map(i=>`<div class="line mu"><span>${esc(i.p.name)} × ${i.qty}</span><span>${won(i.p.price*i.qty)}</span></div>`).join('')}</div>`).join('')}</div>
+  <div class="box"><b>결제 수단</b><span class="demo">시연용</span><div class="pay" style="margin-top:10px">${['신용카드','카카오페이','네이버페이','토스페이'].map(m=>`<button class="${V.pay===m?'on':''}" onclick="V.pay='${m}';V.keepTop=true;render()">${m}</button>`).join('')}</div><p class="mu" style="margin-top:8px">실서비스에서는 토스페이먼츠 결제창이 열립니다. 결제는 한 번, 주문은 농장별로 나뉩니다.</p></div>
+  <div class="box"><div class="line tot" style="border:0;margin:0;padding:0"><span>총 결제금액</span><span>${won(tot)}</span></div></div>
+  <button class="btn full" onclick="placeOrder()">${won(tot)} 결제하기</button>`}
+function placeOrder(){
+  const rcv=document.getElementById('rcv').value.trim(),adr=document.getElementById('adr').value.trim();
+  if(!rcv||!adr)return toast('받는 분과 주소를 입력해 주세요');
+  const g=cartGroups(),d=new Date();
+  const id='O-'+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+String(100+S.orders.length*7).slice(-3);
+  S.orders.unshift({id,date:today(),buyer:rcv,pay:V.pay,subs:g.map(x=>({sid:x.s.id,items:x.items.map(i=>({pid:i.p.id,name:i.p.name,price:i.p.price,qty:i.qty})),ship:x.ship,rate:rateOf(x.s),st:'결제완료',inv:null,settled:false}))});
+  g.forEach(x=>x.items.forEach(i=>i.p.stock-=i.qty));
+  S.cart=[];save();V.ctab='orders';toast(`결제 완료. 농장 ${g.length}곳으로 주문이 나뉘었습니다`);render()}
+function ordersView(){
+  if(!S.orders.length)return `<h1>주문·배송</h1><div class="empty">주문 내역이 없습니다.</div>`;
+  return `<h1 style="margin-bottom:12px">주문·배송</h1>${S.orders.map(o=>{const tot=o.subs.reduce((a,s)=>a+itemsAmt(s)+s.ship,0);return `<div class="box"><div class="row"><b>${o.id}</b><span class="mu">${o.date} · ${esc(o.pay)}</span></div><div class="mu" style="margin-bottom:6px">결제 ${won(tot)} · 농장 ${o.subs.length}곳</div>
+  ${o.subs.map((s,i)=>subCard(o,s,i)).join('')}</div>`}).join('')}`}
+function stTag(st){return `<span class="tag ${st==='환불완료'?'bad':/요청/.test(st)?'warn':'ac'}">${st}</span>`}
+function subCard(o,s,i){
+  const k=FLOW.indexOf(s.st);
+  const act=(s.st==='결제완료'||s.st==='배송준비')?`<button class="btn sm line" onclick="reqCancel('${o.id}',${i},'취소요청')">주문 취소 요청</button>`:(s.st==='배송완료'&&!s.settled)?`<button class="btn sm line" onclick="reqCancel('${o.id}',${i},'반품요청')">반품·환불 요청</button>`:'';
+  return `<div style="border-top:1px solid var(--ln);padding-top:10px;margin-top:10px"><div class="row"><span style="font-weight:600;font-size:14px">${esc(sel(s.sid).name)}</span>${stTag(s.st)}</div>
+  ${s.items.map(it=>`<div class="line mu"><span>${esc(it.name)} × ${it.qty}</span><span>${won(it.price*it.qty)}</span></div>`).join('')}<div class="line mu"><span>배송비</span><span>${s.ship?won(s.ship):'무료'}</span></div>
+  ${k>=0?`<div class="steps">${FLOW.map((f,j)=>`<div class="${j<=k?'on':''}">${f}</div>`).join('')}</div>`:''}
+  ${s.st==='환불완료'?`<div class="mu">${won(itemsAmt(s)+s.ship)} 환불 완료 (결제 수단으로 취소)</div>`:''}
+  <div class="inl" style="margin-top:8px">${s.inv?`<button class="btn sm ghost" onclick="track('${o.id}',${i})">배송 조회</button>`:''}${act}</div></div>`}
+function reqCancel(oid,i,st){const s=S.orders.find(o=>o.id===oid).subs[i];s.prev=s.st;s.st=st;save();toast(st==='취소요청'?'취소를 요청했습니다. 판매자가 승인하면 환불됩니다':'반품을 요청했습니다');V.keepTop=true;render()}
+function track(oid,i){const s=S.orders.find(o=>o.id===oid).subs[i],k=FLOW.indexOf(s.st);
+  const ev=[['집화 완료',sel(s.sid).region+' 대리점'],['간선 상차','지역 허브터미널'],['배송 출발','서울 마포 배송센터'],['배송 완료','문 앞']];
+  const n=s.st==='배송완료'?4:s.st==='배송중'?2:0;
+  document.getElementById('sheetc').innerHTML=`<h1>배송 조회</h1><p class="mu">${esc(s.inv.c)} ${esc(s.inv.no)} <span class="demo">시연용</span></p><p class="mu" style="margin:6px 0 12px">실서비스에서는 택배 조회 API로 단계가 자동 갱신됩니다.</p>
+  ${ev.map((e,j)=>`<div class="row" style="padding:10px 0;border-bottom:1px solid var(--ln);${j<n?'':'opacity:.4'}"><b style="font-size:14px">${e[0]}</b><span class="mu">${e[1]}</span></div>`).join('')}<button class="btn full ghost" style="margin-top:16px" onclick="closeSheet()">닫기</button>`;
+  document.getElementById('sheet').classList.add('on')}
+
+/* ---------- 판매자 ---------- */
+function sellerView(){
+  const s=sel(V.seller);
+  const pick=`<select aria-label="판매자 선택" onchange="V.seller=this.value;render()">${S.sellers.map(x=>`<option value="${x.id}" ${x.id===V.seller?'selected':''}>${esc(x.name)}</option>`).join('')}</select>`;
+  const tabs=[['orders','주문·배송'],['products','상품'],['settle','정산']];
+  let body;
+  if(s.status!=='승인')body=`<h1>${esc(s.name)}</h1><div class="note">입점 심사 중입니다. 운영자 승인 후 상품 판매와 주문 관리를 쓸 수 있습니다.</div><p class="mu">운영자 화면의 판매자 탭에서 승인해 보세요.</p>`;
+  else body=V.stab==='orders'?sOrders(s):V.stab==='products'?sProducts(s):sSettle(s);
+  return `<div class="console"><nav class="side"><div class="who"><div class="mu" style="margin-bottom:4px">로그인한 판매자 <span class="demo">시연용</span></div>${pick}</div>${tabs.map(([k,l])=>`<button class="${V.stab===k?'on':''}" onclick="V.stab='${k}';render()">${l}</button>`).join('')}</nav><section class="panel">${body}</section></div>`}
+function sOrders(s){
+  const rows=subsOf(s.id);
+  return `<h1>주문·배송</h1><p class="mu">이 농장에 들어온 주문만 보입니다. 같은 결제 안의 다른 농장 상품은 보이지 않습니다.</p>
+  ${rows.length?`<div class="tw"><table><thead><tr><th>주문</th><th>상품</th><th class="n">금액</th><th>상태</th><th>처리</th></tr></thead><tbody>${rows.map(({o,s:sub,i})=>`<tr><td><b>${o.id}</b><div class="mu">${o.date} · ${esc(o.buyer)}</div></td><td>${sub.items.map(it=>`${esc(it.name)} × ${it.qty}`).join('<br>')}<div class="mu">배송비 ${sub.ship?won(sub.ship):'무료'}</div></td><td class="n">${won(itemsAmt(sub)+sub.ship)}</td><td>${stTag(sub.st)}${sub.inv?`<div class="mu">${esc(sub.inv.c)}<br>${esc(sub.inv.no)}</div>`:''}</td><td>${sAct(o,sub,i)}</td></tr>`).join('')}</tbody></table></div>`:`<div class="empty">아직 들어온 주문이 없습니다.</div>`}`}
+function sAct(o,sub,i){const a=`'${o.id}',${i}`;
+  if(sub.st==='결제완료')return `<button class="btn sm" onclick="setSt(${a},'배송준비')">주문 확인</button>`;
+  if(sub.st==='배송준비')return `<div class="inl"><select id="c-${o.id}-${i}" aria-label="택배사">${COURIERS.map(c=>`<option>${c}</option>`).join('')}</select><input type="text" id="n-${o.id}-${i}" placeholder="송장번호" aria-label="송장번호" style="width:130px"><button class="btn sm" onclick="ship(${a})">발송</button></div>`;
+  if(sub.st==='배송중')return `<button class="btn sm ghost" onclick="setSt(${a},'배송완료')">배송완료 처리</button><div class="mu">실서비스는 택배 API 자동</div>`;
+  if(/요청/.test(sub.st))return `<div class="inl"><button class="btn sm" onclick="refund(${a})">승인·환불</button><button class="btn sm line" onclick="reject(${a})">거절</button></div>`;
+  return sub.settled?'<span class="mu">정산 지급 완료</span>':'<span class="mu">-</span>'}
+function getSub(oid,i){return S.orders.find(o=>o.id===oid).subs[i]}
+function setSt(oid,i,st){getSub(oid,i).st=st;save();toast('상태를 '+st+'(으)로 바꿨습니다');render()}
+function ship(oid,i){const no=document.getElementById(`n-${oid}-${i}`).value.trim();if(!/^[0-9 -]{8,}$/.test(no))return toast('송장번호를 숫자로 8자리 이상 입력해 주세요');
+  const s=getSub(oid,i);s.inv={c:document.getElementById(`c-${oid}-${i}`).value,no};s.st='배송중';save();toast('송장을 등록했습니다. 고객 앱에서 배송 조회가 열립니다');render()}
+function refund(oid,i){const s=getSub(oid,i);s.st='환불완료';s.items.forEach(it=>{const p=prod(it.pid);if(p)p.stock+=it.qty});save();toast(won(itemsAmt(s)+s.ship)+' 환불 처리했습니다');render()}
+function reject(oid,i){const s=getSub(oid,i);s.st=s.prev||'결제완료';save();toast('요청을 거절했습니다');render()}
+function sProducts(s){const list=S.products.filter(p=>p.sid===s.id);
+  return `<h1>상품</h1><div class="box" style="margin-top:12px"><b>새 상품 등록</b><div class="formgrid"><div style="grid-column:span 2"><label for="np-n">상품명</label><input type="text" id="np-n" placeholder="예: 해남 밤호박 3kg"></div><div><label for="np-p">판매가(원)</label><input type="number" id="np-p" min="100" placeholder="13900"></div><div><label for="np-c">분류</label><select id="np-c">${CATS.slice(1).map(c=>`<option>${c}</option>`).join('')}</select></div><div><label for="np-s">재고</label><input type="number" id="np-s" min="0" value="20"></div><div><label>&nbsp;</label><button class="btn" onclick="addProd()">등록</button></div></div><p class="mu" style="margin-top:8px">실서비스에서는 사진·상세설명·옵션·원산지 표시를 함께 받습니다.</p></div>
+  <div class="tw"><table><thead><tr><th>상품</th><th>분류</th><th class="n">판매가</th><th class="n">재고</th><th></th></tr></thead><tbody>${list.map(p=>`<tr><td>${esc(p.name)}</td><td>${p.cat}</td><td class="n">${won(p.price)}</td><td class="n">${p.stock}</td><td class="n"><button class="btn sm line" onclick="delProd('${p.id}')">내리기</button></td></tr>`).join('')}</tbody></table></div>${list.length?'':'<div class="empty">등록한 상품이 없습니다.</div>'}`}
+function addProd(){const n=document.getElementById('np-n').value.trim(),p=+document.getElementById('np-p').value,st=+document.getElementById('np-s').value;
+  if(!n)return toast('상품명을 입력해 주세요');if(!(p>=100))return toast('판매가를 100원 이상으로 입력해 주세요');
+  S.products.push({id:'p'+Date.now(),sid:V.seller,name:n,price:Math.round(p),cat:document.getElementById('np-c').value,stock:Math.max(0,st|0)});save();toast('등록했습니다. 고객 앱 홈에 바로 보입니다');render()}
+function delProd(id){S.products=S.products.filter(p=>p.id!==id);S.cart=S.cart.filter(c=>c.pid!==id);save();render()}
+function sSettle(s){
+  const rows=subsOf(s.id),P=pending(s.id),ch=S.charges.filter(c=>c.sid===s.id),po=S.payouts.filter(p=>p.sid===s.id);
+  return `<h1>정산</h1><p class="mu">수수료율 ${rateOf(s)}%${s.fee!=null?' (개별 적용)':' (기본)'}. 수수료는 상품금액에만 붙고 배송비는 전액 판매자 몫입니다. 배송완료나 환불완료된 주문이 다음 지급에 들어갑니다.</p>
+  <div class="kpis"><div class="kpi"><span class="mu">정산 대상 판매액</span><b>${won(P.sales)}</b></div><div class="kpi"><span class="mu">수수료</span><b>${neg(P.fee)}</b></div><div class="kpi"><span class="mu">환불·청구 차감</span><b>${neg(P.refund+P.chg)}</b></div><div class="kpi"><span class="mu">다음 지급 예정</span><b style="color:var(--ac)">${won(P.net)}</b></div></div>
+  <h3>주문별 계산</h3><div class="tw"><table><thead><tr><th>주문</th><th>상태</th><th class="n">상품</th><th class="n">배송비</th><th class="n">수수료</th><th class="n">환불</th><th class="n">정산액</th><th>지급</th></tr></thead><tbody>${rows.map(({o,s:sub})=>{const c=calc(sub);return `<tr><td>${o.id}</td><td>${stTag(sub.st)}</td><td class="n">${won(c.it)}</td><td class="n">${won(sub.ship)}</td><td class="n">${c.fee?'-'+won(c.fee):'0원'}<div class="mu">${sub.rate}%</div></td><td class="n">${c.refund?'-'+won(c.refund):'0원'}</td><td class="n"><b>${won(c.pay)}</b></td><td>${sub.settled?'<span class="tag ac">지급완료</span>':(sub.st==='배송완료'||sub.st==='환불완료')?'<span class="tag warn">지급대기</span>':'<span class="tag">진행중</span>'}</td></tr>`}).join('')}</tbody></table></div>
+  <h3>입점료·광고비 청구</h3>${ch.length?`<div class="tw"><table><thead><tr><th>청구일</th><th>항목</th><th class="n">금액</th><th>처리</th></tr></thead><tbody>${ch.map(c=>`<tr><td>${c.date}</td><td>${c.type}</td><td class="n">${won(c.amt)}</td><td>${c.done?'<span class="tag ac">정산에서 차감됨</span>':'<span class="tag warn">다음 정산에서 차감</span>'}</td></tr>`).join('')}</tbody></table></div>`:'<p class="mu">청구 내역이 없습니다.</p>'}
+  <h3>지급 내역</h3>${po.length?`<div class="tw"><table><thead><tr><th>지급일</th><th class="n">판매액</th><th class="n">수수료</th><th class="n">환불</th><th class="n">청구 차감</th><th class="n">지급액</th></tr></thead><tbody>${po.map(p=>`<tr><td>${p.date}</td><td class="n">${won(p.sales)}</td><td class="n">${neg(p.fee)}</td><td class="n">${neg(p.refund)}</td><td class="n">${neg(p.chg)}</td><td class="n"><b>${won(p.net)}</b></td></tr>`).join('')}</tbody></table></div>`:'<p class="mu">아직 지급된 정산이 없습니다. 운영자 화면에서 지급 처리하면 여기에 기록됩니다.</p>'}`}
+
+/* ---------- 운영자 ---------- */
+function adminView(){
+  const tabs=[['sellers','판매자·수수료'],['payout','정산 지급'],['charge','입점료·광고비'],['orders','전체 주문']];
+  const body=V.atab==='sellers'?aSellers():V.atab==='payout'?aPayout():V.atab==='charge'?aCharge():aOrders();
+  return `<div class="console"><nav class="side"><div class="who"><b>운영자</b><div class="mu">산지바로 본사</div></div>${tabs.map(([k,l])=>`<button class="${V.atab===k?'on':''}" onclick="V.atab='${k}';render()">${l}</button>`).join('')}</nav><section class="panel">${body}</section></div>`}
+function platformKpi(){let gmv=0,fee=0;S.orders.forEach(o=>o.subs.forEach(s=>{const c=calc(s);if(s.st!=='환불완료')gmv+=c.gross;if(s.st==='배송완료')fee+=c.fee}));
+  const chg=S.charges.reduce((a,c)=>a+c.amt,0),paid=S.payouts.reduce((a,p)=>a+p.net,0);
+  return `<div class="kpis"><div class="kpi"><span class="mu">거래액 (환불 제외)</span><b>${won(gmv)}</b></div><div class="kpi"><span class="mu">확정 수수료 수익</span><b>${won(fee)}</b></div><div class="kpi"><span class="mu">입점료·광고비 청구</span><b>${won(chg)}</b></div><div class="kpi"><span class="mu">판매자 지급 누계</span><b>${won(paid)}</b></div></div>`}
+function aSellers(){
+  return `<h1>판매자·수수료</h1>${platformKpi()}
+  <div class="box"><div class="inl"><b>기본 판매수수료</b><input type="number" id="gfee" min="0" max="50" step="0.5" value="${S.feeRate}" style="width:80px" aria-label="기본 수수료율">%<button class="btn sm" onclick="setGfee()">저장</button></div><p class="mu" style="margin-top:6px">바꾼 수수료율은 그 뒤에 들어오는 주문부터 적용됩니다. 이미 결제된 주문은 결제 시점 수수료율로 정산합니다.</p></div>
+  <div class="tw"><table><thead><tr><th>판매자</th><th>지역</th><th>상태</th><th>수수료율</th><th class="n">배송비</th><th>처리</th></tr></thead><tbody>${S.sellers.map(s=>`<tr><td><b>${esc(s.name)}</b></td><td>${esc(s.region)}</td><td>${s.status==='승인'?'<span class="tag ac">승인</span>':'<span class="tag warn">심사 대기</span>'}</td><td><div class="inl"><input type="number" id="f-${s.id}" min="0" max="50" step="0.5" placeholder="${S.feeRate}" value="${s.fee??''}" style="width:72px" aria-label="${esc(s.name)} 수수료율">%<button class="btn sm line" onclick="setSfee('${s.id}')">적용</button></div><div class="mu">${s.fee!=null?'개별 적용':'비우면 기본값'}</div></td><td class="n">${won(s.ship)}<div class="mu">${won(s.free)} 이상 무료</div></td><td>${s.status==='승인'?`<button class="btn sm line" onclick="setStatus('${s.id}','대기')">판매 중지</button>`:`<button class="btn sm" onclick="setStatus('${s.id}','승인')">입점 승인</button>`}</td></tr>`).join('')}</tbody></table></div>`}
+function setGfee(){const v=+document.getElementById('gfee').value;if(!(v>=0&&v<=50))return toast('0~50 사이로 입력해 주세요');S.feeRate=v;save();toast('기본 수수료율 '+v+'% 저장');render()}
+function setSfee(id){const raw=document.getElementById('f-'+id).value,s=sel(id);if(raw===''){s.fee=null}else{const v=+raw;if(!(v>=0&&v<=50))return toast('0~50 사이로 입력해 주세요');s.fee=v}save();toast(s.name+' 수수료율 '+rateOf(s)+'%');render()}
+function setStatus(id,st){sel(id).status=st;save();toast(st==='승인'?'입점을 승인했습니다. 고객 앱에 상품이 올라갑니다':'판매를 중지했습니다');render()}
+function aPayout(){
+  const list=S.sellers.filter(s=>s.status==='승인').map(s=>({s,P:pending(s.id)}));
+  return `<h1>정산 지급</h1><p class="mu">배송완료·환불완료 주문을 판매자별로 모아 수수료, 환불, 입점료·광고비를 빼고 지급합니다. 실제 송금은 시연용입니다.</p>
+  <div class="tw" style="margin-top:12px"><table><thead><tr><th>판매자</th><th class="n">건수</th><th class="n">판매액</th><th class="n">수수료</th><th class="n">환불</th><th class="n">청구 차감</th><th class="n">지급액</th><th></th></tr></thead><tbody>${list.map(({s,P})=>`<tr><td><b>${esc(s.name)}</b></td><td class="n">${P.rows.length}</td><td class="n">${won(P.sales)}</td><td class="n">${neg(P.fee)}</td><td class="n">${neg(P.refund)}</td><td class="n">${neg(P.chg)}</td><td class="n"><b>${won(P.net)}</b></td><td>${P.net<0?'<span class="mu">청구액이 더 커 다음 정산으로 이월</span>':`<button class="btn sm" ${P.rows.length||P.ch.length?'':'disabled'} onclick="doPayout('${s.id}')">지급 처리</button>`}</td></tr>`).join('')}</tbody></table></div>
+  <div class="row" style="margin-top:20px"><h3 style="margin:0">지급 내역</h3><button class="btn sm line" onclick="csv()">엑셀(CSV) 내려받기</button></div>
+  ${S.payouts.length?`<div class="tw"><table><thead><tr><th>지급일</th><th>판매자</th><th class="n">판매액</th><th class="n">수수료</th><th class="n">환불</th><th class="n">청구 차감</th><th class="n">지급액</th></tr></thead><tbody>${S.payouts.map(p=>`<tr><td>${p.date}</td><td>${esc(sel(p.sid).name)}</td><td class="n">${won(p.sales)}</td><td class="n">${neg(p.fee)}</td><td class="n">${neg(p.refund)}</td><td class="n">${neg(p.chg)}</td><td class="n"><b>${won(p.net)}</b></td></tr>`).join('')}</tbody></table></div>`:'<p class="mu">아직 지급 내역이 없습니다.</p>'}`}
+function doPayout(sid){const P=pending(sid);if(P.net<0)return;
+  P.rows.forEach(x=>x.s.settled=true);P.ch.forEach(c=>c.done=true);
+  S.payouts.unshift({sid,date:today(),sales:P.sales,fee:P.fee,refund:P.refund,chg:P.chg,net:P.net});save();toast(sel(sid).name+' '+won(P.net)+' 지급 처리');render()}
+function csv(){const h='지급일,판매자,판매액,수수료,환불,청구차감,지급액\n'+S.payouts.map(p=>[p.date,sel(p.sid).name,p.sales,p.fee,p.refund,p.chg,p.net].join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+h],{type:'text/csv'}));a.download='정산지급내역.csv';a.click()}
+function aCharge(){
+  const ok=S.sellers.filter(s=>s.status==='승인');
+  return `<h1>입점료·광고비</h1><p class="mu">청구한 금액은 판매자 정산 화면에 바로 보이고, 다음 정산 지급에서 자동으로 차감됩니다.</p>
+  <div class="box" style="margin-top:12px"><div class="formgrid"><div><label for="cg-s">판매자</label><select id="cg-s">${ok.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select></div><div><label for="cg-t">항목</label><select id="cg-t"><option>입점료</option><option>광고비</option></select></div><div><label for="cg-a">금액(원)</label><input type="number" id="cg-a" min="1000" step="1000" value="30000"></div><div><button class="btn" onclick="addCharge()">청구하기</button></div></div><p class="mu" style="margin-top:8px">광고비는 실서비스에서 상단 노출 상품 기간·클릭 수로 계산합니다. 시연에서는 금액을 직접 넣습니다.</p></div>
+  <div class="tw"><table><thead><tr><th>청구일</th><th>판매자</th><th>항목</th><th class="n">금액</th><th>처리</th></tr></thead><tbody>${S.charges.map(c=>`<tr><td>${c.date}</td><td>${esc(sel(c.sid).name)}</td><td>${c.type}</td><td class="n">${won(c.amt)}</td><td>${c.done?'<span class="tag ac">차감 완료</span>':'<span class="tag warn">차감 대기</span>'}</td></tr>`).join('')}</tbody></table></div>`}
+function addCharge(){const a=+document.getElementById('cg-a').value;if(!(a>=1000))return toast('1,000원 이상 입력해 주세요');
+  S.charges.unshift({sid:document.getElementById('cg-s').value,type:document.getElementById('cg-t').value,amt:Math.round(a),date:today(),done:false});save();toast('청구했습니다');render()}
+function aOrders(){
+  return `<h1>전체 주문</h1><p class="mu">고객 결제 1건이 판매자별 주문으로 나뉜 모습입니다.</p>${S.orders.map(o=>`<div class="box" style="margin-top:12px"><div class="row"><b>${o.id}</b><span class="mu">${o.date} · ${esc(o.buyer)} · ${esc(o.pay)} · ${won(o.subs.reduce((a,s)=>a+itemsAmt(s)+s.ship,0))}</span></div><div class="tw"><table><tbody>${o.subs.map(s=>{const c=calc(s);return `<tr><td>${esc(sel(s.sid).name)}</td><td>${s.items.map(i=>esc(i.name)+' × '+i.qty).join(', ')}</td><td>${stTag(s.st)}</td><td class="n">${won(c.gross)}</td><td class="n mu">수수료 ${won(c.fee)}</td></tr>`}).join('')}</tbody></table></div></div>`).join('')}`}
+
+/* self-check: 정산 계산식 */
+(function(){const t={items:[{price:10000,qty:2}],ship:3000,rate:10,st:'배송완료'};const c=calc(t);console.assert(c.fee===2000&&c.pay===21000,'calc');t.st='환불완료';console.assert(calc(t).pay===0&&calc(t).refund===23000,'refund')})();
+render();
+</script>
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:99999;text-align:center;font:12px/1.6 system-ui,sans-serif;color:#fff;background:rgba(0,0,0,.62);padding:4px 8px;pointer-events:none">© 2026 ZTW · 제안용 시연 화면입니다. 화면·설계의 무단 복제·사용을 금합니다.</div>
+</body>
+</html>
