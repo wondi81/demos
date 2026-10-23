@@ -6,321 +6,400 @@
 <title>소비자시선 미디어 시안</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-:root{--bg:#fafaf9;--surf:#fff;--ink:#18181b;--sub:#52525b;--mute:#71717a;--line:#e4e4e7;--acc:#0f6e5a;--acc-ink:#fff;--acc-soft:#e7f3ef;--warn:#b42318}
-@media (prefers-color-scheme:dark){:root{--bg:#111113;--surf:#1a1a1d;--ink:#f4f4f5;--sub:#c4c4c8;--mute:#9a9aa1;--line:#2c2c31;--acc:#3fb28f;--acc-ink:#0b1f19;--acc-soft:#16302a;--warn:#f97066}}
-*{box-sizing:border-box}html{scroll-behavior:smooth}
+:root{--bg:#fafaf9;--surf:#fff;--ink:#18181b;--sub:#52525b;--mute:#6b6b73;--line:#e4e4e7;--acc:#0f6e5a;--acc-ink:#fff;--acc-soft:#e7f3ef;--hl:#fff1a8;--warn:#b42318}
+@media (prefers-color-scheme:dark){:root{--bg:#111113;--surf:#1a1a1d;--ink:#f4f4f5;--sub:#c4c4c8;--mute:#9a9aa1;--line:#2c2c31;--acc:#3fb28f;--acc-ink:#0b1f19;--acc-soft:#16302a;--hl:#5c5118;--warn:#f97066}}
+*{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,system-ui,sans-serif;font-size:16px;line-height:1.6;padding-bottom:30px}
 a{color:inherit;text-decoration:none}img{display:block;width:100%;object-fit:cover;background:var(--line)}
+button{font:inherit;color:inherit}
 .wrap{max-width:1200px;margin:0 auto;padding:0 20px}
 .demo-tag{font-size:11px;font-weight:600;color:var(--acc);background:var(--acc-soft);padding:2px 8px;border-radius:4px;white-space:nowrap}
-/* header */
 .util{border-bottom:1px solid var(--line);font-size:13px;color:var(--mute)}
 .util .wrap{display:flex;justify-content:space-between;align-items:center;height:36px;gap:12px}
 .util a{margin-left:14px;white-space:nowrap}.util a:hover{color:var(--ink)}
 header.top{background:var(--surf);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
 header.top .wrap{display:flex;align-items:center;height:68px;gap:28px}
-.logo{font-weight:800;font-size:22px;letter-spacing:-.03em;display:flex;align-items:center;gap:8px}
+.logo{font-weight:800;font-size:22px;letter-spacing:-.03em;display:flex;align-items:center;gap:8px;white-space:nowrap}
 .logo b{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:6px;background:var(--acc);color:var(--acc-ink);font-size:15px}
-nav.gnb{display:flex;gap:22px;font-weight:600;font-size:15px;flex:1}
-nav.gnb a{padding:22px 0;border-bottom:2px solid transparent}
-nav.gnb a.on,nav.gnb a:hover{border-color:var(--acc);color:var(--acc)}
-.sbtn{border:1px solid var(--line);background:none;color:var(--ink);border-radius:6px;height:38px;padding:0 12px;font:inherit;font-size:14px;cursor:pointer}
-.cta{background:var(--acc);color:var(--acc-ink);border:0;border-radius:6px;height:40px;padding:0 18px;font:inherit;font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center}
+nav.gnb{display:flex;gap:26px;font-weight:600;font-size:15px;flex:1}
+nav.gnb .m{position:relative}
+nav.gnb .m>a{display:block;padding:22px 0;border-bottom:2px solid transparent}
+nav.gnb .m.on>a,nav.gnb .m:hover>a{border-color:var(--acc);color:var(--acc)}
+nav.gnb .sub{display:none;position:absolute;top:66px;left:-14px;background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:6px;min-width:170px;box-shadow:0 10px 30px rgb(15 110 90 / .08)}
+nav.gnb .m:hover .sub,nav.gnb .m:focus-within .sub{display:block}
+nav.gnb .sub a{display:block;padding:8px 10px;border-radius:5px;font-weight:500;font-size:14px}
+nav.gnb .sub a:hover{background:var(--acc-soft);color:var(--acc)}
+.sbox{display:flex;gap:6px}
+.sbox input{width:200px;height:38px;padding:0 12px}
+.sbtn{border:1px solid var(--line);background:var(--surf);border-radius:6px;height:38px;padding:0 12px;font-size:14px;cursor:pointer;white-space:nowrap}
+.cta{background:var(--acc);color:var(--acc-ink);border:0;border-radius:6px;height:40px;padding:0 18px;font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center}
 .cta:active,.sbtn:active{transform:scale(.98)}
-.cta.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
+.cta.ghost{background:var(--surf);color:var(--ink);border:1px solid var(--line)}
 .menu-btn{display:none}
-/* home */
-.lead{display:grid;grid-template-columns:1.6fr 1fr;gap:32px;padding:32px 0 36px;border-bottom:1px solid var(--line)}
-.lead .main img{aspect-ratio:16/9;border-radius:8px}
 .cat{font-size:13px;font-weight:700;color:var(--acc)}
-.lead .main h1{font-size:32px;line-height:1.3;letter-spacing:-.03em;margin:10px 0 8px}
-.lead .main p{color:var(--sub);margin:0;max-width:62ch}
-.meta{font-size:13px;color:var(--mute);margin-top:8px}
-.side h3{font-size:14px;margin:0 0 6px;color:var(--mute);font-weight:600}
-.side a.row{display:grid;grid-template-columns:1fr 96px;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
-.side a.row:last-child{border:0}
-.side a.row h4{margin:4px 0 0;font-size:16px;line-height:1.4}
-.side a.row img{aspect-ratio:1;border-radius:6px}
-h2.sec{font-size:22px;letter-spacing:-.02em;margin:0;display:flex;justify-content:space-between;align-items:baseline}
+.meta{font-size:13px;color:var(--mute);margin-top:6px}
+.theme{padding:28px 0 30px;border-bottom:1px solid var(--line)}
+.theme-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+.theme-tabs button{border:1px solid var(--line);background:var(--surf);border-radius:999px;padding:7px 16px;font-size:15px;font-weight:600;cursor:pointer}
+.theme-tabs button.on{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.theme-tabs .edit{margin-left:auto;font-size:13px;color:var(--mute);text-decoration:underline;text-underline-offset:3px}
+.theme-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:20px}
+.theme-grid .big{grid-row:span 2}
+.theme-grid .big img{aspect-ratio:4/3}
+.tcard img{aspect-ratio:16/10;border-radius:8px}
+.tcard h3{margin:8px 0 0;font-size:17px;line-height:1.4;letter-spacing:-.01em}
+.tcard.big h3{font-size:26px;letter-spacing:-.03em}
+.tcard p{margin:6px 0 0;color:var(--sub);font-size:15px}
+.kind{display:inline-block;font-size:12px;font-weight:700;border:1px solid var(--acc);color:var(--acc);border-radius:4px;padding:0 6px;margin-right:6px}
+.tcard:hover h3,.card:hover h4,.list a.item:hover h3{text-decoration:underline;text-underline-offset:3px}
+h2.sec{font-size:21px;letter-spacing:-.02em;margin:0 0 14px;display:flex;justify-content:space-between;align-items:baseline}
 h2.sec a{font-size:14px;color:var(--mute);font-weight:500}
-section.block{padding:36px 0;border-bottom:1px solid var(--line)}
-.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:18px}
+.home-cols{display:grid;grid-template-columns:2fr 1fr;gap:40px;padding:32px 0;border-bottom:1px solid var(--line)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .card img{aspect-ratio:4/3;border-radius:6px}
-.card h4{font-size:17px;line-height:1.4;margin:10px 0 0}
-.card:hover h4,.side a.row:hover h4,.lead .main:hover h1{text-decoration:underline;text-underline-offset:3px}
-.research{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
-.rcard{background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:20px;display:grid;grid-template-columns:72px 1fr;gap:16px;align-items:start}
+.card h4{font-size:16px;line-height:1.45;margin:8px 0 0}
+.mini a{display:block;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px;line-height:1.45}
+.mini a:last-child{border:0}
+.lib{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:32px 0;border-bottom:1px solid var(--line)}
+.rcard{background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:18px;display:grid;grid-template-columns:64px 1fr;gap:16px;align-items:start}
 .pdf{aspect-ratio:3/4;border-radius:4px;background:var(--acc-soft);color:var(--acc);display:grid;place-items:center;font-weight:800;font-size:13px}
-.rcard h4{margin:4px 0 6px;font-size:17px;line-height:1.4}
+.rcard h4{margin:2px 0 4px;font-size:16px;line-height:1.4}
 .rcard p{margin:0;font-size:14px;color:var(--sub)}
-.band{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:36px 0}
-.band > a{border-radius:10px;padding:28px;display:flex;flex-direction:column;gap:8px;min-height:180px}
-.band .b1{background:var(--acc);color:var(--acc-ink)}
-.band .b2{background:var(--surf);border:1px solid var(--line)}
-.band h3{margin:0;font-size:22px;letter-spacing:-.02em}
-.band p{margin:0;opacity:.85;max-width:44ch}
-.band .go{margin-top:auto;font-weight:700}
-/* list */
-.page-head{padding:32px 0 18px;border-bottom:1px solid var(--line)}
+.page-head{padding:30px 0 18px;border-bottom:1px solid var(--line)}
 .page-head h1{margin:0;font-size:30px;letter-spacing:-.03em}
 .page-head p{margin:6px 0 0;color:var(--sub)}
+.crumb{font-size:13px;color:var(--mute);margin-bottom:6px}
 .tabs{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
-.tabs button{border:1px solid var(--line);background:var(--surf);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-size:14px;cursor:pointer}
-.tabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.list a.item{display:grid;grid-template-columns:220px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--line)}
+.tabs button,.tabs a{border:1px solid var(--line);background:var(--surf);border-radius:999px;padding:6px 14px;font-size:14px;cursor:pointer}
+.tabs .on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tabs .n{font-size:12px;opacity:.7;margin-left:4px}
+.sortnote{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mute);padding:14px 0 0}
+.list a.item{display:grid;grid-template-columns:200px 1fr;gap:22px;padding:20px 0;border-bottom:1px solid var(--line)}
+.list a.item.noimg{grid-template-columns:1fr}
 .list a.item img{aspect-ratio:4/3;border-radius:6px}
-.list a.item h3{margin:4px 0 6px;font-size:20px;line-height:1.4;letter-spacing:-.02em}
+.list a.item h3{margin:4px 0 6px;font-size:19px;line-height:1.4;letter-spacing:-.02em}
 .list a.item p{margin:0;color:var(--sub);font-size:15px}
-.pager{display:flex;gap:6px;justify-content:center;padding:28px 0}
-.pager span{width:34px;height:34px;display:grid;place-items:center;border-radius:6px;border:1px solid var(--line);font-size:14px}
-.pager span.on{background:var(--ink);color:var(--bg)}
-.empty{padding:60px 0;text-align:center;color:var(--mute)}
-/* article */
-.article{display:grid;grid-template-columns:minmax(0,720px) 300px;gap:56px;padding:32px 0 48px}
-.crumb{font-size:13px;color:var(--mute)}
-.article h1{font-size:34px;line-height:1.3;letter-spacing:-.03em;margin:10px 0 12px}
+.empty{padding:56px 0;text-align:center;color:var(--mute)}
+.subbox{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--acc-soft);border-radius:10px;padding:18px 20px;margin-top:20px;flex-wrap:wrap}
+.subbox b{display:block;font-size:16px}.subbox span{font-size:14px;color:var(--sub)}
+.subform{flex-basis:100%;display:none;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
+.subform.open{display:grid}
+.subform .agree{grid-column:1/-1}
+.article{display:grid;grid-template-columns:minmax(0,720px) 280px;gap:56px;padding:30px 0 40px}
+.article h1{font-size:33px;line-height:1.3;letter-spacing:-.03em;margin:8px 0 12px}
 .byline{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:16px;font-size:14px;color:var(--mute);gap:10px;flex-wrap:wrap}
 .share{display:flex;gap:6px}
-.share button{border:1px solid var(--line);background:var(--surf);color:var(--ink);border-radius:6px;padding:5px 10px;font:inherit;font-size:13px;cursor:pointer}
+.share button{border:1px solid var(--line);background:var(--surf);border-radius:6px;padding:5px 10px;font-size:13px;cursor:pointer}
 .body{font-size:18px;line-height:1.85}
 .body figure{margin:24px 0}.body figure img{border-radius:8px;aspect-ratio:16/9}
-.body figcaption{font-size:13px;color:var(--mute);margin-top:6px}
-.body blockquote{margin:24px 0;padding:4px 0 4px 18px;border-left:3px solid var(--acc);color:var(--sub)}
-.attach{display:flex;align-items:center;gap:14px;background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:16px;margin:24px 0}
+.body figcaption{font-size:14px;color:var(--mute);margin-top:8px;padding-left:10px;border-left:2px solid var(--line)}
+.body blockquote{margin:26px 0;padding:6px 0 6px 20px;border-left:4px solid var(--acc);font-size:20px;font-weight:600;line-height:1.6}
+.body blockquote cite{display:block;font-size:14px;font-weight:400;color:var(--mute);font-style:normal;margin-top:6px}
+.body mark,.ed mark{background:linear-gradient(transparent 45%,var(--hl) 45%);color:inherit;padding:0 1px}
+.attach{display:flex;align-items:center;gap:14px;background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:16px;margin:24px 0;flex-wrap:wrap}
 .attach .pdf{width:44px}
-.attach div{flex:1;font-size:14px}.attach b{display:block;font-size:15px}
+.attach div{flex:1;font-size:14px;min-width:160px}.attach b{display:block;font-size:15px}
 .contact-box{background:var(--acc-soft);border-radius:8px;padding:16px 18px;font-size:14px;margin-top:20px}
 .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:20px}
 .tags a{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--sub)}
 aside.rail h3{font-size:15px;margin:0 0 4px}
-aside.rail a{display:block;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px;line-height:1.45}
 aside.rail .sticky{position:sticky;top:96px}
-.rail-cta{margin-top:24px;background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:18px}
-.rail-cta a.cta{display:inline-flex;padding:0 18px;border:0}
-.rail-cta p{margin:4px 0 12px;font-size:14px;color:var(--sub)}
-/* search */
-.sbar{display:flex;gap:8px;margin-top:16px;max-width:640px}
-.sbar input{flex:1}
-mark{background:var(--acc-soft);color:var(--acc);padding:0 2px}
-/* forms */
-.formwrap{display:grid;grid-template-columns:minmax(0,640px) 1fr;gap:56px;padding:32px 0 48px}
-.field{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
-.field label{font-weight:600;font-size:14px}
-.field .help{font-size:13px;color:var(--mute)}
-.field .err{font-size:13px;color:var(--warn);min-height:0}
-input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--surf);border:1px solid #a1a1aa;border-radius:6px;padding:10px 12px;width:100%}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:1px;border-color:var(--acc)}
-textarea{min-height:140px;resize:vertical}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chips label{font-weight:500;border:1px solid var(--line);background:var(--surf);border-radius:6px;padding:8px 14px;cursor:pointer;font-size:15px}
-.chips input{display:none}
-.chips label:has(input:checked){border-color:var(--acc);background:var(--acc-soft);color:var(--acc);font-weight:700}
-.agree{display:flex;gap:8px;align-items:flex-start;font-size:14px;color:var(--sub)}
-.agree input{width:18px;height:18px;margin-top:3px;flex:none}
-.done{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:28px}
-.done h3{margin:0 0 6px;font-size:22px}
-.steps{counter-reset:s;list-style:none;padding:0;margin:0}
-.steps li{counter-increment:s;padding:12px 0 12px 40px;position:relative;border-bottom:1px solid var(--line);font-size:15px}
-.steps li::before{content:counter(s);position:absolute;left:0;top:12px;width:26px;height:26px;border-radius:50%;background:var(--acc-soft);color:var(--acc);font-weight:700;display:grid;place-items:center;font-size:13px}
-.amounts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.amounts label{text-align:center}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;padding:32px 0 48px;align-items:start}
-.about-grid img{border-radius:8px;aspect-ratio:4/3}
-.hist{margin-top:10px}
-.hist div{display:grid;grid-template-columns:70px 1fr;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}
+aside.rail .mini a{font-size:14px}
+.viewer{background:#3f3f46;border-radius:10px;padding:16px;margin:20px 0 10px}
+.vbar{display:flex;align-items:center;gap:8px;color:#fff;font-size:14px;margin-bottom:12px;flex-wrap:wrap}
+.vbar button{background:#52525b;border:0;color:#fff;border-radius:5px;height:34px;min-width:34px;padding:0 10px;cursor:pointer}
+.vbar button:disabled{opacity:.4;cursor:default}
+.vbar .sp{flex:1}
+.vbar input{width:52px;height:34px;padding:0 6px;text-align:center;background:#27272a;color:#fff;border:1px solid #52525b}
+.vpage-wrap{overflow:auto;display:flex;justify-content:center}
+.vpage{background:#fff;color:#18181b;width:min(100%,640px);aspect-ratio:1/1.414;padding:7% 8%;font-size:15px;line-height:1.7;box-shadow:0 6px 24px rgb(0 0 0 / .35);transform-origin:top center;flex:none;overflow:hidden}
+.vpage h2{font-size:1.5em;margin:0 0 .6em;letter-spacing:-.02em;line-height:1.3}
+.vpage .pno{font-size:12px;color:#71717a;text-align:right;margin-top:1.2em}
+.vpage .bar{height:12px;background:#0f6e5a;border-radius:2px;margin:6px 0}
+.vpage table{width:100%;border-collapse:collapse;font-size:.9em}.vpage td{border-bottom:1px solid #d4d4d8;padding:5px 2px;text-align:left}
+.thumbs{display:flex;gap:6px;overflow-x:auto;margin-top:12px;padding-bottom:4px}
+.thumbs button{flex:none;width:38px;height:52px;background:#fff;border:2px solid transparent;border-radius:3px;font-size:11px;color:#3f3f46;cursor:pointer}
+.thumbs button.on{border-color:#3fb28f}
+.admin-bar{background:#27272a;color:#e4e4e7;font-size:13px}
+.admin-bar .wrap{display:flex;align-items:center;gap:14px;height:34px;white-space:nowrap;overflow-x:auto}
+.admin-bar a{color:#fff;font-weight:600}
+.adm{display:grid;grid-template-columns:220px 1fr;gap:32px;padding:30px 0 40px}
+.adm nav a{display:block;padding:10px 12px;border-radius:6px;font-weight:600;font-size:15px}
+.adm nav a.on{background:var(--acc-soft);color:var(--acc)}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:24px;min-width:0}
+.panel h2{margin:0 0 4px;font-size:20px}
+.panel>p{margin:0 0 18px;color:var(--sub);font-size:14px}
+.tagrow{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}
+.tagrow input[type=checkbox]{width:18px;height:18px}
+.tagrow .cnt{font-size:13px;color:var(--mute)}
+.tagrow button{border:1px solid var(--line);background:var(--surf);border-radius:5px;height:30px;padding:0 8px;cursor:pointer}
+.ed-tools{display:flex;gap:6px;flex-wrap:wrap;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;padding:8px;background:var(--bg)}
+.ed-tools button{border:1px solid var(--line);background:var(--surf);border-radius:5px;height:34px;padding:0 12px;font-size:14px;cursor:pointer}
+.ed{border:1px solid var(--line);border-radius:0 0 8px 8px;min-height:300px;padding:20px;font-size:17px;line-height:1.8;background:var(--surf)}
+.ed:focus{outline:2px solid var(--acc);outline-offset:1px}
+.ed figure{margin:16px 0}.ed figure img{border-radius:6px;aspect-ratio:16/9}
+.ed figcaption{font-size:14px;color:var(--mute);margin-top:6px;padding-left:10px;border-left:2px solid var(--line)}
+.ed blockquote{margin:16px 0;padding:4px 0 4px 18px;border-left:4px solid var(--acc);font-weight:600}
+.edgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:6px}
+.edgrid h3{font-size:14px;color:var(--mute);margin:0 0 8px}
+.prev{border:1px dashed var(--line);border-radius:8px;padding:20px;min-height:300px}
+.prev .body{font-size:16px}
+label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}
+input,select{font:inherit;font-size:16px;color:var(--ink);background:var(--surf);border:1px solid #a1a1aa;border-radius:6px;padding:9px 12px;width:100%}
+input:focus{outline:2px solid var(--acc);outline-offset:1px;border-color:var(--acc)}
+.err{font-size:13px;color:var(--warn);font-weight:500}
+.agree{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--sub);font-weight:400}
+.agree input{width:17px;height:17px;margin-top:2px;flex:none}
+.about{display:grid;grid-template-columns:200px 1fr;gap:40px;padding:30px 0 40px}
+.about nav a{display:block;padding:9px 0;border-bottom:1px solid var(--line);font-weight:600}
+.about nav a.on{color:var(--acc)}
+.org{display:grid;gap:10px;justify-items:center}
+.org .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.org span{border:1px solid var(--line);background:var(--surf);border-radius:6px;padding:10px 16px;font-weight:600}
+.org span.top{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+.hist div{display:grid;grid-template-columns:90px 1fr;padding:10px 0;border-bottom:1px solid var(--line)}
 .hist b{color:var(--acc)}
-/* wp memo */
-.wpmemo{border:1px dashed var(--acc);border-radius:8px;padding:16px 18px;margin:28px 0 20px;font-size:14px;background:var(--surf)}
+details{border-bottom:1px solid var(--line);padding:14px 0}
+summary{cursor:pointer;font-weight:600;font-size:16px}
+details p{margin:10px 0 0;color:var(--sub)}
+.wpmemo{border:1px dashed var(--acc);border-radius:8px;padding:16px 18px;margin:24px 0 20px;font-size:14px;background:var(--surf)}
 .wpmemo b{color:var(--acc)}
 .wpmemo ul{margin:6px 0 0;padding-left:18px;color:var(--sub)}
 footer.ft{border-top:1px solid var(--line);padding:28px 0;font-size:13px;color:var(--mute)}
 footer.ft .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .toast{position:fixed;left:50%;bottom:48px;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:6px;font-size:14px;transition:.25s;pointer-events:none;z-index:50}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-main{animation:fade .35s ease}
+main{animation:fade .3s ease}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){main{animation:none}.toast{transition:none}}
-/* mobile */
-@media (max-width:900px){
- nav.gnb{display:none;position:absolute;top:68px;left:0;right:0;flex-direction:column;gap:0;background:var(--surf);border-bottom:1px solid var(--line);padding:0 20px}
- nav.gnb.open{display:flex}nav.gnb a{padding:14px 0;border-bottom:1px solid var(--line)}
+@media (max-width:960px){
+ nav.gnb{display:none;position:absolute;top:68px;left:0;right:0;flex-direction:column;gap:0;background:var(--surf);border-bottom:1px solid var(--line);padding:0 20px 10px}
+ nav.gnb.open{display:flex}
+ nav.gnb .m>a{padding:12px 0 4px;border:0}
+ nav.gnb .sub{display:flex!important;flex-wrap:wrap;position:static;border:0;box-shadow:none;padding:0 0 8px;min-width:0;background:none}
+ nav.gnb .sub a{padding:6px 10px 6px 0;color:var(--sub)}
  .menu-btn{display:inline-flex;align-items:center}
  header.top .wrap{gap:10px;justify-content:space-between}
- header.top .cta{display:none}
- .lead,.article,.formwrap,.about-grid,.band,.research{grid-template-columns:1fr;gap:24px}
- .grid4{grid-template-columns:1fr 1fr;gap:16px}
- .lead .main h1,.article h1{font-size:25px}
- .list a.item{grid-template-columns:110px 1fr;gap:14px}
+ header.top .sbox input{display:none}
+ .theme-grid,.home-cols,.lib,.article,.adm,.edgrid,.about{grid-template-columns:1fr;gap:22px}
+ .theme-grid .big{grid-row:auto}
+ .tcard.big h3{font-size:22px}
+ .grid3{grid-template-columns:1fr 1fr;gap:14px}
+ .article h1{font-size:25px}
+ .list a.item{grid-template-columns:104px 1fr;gap:14px}
+ .list a.item.noimg{grid-template-columns:1fr}
  .list a.item h3{font-size:17px}.list a.item p{display:none}
  .util .hide-m{display:none}
  .body{font-size:17px}
- .two{grid-template-columns:1fr}
- .amounts{grid-template-columns:repeat(2,1fr)}
+ .subform{grid-template-columns:1fr}
+ .vpage{font-size:11px}
+ .theme-tabs .edit{margin-left:0}
+ .adm nav{display:flex;gap:6px;flex-wrap:wrap}
 }
 </style>
 </head>
 <body>
-<div class="util"><div class="wrap"><span><span class="hide-m">소비자 권익을 지키는 비영리 단체 </span><span class="demo-tag">가상 단체 시연</span></span><span><a href="#/about" class="hide-m">단체소개</a><a href="#/support">회원가입</a><a href="#/support">후원하기</a></span></div></div>
+<div class="admin-bar"><div class="wrap"><span class="demo-tag" style="background:#3f3f46;color:#d4d4d8">관리자 미리보기</span><a href="#/admin/tags">메인 해시태그 지정</a><a href="#/admin/editor">기사 에디터</a></div></div>
+<div class="util"><div class="wrap"><span><span class="hide-m">소비자 권익을 지키는 비영리 단체 </span><span class="demo-tag">가상 단체 시연</span></span><span><a href="#/c/press">기자 구독</a><a href="#/about/map">오시는 길</a></span></div></div>
 <header class="top"><div class="wrap">
  <a class="logo" href="#/"><b>시</b>소비자시선</a>
- <nav class="gnb" id="gnb">
-  <a href="#/c/press" data-k="press">보도자료</a>
-  <a href="#/c/research" data-k="research">연구·조사</a>
-  <a href="#/c/issue" data-k="issue">소비자 이슈</a>
-  <a href="#/report" data-k="report">제보·상담</a>
-  <a href="#/about" data-k="about">단체소개</a>
- </nav>
- <button class="sbtn" onclick="location.hash='#/search'" aria-label="검색">검색</button>
- <a class="cta" href="#/support">후원하기</a>
+ <nav class="gnb" id="gnb"></nav>
+ <form class="sbox" onsubmit="event.preventDefault();location.hash='#/search/'+encodeURIComponent(this.q.value)"><input name="q" placeholder="통합 검색" aria-label="통합 검색어"><button class="sbtn">검색</button></form>
  <button class="sbtn menu-btn" onclick="gnb.classList.toggle('open')" aria-label="메뉴">메뉴</button>
 </div></header>
 <main id="app"></main>
-<footer class="ft"><div class="wrap"><span>소비자시선 (가상 단체) · 서울특별시 OO구 OO로 00 · 고유번호 000-00-00000</span><span>개인정보처리방침 · 이메일무단수집거부 · 기부금 영수증 안내</span></div></footer>
+<footer class="ft"><div class="wrap"><span>소비자시선 (가상 단체) · 서울특별시 OO구 OO로 00</span><span>개인정보처리방침 · 이메일무단수집거부 · 회원가입 없이 모든 자료 공개</span></div></footer>
 <div class="toast" id="toast"></div>
 <script>
-const CATS={press:'보도자료',research:'연구·조사',issue:'소비자 이슈',notice:'공지'};
+const BOARDS={press:'보도자료·성명',forum:'토론회·포럼',policy:'정책 자료',brief:'소비자보고서 Brief·칼럼',journal:'저널',notice:'공지사항',faq:'FAQ'};
+const PRESS_CATS=['AI','통신','플랫폼·문화','자동차','식품·과학','사회'];
+const MENU=[
+ {t:'단체소개',k:'about',href:'#/about/greet',sub:[['인사말','#/about/greet'],['연혁','#/about/hist'],['조직도','#/about/org'],['오시는 길','#/about/map']]},
+ {t:'소비자 활동',k:'act',href:'#/c/press',sub:[['보도자료·성명','#/c/press'],['토론회·포럼','#/c/forum']]},
+ {t:'소비자 정보',k:'info',href:'#/c/policy',sub:[['정책 자료','#/c/policy'],['Brief·칼럼','#/c/brief'],['저널','#/c/journal']]},
+ {t:'공지',k:'news',href:'#/c/notice',sub:[['공지사항','#/c/notice'],['FAQ','#/c/faq']]}];
+const GROUP={press:'act',forum:'act',policy:'info',brief:'info',journal:'info',notice:'news',faq:'news'};
+const SEARCH_TABS=[['press','보도자료',['press','forum']],['notice','공지',['notice']],['lib','자료실',['policy','brief','journal']],['faq','FAQ',['faq']]];
 const P=(s,w=800,h=600)=>`https://picsum.photos/seed/cs-${s}/${w}/${h}`;
+// 작성일 순서를 일부러 섞어 둠: 목록은 항상 최신순으로 다시 정렬
 const A=[
- {id:1,c:'press',t:'배달앱 3사 최소주문금액 1년 새 평균 11.6% 올라',s:'수도권 음식점 1,240곳 가격을 1년간 추적한 결과, 최소주문금액과 배달팁이 함께 오른 곳이 절반을 넘었습니다.',d:'2026.10.21',a:'정책팀 한서윤',img:'delivery',tag:['배달앱','가격조사'],pdf:'배달앱_가격추적_보고서.pdf'},
- {id:2,c:'research',t:'2026 구독서비스 해지 절차 실태조사 보고서',s:'OTT·음원·쇼핑 멤버십 32개 서비스의 해지 단계 수와 위약 안내 방식을 비교했습니다.',d:'2026.10.17',a:'조사연구실',img:'subscribe',tag:['구독','해지방해'],pdf:'구독해지_실태조사_2026.pdf'},
- {id:3,c:'issue',t:'중고거래 안전결제 사칭 문자, 이렇게 구별하세요',s:'최근 접수된 사칭 링크 제보 84건을 유형별로 정리했습니다.',d:'2026.10.15',a:'상담센터 문태경',img:'phone',tag:['중고거래','사기예방']},
- {id:4,c:'press',t:'헬스장 장기 회원권 환불 거부, 공정위에 조사 요청',s:'환불 규정 미고지 사례가 반복된 업체 6곳에 대해 조사를 요청했습니다.',d:'2026.10.13',a:'정책팀 한서윤',img:'gym',tag:['환불','공정위']},
- {id:5,c:'research',t:'유아용 물티슈 18종 보존제 성분 비교 시험',s:'공인 시험기관에 의뢰해 표시 성분과 실제 검출 성분을 대조했습니다.',d:'2026.10.08',a:'조사연구실',img:'baby',tag:['생활화학','시험결과'],pdf:'물티슈_성분비교_시험결과.pdf'},
- {id:6,c:'issue',t:'항공권 유류할증료, 환불 때 돌려받을 수 있을까',s:'항공사별 약관을 비교하고 실제 상담 사례로 정리했습니다.',d:'2026.10.06',a:'상담센터 문태경',img:'airport',tag:['항공','환불']},
- {id:7,c:'press',t:'온라인 쇼핑몰 "품절 임박" 표시 47%가 실제 재고와 달라',s:'다크패턴 모니터링 3분기 결과를 발표합니다.',d:'2026.10.02',a:'디지털소비자팀',img:'shopping',tag:['다크패턴','온라인쇼핑'],pdf:'다크패턴_3분기_모니터링.pdf'},
- {id:8,c:'research',t:'고령 소비자 키오스크 이용 불편 설문 결과',s:'65세 이상 소비자 612명을 대상으로 한 설문 결과입니다.',d:'2026.09.26',a:'조사연구실',img:'kiosk',tag:['고령소비자','디지털포용'],pdf:'키오스크_고령소비자_설문.pdf'},
- {id:9,c:'issue',t:'전세 계약 전 꼭 확인할 서류 다섯 가지',s:'주거 상담에서 가장 많이 나온 질문을 정리했습니다.',d:'2026.09.22',a:'상담센터',img:'house',tag:['주거','계약']},
- {id:10,c:'notice',t:'2026 소비자 권익 포럼 참가 신청 안내',s:'11월 정기 포럼의 주제와 신청 방법을 안내합니다.',d:'2026.09.19',a:'사무국',img:'forum',tag:['행사']},
- {id:11,c:'press',t:'택배 분실 보상 기준, 업체마다 최대 3배 차이',s:'주요 택배사 7곳의 분실·파손 보상 약관을 비교했습니다.',d:'2026.09.15',a:'정책팀',img:'parcel',tag:['택배','약관']},
- {id:12,c:'notice',t:'정기총회 결과 및 2027년 사업계획 공개',s:'총회 의결 사항과 결산 자료를 공개합니다.',d:'2026.09.10',a:'사무국',img:'meeting',tag:['공시'],pdf:'2026_정기총회_결과.pdf'}
+ {id:1,b:'press',pc:'플랫폼·문화',k:'보도자료',t:'배달앱 3사 최소주문금액 1년 새 평균 11.6% 올라',s:'수도권 음식점 1,240곳 가격을 1년간 추적한 결과, 최소주문금액과 배달팁이 함께 오른 곳이 절반을 넘었습니다.',d:'2026-10-21',img:'delivery',tag:['배달앱','플랫폼수수료'],pdf:1},
+ {id:2,b:'press',pc:'AI',k:'성명',t:'AI 기본법 시행령, 소비자 설명요구권 빠져선 안 된다',s:'고위험 AI 판단에 대해 소비자가 이유를 물을 권리를 시행령에 명시해야 합니다.',d:'2026-10-17',img:'ai',tag:['AI기본법']},
+ {id:3,b:'press',pc:'통신',k:'보도자료',t:'5G 요금제 데이터 소진율 조사, 이용자 62%가 절반도 안 써',s:'통신 3사 이용자 1,500명의 3개월 사용량을 분석했습니다.',d:'2026-10-19',img:'phone',tag:['통신비'],pdf:1},
+ {id:4,b:'press',pc:'자동차',k:'보도자료',t:'전기차 배터리 보증 조건, 제조사별 표기 방식 제각각',s:'국내 판매 전기차 14종의 보증서와 광고 문구를 비교했습니다.',d:'2026-10-09',img:'ev',tag:['전기차']},
+ {id:5,b:'press',pc:'식품·과학',k:'성명',t:'유아용 물티슈 보존제 표시 기준 강화를 요구합니다',s:'시험 결과 표시되지 않은 보존제가 검출된 제품이 있었습니다.',d:'2026-10-02',img:'baby',tag:['생활화학']},
+ {id:6,b:'press',pc:'사회',k:'보도자료',t:'고령 소비자 키오스크 이용 불편 설문 결과 발표',s:'65세 이상 소비자 612명을 대상으로 한 설문 결과입니다.',d:'2026-09-26',img:'kiosk',tag:['디지털포용']},
+ {id:7,b:'press',pc:'AI',k:'카드뉴스',t:'카드뉴스: AI 상담봇에게 환불을 거절당했다면',s:'AI 상담 응답에도 사업자 책임이 있다는 점을 5장으로 정리했습니다.',d:'2026-10-14',img:'chatbot',tag:['AI기본법']},
+ {id:8,b:'press',pc:'통신',k:'성명',t:'단말기 지원금 정보, 소비자가 비교할 수 있게 공개해야',s:'지원금 정보가 판매점마다 달라 비교가 어려워졌습니다.',d:'2026-09-30',img:'store',tag:['통신비']},
+ {id:9,b:'press',pc:'플랫폼·문화',k:'카드뉴스',t:'카드뉴스: 구독 해지 버튼 찾기, 이렇게 어렵습니다',s:'32개 서비스의 해지 단계를 그림으로 비교했습니다.',d:'2026-10-11',img:'subscribe',tag:['플랫폼수수료','구독해지']},
+ {id:10,b:'forum',k:'토론회',t:'AI 시대 소비자 권리, 무엇을 법에 담을까 토론회',s:'정기 토론회 발제문과 영상을 공개합니다.',d:'2026-10-07',img:'forum',tag:['AI기본법']},
+ {id:11,b:'forum',k:'포럼',t:'플랫폼 수수료와 음식값, 소상공인과 소비자 공동 포럼',s:'배달 플랫폼 수수료 구조를 함께 짚었습니다.',d:'2026-09-18',img:'meeting',tag:['플랫폼수수료']},
+ {id:12,b:'policy',k:'정책 자료',t:'2026 구독서비스 해지 절차 실태조사 보고서',s:'OTT·음원·쇼핑 멤버십 32개 서비스의 해지 단계 수와 위약 안내 방식을 비교했습니다.',d:'2026-10-16',img:'report1',tag:['구독해지'],pdf:1},
+ {id:13,b:'policy',k:'정책 자료',t:'통신요금 정책 개선 제안서',s:'중저가 요금제 확대와 데이터 이월 제도를 제안합니다.',d:'2026-09-21',img:'report2',tag:['통신비'],pdf:1},
+ {id:14,b:'brief',k:'Brief',t:'소비자보고서 Brief 12호: 다크패턴 3분기 모니터링',s:'"품절 임박" 표시 47%가 실제 재고와 달랐습니다.',d:'2026-10-12',img:'shopping',tag:['다크패턴'],pdf:1},
+ {id:15,b:'brief',k:'칼럼',t:'칼럼: 알고리즘 가격, 같은 상품 다른 값',s:'개인화 가격이 소비자에게 알려져야 하는 이유.',d:'2026-10-04',img:'column',tag:['AI기본법']},
+ {id:16,b:'journal',k:'저널',t:'소비자시선 저널 창간호 (2026 가을)',s:'소비자 권익 연구 논문 4편과 좌담을 실었습니다.',d:'2026-10-01',img:'journal',tag:['저널'],pdf:1},
+ {id:17,b:'notice',k:'공지',t:'정기 토론회 참가 신청 안내',s:'신청은 이메일로 받습니다. 회원가입은 필요 없습니다.',d:'2026-10-20',tag:['행사']},
+ {id:18,b:'notice',k:'공지',t:'홈페이지를 새로 열었습니다',s:'보도자료와 연구자료를 회원가입 없이 모두 보실 수 있습니다.',d:'2026-10-03',tag:['안내']},
+ {id:19,b:'faq',k:'FAQ',t:'자료를 보려면 회원가입을 해야 하나요?',s:'아니요. 모든 보도자료와 연구자료는 가입 없이 공개됩니다.',d:'2026-10-03',tag:['안내']},
+ {id:20,b:'faq',k:'FAQ',t:'보도자료를 이메일로 받을 수 있나요?',s:'보도자료·성명 게시판 상단의 기자 전용 구독에 이메일과 소속을 남기시면 새 보도자료가 등록될 때 자동으로 보내 드립니다.',d:'2026-10-03',tag:['기자구독']},
+ {id:21,b:'faq',k:'FAQ',t:'보고서 내용을 기사에 인용해도 되나요?',s:'출처를 밝히시면 자유롭게 인용하실 수 있습니다.',d:'2026-10-03',tag:['안내']}
 ];
+const byDate=(a,b)=>b.d.localeCompare(a.d);
+const LS={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+const DEF_THEMES=['AI기본법','통신비','플랫폼수수료'];
+let THEMES=LS.get('cm_themes',DEF_THEMES),curTheme=0;
 const $=s=>document.querySelector(s),app=$('#app');
 const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._);t._=setTimeout(()=>t.classList.remove('on'),1800)};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=d=>d.replace(/-/g,'.');
+const label=x=>x.b==='press'?`${x.pc} · ${x.k}`:BOARDS[x.b];
 const memo=(title,items)=>`<div class="wpmemo"><b>워드프레스 이전 메모</b> · ${title}<ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
-const card=x=>`<a class="card" href="#/a/${x.id}"><img loading="lazy" src="${P(x.img)}" alt=""><div class="cat" style="margin-top:10px">${CATS[x.c]}</div><h4>${x.t}</h4><div class="meta">${x.d}</div></a>`;
-const item=(x,q)=>{const hl=s=>q?esc(s).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${m}</mark>`):esc(s);
- return `<a class="item" href="#/a/${x.id}"><img loading="lazy" src="${P(x.img,440,330)}" alt=""><div><div class="cat">${CATS[x.c]}${x.pdf?' · PDF 첨부':''}</div><h3>${hl(x.t)}</h3><p>${hl(x.s)}</p><div class="meta">${x.d} · ${x.a}</div></div></a>`};
+const allTags=()=>[...new Set(A.filter(x=>['press','forum'].includes(x.b)).flatMap(x=>x.tag))];
+gnb.innerHTML=MENU.map(m=>`<div class="m" data-k="${m.k}"><a href="${m.href}">${m.t}</a><div class="sub">${m.sub.map(s=>`<a href="${s[1]}">${s[0]}</a>`).join('')}</div></div>`).join('');
 
+function themeBlock(){
+ if(!THEMES.length)return `<section class="theme"><div class="empty">관리자가 지정한 해시태그가 없습니다. <a href="#/admin/tags" style="color:var(--acc)">해시태그 지정하기</a></div></section>`;
+ if(curTheme>=THEMES.length)curTheme=0;
+ const tg=THEMES[curTheme];
+ const [b,...r]=A.filter(x=>['press','forum'].includes(x.b)&&x.tag.includes(tg)).sort(byDate).slice(0,5);
+ return `<section class="theme"><div class="theme-tabs">${THEMES.map((t,i)=>`<button class="${i===curTheme?'on':''}" onclick="curTheme=${i};home()">#${t}</button>`).join('')}<a class="edit" href="#/admin/tags">해시태그 바꾸기 (관리자)</a></div>
+ ${b?`<div class="theme-grid"><a class="tcard big" href="#/a/${b.id}"><img src="${P(b.img,1000,750)}" alt=""><div class="meta"><span class="kind">${b.k}</span>${fmt(b.d)}</div><h3>${b.t}</h3><p>${b.s}</p></a>
+ ${r.map(x=>`<a class="tcard" href="#/a/${x.id}"><img loading="lazy" src="${P(x.img,640,400)}" alt=""><div class="meta"><span class="kind">${x.k}</span>${fmt(x.d)}</div><h3>${x.t}</h3></a>`).join('')}</div>`:'<div class="empty">이 해시태그가 붙은 성명서·보도자료·카드뉴스가 아직 없습니다.</div>'}</section>`;
+}
 function home(){
- const [m,...r]=A;const side=r.slice(0,3);
- const latest=A.filter(x=>x.c!=='notice').slice(4,8);
- const res=A.filter(x=>x.c==='research').slice(0,2);
- app.innerHTML=`<div class="wrap">
- <div class="lead">
-  <a class="main" href="#/a/${m.id}"><img src="${P(m.img,1280,720)}" alt="배달 음식 이미지"><div class="cat" style="margin-top:14px">${CATS[m.c]}</div><h1>${m.t}</h1><p>${m.s}</p><div class="meta">${m.d} · ${m.a}</div></a>
-  <div class="side"><h3>주요 기사</h3>${side.map(x=>`<a class="row" href="#/a/${x.id}"><div><div class="cat">${CATS[x.c]}</div><h4>${x.t}</h4><div class="meta">${x.d}</div></div><img src="${P(x.img,200,200)}" alt=""></a>`).join('')}</div>
- </div>
- <section class="block"><h2 class="sec">최신 보도·이슈 <a href="#/c/press">전체 보기</a></h2><div class="grid4">${latest.map(card).join('')}</div></section>
- <section class="block"><h2 class="sec">연구·조사 자료 <a href="#/c/research">자료실</a></h2><div class="research">${res.map(x=>`<a class="rcard" href="#/a/${x.id}"><div class="pdf">PDF</div><div><div class="cat">${x.d}</div><h4>${x.t}</h4><p>${x.s}</p></div></a>`).join('')}</div></section>
- <div class="band">
-  <a class="b1" href="#/report"><h3>피해를 겪으셨나요?</h3><p>제보와 상담 신청을 남기시면 상담원이 영업일 기준 3일 안에 연락드립니다.</p><span class="go">제보·상담 신청</span></a>
-  <a class="b2" href="#/support"><h3>회원이 되어 주세요</h3><p>단체는 회원 회비와 후원으로 독립적으로 운영됩니다. 기업 광고를 받지 않습니다.</p><span class="go" style="color:var(--acc)">후원 안내</span></a>
- </div>
- ${memo('메인 페이지',['Elementor 페이지 템플릿 1개 + Loop Grid 위젯으로 최신글·카테고리별 글을 자동 노출','머리기사는 "주요기사" 체크(ACF 필드)된 글 중 최신 1건, 옆 목록은 다음 3건','하단 두 배너는 Elementor 전역 위젯이라 문구를 관리자가 직접 수정'])}
- </div>`;
+ const press=A.filter(x=>x.b==='press').sort(byDate).slice(0,6);
+ const lib=A.filter(x=>['policy','brief','journal'].includes(x.b)).sort(byDate).slice(0,4);
+ app.innerHTML=`<div class="wrap">${themeBlock()}
+ <div class="home-cols"><section><h2 class="sec">보도자료·성명 <a href="#/c/press">전체 보기</a></h2><div class="grid3">${press.map(x=>`<a class="card" href="#/a/${x.id}"><img loading="lazy" src="${P(x.img)}" alt=""><div class="cat" style="margin-top:8px">${label(x)}</div><h4>${x.t}</h4><div class="meta">${fmt(x.d)}</div></a>`).join('')}</div></section>
+ <aside><h2 class="sec">공지사항 <a href="#/c/notice">더 보기</a></h2><div class="mini">${A.filter(x=>x.b==='notice').sort(byDate).map(x=>`<a href="#/a/${x.id}">${x.t}<div class="meta">${fmt(x.d)}</div></a>`).join('')}</div>
+ <h2 class="sec" style="margin-top:26px">토론회·포럼 <a href="#/c/forum">더 보기</a></h2><div class="mini">${A.filter(x=>x.b==='forum').sort(byDate).map(x=>`<a href="#/a/${x.id}">${x.t}<div class="meta">${fmt(x.d)}</div></a>`).join('')}</div></aside></div>
+ <h2 class="sec" style="margin-top:32px">소비자 정보 자료실 <a href="#/c/policy">자료실</a></h2>
+ <div class="lib" style="padding-top:0">${lib.map(x=>`<a class="rcard" href="#/a/${x.id}"><div class="pdf">${x.pdf?'PDF':'글'}</div><div><div class="cat">${BOARDS[x.b]} · ${fmt(x.d)}</div><h4>${x.t}</h4><p>${x.s}</p></div></a>`).join('')}</div>
+ ${memo('메인 (공고 3번)',['최상단 테마는 관리자 "메인 설정" 화면에서 고른 해시태그(워드프레스 태그) 순서대로 탭이 생기고, 탭마다 그 태그가 붙은 성명서·보도자료·카드뉴스 최신 5건을 보여 줌','해시태그 변경은 상단 검은 띠의 관리자 미리보기에서 바로 해 볼 수 있음','아래 영역은 Elementor Loop Grid로 게시판별 최신글 자동 노출, 스크롤 한 번에 전체 구성이 보이도록 배치'])}</div>`;
 }
 function list(k){
- const rows=A.filter(x=>x.c===k);
- app.innerHTML=`<div class="wrap"><div class="page-head"><h1>${CATS[k]}</h1><p>${{press:'단체가 발표한 공식 보도자료입니다. 언론사는 첨부 파일과 담당자 연락처를 함께 확인하실 수 있습니다.',research:'조사·시험 결과 원문 보고서를 PDF로 내려받을 수 있습니다.',issue:'상담 사례로 정리한 생활 속 소비자 정보입니다.',notice:'단체 공지와 공시 자료입니다.'}[k]}</p>
- <div class="tabs">${Object.keys(CATS).map(c=>`<button class="${c===k?'on':''}" onclick="location.hash='#/c/${c}'">${CATS[c]}</button>`).join('')}</div></div>
- <div class="list">${rows.map(x=>item(x)).join('')||'<div class="empty">아직 등록된 글이 없습니다.</div>'}</div>
- <div class="pager"><span class="on">1</span><span>2</span><span>3</span></div>
- ${memo('카테고리 목록',['글(post) 하나에 카테고리 4종(보도자료·연구조사·소비자이슈·공지) 지정, 목록은 Elementor Archive 템플릿 1개로 공용','PDF 첨부 여부는 ACF 파일 필드로 표시하고 목록에 자동 배지','페이지 번호는 워드프레스 기본 페이지네이션'])}</div>`;
+ const m=MENU.find(x=>x.k===GROUP[k]);
+ const pc=k==='press'?decodeURIComponent(location.hash.split('/')[3]||''):'';
+ const rows=A.filter(x=>x.b===k&&(!pc||x.pc===pc)).sort(byDate);
+ const subnav=`<div class="tabs">${m.sub.map(s=>`<a href="${s[1]}" class="${s[1]==='#/c/'+k?'on':''}">${s[0]}</a>`).join('')}</div>`;
+ if(k==='faq'){app.innerHTML=`<div class="wrap"><div class="page-head"><div class="crumb">공지</div><h1>FAQ</h1>${subnav}</div>
+  <div>${rows.map(x=>`<details><summary>${x.t}</summary><p>${x.s}</p></details>`).join('')}</div>${memo('FAQ',['FAQ는 별도 글 유형으로 만들어 통합 검색 FAQ 탭에 따로 잡히게 함'])}</div>`;return}
+ app.innerHTML=`<div class="wrap"><div class="page-head"><div class="crumb">${m.t}</div><h1>${BOARDS[k]}</h1>${subnav}
+ ${k==='press'?`<div class="subbox"><div><b>보도자료 이메일로 받아보기 (기자 전용)</b><span>새 보도자료·성명이 등록되면 바로 메일로 보내 드립니다. 회원가입은 필요 없습니다.</span></div><button class="cta" onclick="subOpen()" id="subBtn">구독 신청</button>
+ <form class="subform" id="subf" novalidate><label class="f">이메일<input name="em" type="email" autocomplete="email" placeholder="name@press.co.kr"></label><label class="f">소속 매체<input name="org" placeholder="예: OO일보 경제부"></label><button class="cta" style="height:42px">신청하기</button>
+ <label class="agree"><input type="checkbox" name="ag"> [필수] 보도자료 발송을 위해 이메일·소속을 수집하며, 구독 해지 시 또는 2년 뒤 자동 파기합니다.</label><span class="err" id="suberr" style="grid-column:1/-1"></span></form></div>
+ <div class="tabs" style="margin-top:14px">${['전체',...PRESS_CATS].map(c=>`<a href="#/c/press${c==='전체'?'':'/'+encodeURIComponent(c)}" class="${(pc||'전체')===c?'on':''}">${c}</a>`).join('')}</div>`:''}</div>
+ <div class="sortnote"><span>총 ${rows.length}건</span><span>작성일 최신순</span></div>
+ <div class="list">${rows.map(x=>`<a class="item ${x.img?'':'noimg'}" href="#/a/${x.id}">${x.img?`<img loading="lazy" src="${P(x.img,400,300)}" alt="">`:''}<div><div class="cat">${label(x)}${x.pdf?' · PDF':''}</div><h3>${x.t}</h3><p>${x.s}</p><div class="meta">${fmt(x.d)}</div></div></a>`).join('')||'<div class="empty">이 분류에 등록된 글이 아직 없습니다.</div>'}</div>
+ ${memo(BOARDS[k],[k==='press'?'6분류(AI, 통신, 플랫폼·문화, 자동차, 식품·과학, 사회)는 워드프레스 카테고리로, 성명·보도자료·카드뉴스 구분은 글쓰기 화면의 선택 칸으로 둠':'게시판마다 같은 목록 템플릿을 공용으로 씀','모든 게시판 목록은 코드 한 곳(pre_get_posts)에서 작성일 최신순으로 고정해 예외가 생기지 않음 (공고 5번)',k==='press'?'기자 구독 신청은 기자 주소록으로 들어가고, 보도자료 발행 시 자동 발송 (공고 8번)':'썸네일이 없는 글은 텍스트형 목록으로 자동 전환'])}</div>`;
+ if(k==='press')$('#subf').onsubmit=subSubmit;
 }
+function subOpen(){$('#subf').classList.add('open');$('#subBtn').style.display='none';$('#subf').em.focus()}
+function subSubmit(e){e.preventDefault();const f=e.target,er=$('#suberr');
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.em.value.trim()))return er.textContent='이메일 주소를 확인해 주세요.';
+ if(f.org.value.trim().length<2)return er.textContent='소속 매체를 적어 주세요.';
+ if(!f.ag.checked)return er.textContent='개인정보 수집에 동의해 주셔야 신청됩니다.';
+ const mask=f.em.value.trim().replace(/^(.{2}).*(@.*)$/,'$1***$2');
+ f.parentElement.innerHTML=`<div><b>구독 신청이 접수되었습니다</b><span>${esc(mask)} (${esc(f.org.value)}) 주소로 확인 메일을 보냈습니다. 메일의 확인 버튼을 누르시면 구독이 시작됩니다. 시연용이라 실제 발송은 없습니다.</span></div>`;}
+
+const PAGES=Array.from({length:10},(_,i)=>{const p=i+1;
+ if(p===1)return `<h2 style="font-size:2em;margin-top:30%">2026 구독서비스<br>해지 절차 실태조사</h2><p>소비자시선 조사연구실</p><p style="color:#71717a">2026년 10월 · 시연용 가상 보고서</p>`;
+ if(p===2)return `<h2>목차</h2><table>${['조사 개요','조사 방법과 표본','해지 단계 수 비교','위약 안내 방식','사업자 의견','정책 제언','부록'].map((t,j)=>`<tr><td>${j+1}. ${t}</td><td style="text-align:right">${j+3}</td></tr>`).join('')}</table>`;
+ if(p===5)return `<h2>3. 해지 단계 수 비교</h2><p>서비스 유형별 평균 해지 단계 수 (가상 데이터)</p>${[['OTT',62],['음원',48],['쇼핑 멤버십',85],['클라우드',40]].map(r=>`<div style="font-size:.9em">${r[0]}</div><div class="bar" style="width:${r[1]}%"></div>`).join('')}<p>쇼핑 멤버십은 해지 전 혜택 안내 화면이 평균 3회 반복되었습니다.</p>`;
+ return `<h2>${{3:'1. 조사 개요',4:'2. 조사 방법과 표본',6:'4. 위약 안내 방식',7:'5. 사업자 의견',8:'6. 정책 제언',9:'7. 부록',10:'부록 표'}[p]}</h2><p>이 쪽은 시연용 본문입니다. 실제 보고서는 원본 PDF를 그대로 띄우며, 글자를 이미지가 아니라 벡터로 그리기 때문에 휴대폰에서 확대해도 깨지지 않습니다.</p><p>조사 대상 32개 서비스의 약관과 해지 화면을 같은 조건으로 기록했습니다. 표본과 한계는 2장에 공개했습니다.</p>`});
+let vp={p:1,z:1};
+const viewer=()=>`<div class="viewer" id="viewer"><div class="vbar"><button onclick="vgo(-1)" id="vprev">이전</button><input id="vnum" inputmode="numeric" aria-label="쪽 번호" onchange="vset(+this.value)"><span>/ ${PAGES.length}</span><button onclick="vgo(1)" id="vnext">다음</button><span class="sp"></span><button onclick="vzoom(-.15)">축소</button><button onclick="vzoom(.15)">확대</button></div>
+ <div class="vpage-wrap"><div class="vpage" id="vpage"></div></div>
+ <div class="thumbs">${PAGES.map((_,i)=>`<button onclick="vset(${i+1})" data-p="${i+1}" aria-label="${i+1}쪽">${i+1}</button>`).join('')}</div></div>`;
+function vrender(){const el=$('#vpage');if(!el)return;el.innerHTML=PAGES[vp.p-1]+`<div class="pno">${vp.p} / ${PAGES.length}</div>`;el.style.transform=`scale(${vp.z})`;el.parentElement.style.height=(el.offsetHeight*vp.z+4)+'px';
+ $('#vnum').value=vp.p;$('#vprev').disabled=vp.p===1;$('#vnext').disabled=vp.p===PAGES.length;document.querySelectorAll('.thumbs button').forEach(b=>b.classList.toggle('on',+b.dataset.p===vp.p))}
+function vset(p){vp.p=Math.min(PAGES.length,Math.max(1,p||1));vrender()}
+function vgo(d){vset(vp.p+d)}
+function vzoom(d){vp.z=Math.min(1.6,Math.max(.6,+(vp.z+d).toFixed(2)));vrender()}
+addEventListener('keydown',e=>{if(!$('#viewer')||/INPUT|TEXTAREA/.test(e.target.tagName)||e.target.isContentEditable)return;if(e.key==='ArrowRight')vgo(1);if(e.key==='ArrowLeft')vgo(-1)});
+
 function article(id){
- const x=A.find(a=>a.id==id);if(!x)return list('press');
- const rel=A.filter(a=>a.c===x.c&&a.id!==x.id).slice(0,4);
- document.title=x.t+' | 소비자시선';
+ const x=A.find(a=>a.id==id);if(!x)return home();
+ const rel=A.filter(a=>a.b===x.b&&a.id!==x.id).sort(byDate).slice(0,4);
+ document.title=x.t+' | 소비자시선';vp={p:1,z:1};
+ const isLib=['policy','brief','journal'].includes(x.b);
  app.innerHTML=`<div class="wrap"><div class="article"><article>
-  <div class="crumb"><a href="#/">홈</a> / <a href="#/c/${x.c}">${CATS[x.c]}</a></div>
+  <div class="crumb"><a href="#/">홈</a> / <a href="#/c/${x.b}">${BOARDS[x.b]}</a>${x.pc?' / '+x.pc:''}</div>
   <h1>${x.t}</h1>
-  <div class="byline"><span>${x.a} · 입력 ${x.d}</span><span class="share"><button onclick="copyLink()">링크 복사</button><button onclick="toast('카카오톡 공유 (시연용)')">카카오톡</button><button onclick="window.print()">인쇄</button></span></div>
+  <div class="byline"><span>${x.k} · 입력 ${fmt(x.d)}</span><span class="share"><button onclick="copyLink()">링크 복사</button><button onclick="toast('카카오톡 공유 (시연용)')">카카오톡</button><button onclick="window.print()">인쇄</button></span></div>
   <div class="body">
    <p><b>${x.s}</b></p>
-   <figure><img src="${P(x.img,1280,720)}" alt=""><figcaption>자료 사진 (시연용 이미지)</figcaption></figure>
-   <p>소비자시선은 지난 1년간 조사 대상을 정해 같은 조건으로 반복 측정했습니다. 조사 방법과 표본, 한계는 첨부 보고서 2장에 그대로 공개했습니다. 본문 숫자는 모두 가상의 시연용 데이터입니다.</p>
-   <blockquote>“가격이 오른 것보다 소비자가 그 사실을 알기 어려웠다는 점이 더 큰 문제입니다.” 정책팀 담당자</blockquote>
-   <p>단체는 조사 결과를 관계 부처에 전달하고, 표시 기준 개선을 요청할 계획입니다. 같은 피해를 겪은 소비자는 제보·상담 메뉴로 사례를 보내 주시면 후속 조사에 반영합니다.</p>
-   ${x.pdf?`<div class="attach"><div class="pdf">PDF</div><div><b>${x.pdf}</b>원문 보고서 · 2.4MB</div><button class="cta" onclick="toast('PDF 내려받기 (시연용)')">내려받기</button></div>`:''}
-   ${x.c==='press'?`<div class="contact-box"><b>보도 문의</b><br>${x.a} · 02-000-0000 · press@example.org (가상)<br>엠바고: 없음. 사진은 출처 표기 후 사용 가능합니다.</div>`:''}
+   ${x.pdf&&isLib?viewer()+'<p class="meta">다운로드나 가입 없이 바로 넘겨 보실 수 있습니다. 키보드 좌우 화살표도 됩니다. (시연용 10쪽)</p>':''}
+   ${x.img&&!isLib?`<figure><img src="${P(x.img,1280,720)}" alt=""><figcaption>사진 캡션: 기자회견 현장. 출처를 밝히면 기사에 쓰실 수 있습니다. (시연용 이미지)</figcaption></figure>`:''}
+   <p>소비자시선은 같은 조건으로 반복 조사한 결과를 공개합니다. <mark>조사 방법과 표본, 한계는 원문 보고서 2장에 그대로 실었습니다.</mark> 본문 숫자는 모두 가상의 시연용 데이터입니다.</p>
+   <blockquote>“가격이 오른 것보다 소비자가 그 사실을 알기 어려웠다는 점이 더 큰 문제입니다.”<cite>소비자시선 정책위원장 (가상)</cite></blockquote>
+   <p>단체는 결과를 관계 부처에 전달하고 표시 기준 개선을 요청할 계획입니다.</p>
+   ${x.pdf&&!isLib?`<div class="attach"><div class="pdf">PDF</div><div><b>보도자료 원문.pdf</b>브라우저에서 바로 보기 · 회원가입 필요 없음</div><a class="cta ghost" href="#/a/12">뷰어 예시 보기</a></div>`:''}
+   ${x.b==='press'?`<div class="contact-box"><b>보도 문의</b><br>정책팀 · 02-000-0000 · press@example.org (가상)<br>새 보도자료를 메일로 받으시려면 <a href="#/c/press" style="color:var(--acc);font-weight:700">기자 전용 구독</a>을 신청해 주세요.</div>`:''}
   </div>
   <div class="tags">${x.tag.map(t=>`<a href="#/search/${encodeURIComponent(t)}">#${t}</a>`).join('')}</div>
-  ${memo('기사 상세',['Elementor Single Post 템플릿 1개로 모든 글 공용, 카테고리가 보도자료일 때만 "보도 문의" 블록 표시','기자명·담당부서·첨부 PDF·엠바고는 ACF 필드, 작성자는 편집자 화면에서 입력만 하면 됨','Open Graph·검색엔진용 메타는 Rank Math(또는 Yoast)로 글마다 자동 생성'])}
+  ${memo('기사 상세 (공고 6·7번)',['본문은 워드프레스 블록 에디터로 작성: 이미지 캡션, 인용구, 형광펜을 신문 스타일로 고정. HTML을 몰라도 버튼으로 씀','자료실 PDF는 PDF.js로 브라우저 안에서 넘겨 보기. 글자를 벡터로 그려 모바일 확대에도 선명함 (데모는 HTML로 흉내 낸 가상 10쪽)','Single 템플릿 1개를 모든 글이 공용으로 씀. 보도자료일 때만 보도 문의 블록 노출'])}
  </article>
- <aside class="rail"><div class="sticky"><h3>같은 분류의 글</h3>${rel.map(r=>`<a href="#/a/${r.id}">${r.t}</a>`).join('')}
-  <div class="rail-cta"><b>비슷한 피해를 겪으셨나요?</b><p>사례를 보내 주시면 후속 조사에 반영합니다.</p><a class="cta" href="#/report">제보·상담 신청</a></div></div></aside></div></div>`;
+ <aside class="rail"><div class="sticky"><h3>${BOARDS[x.b]} 최신글</h3><div class="mini">${rel.map(r=>`<a href="#/a/${r.id}">${r.t}</a>`).join('')}</div></div></aside></div></div>`;
+ vrender();
 }
 function search(q=''){
- q=q.trim();const r=q?A.filter(x=>(x.t+x.s+x.tag.join(' ')).toLowerCase().includes(q.toLowerCase())):[];
- app.innerHTML=`<div class="wrap"><div class="page-head"><h1>검색</h1>
- <form class="sbar" onsubmit="event.preventDefault();location.hash='#/search/'+encodeURIComponent(this.q.value)"><input name="q" value="${esc(q)}" placeholder="예: 환불, 구독, 배달앱" aria-label="검색어"><button class="cta">검색</button></form>
- <div class="tabs">${['환불','구독','다크패턴','택배'].map(t=>`<button onclick="location.hash='#/search/${t}'">${t}</button>`).join('')}</div></div>
- <div class="list">${q?(r.length?`<p class="meta">"${esc(q)}" 검색 결과 ${r.length}건</p>`+r.map(x=>item(x,q)).join(''):`<div class="empty">"${esc(q)}"에 맞는 글이 없습니다. 다른 단어로 찾아보시거나 <a href="#/report" style="color:var(--acc)">상담을 신청</a>해 주세요.</div>`):'<div class="empty">찾으실 단어를 입력해 주세요. 제목, 요약, 태그에서 찾습니다.</div>'}</div>
- ${memo('검색',['워드프레스 기본 검색에 Relevanssi(무료)를 얹어 본문·태그·PDF 파일명까지 검색','검색어 강조와 결과 없음 안내 문구는 검색 결과 템플릿에 포함'])}</div>`;
- setTimeout(()=>{const i=document.querySelector('.sbar input');if(i&&!q)i.focus()},50);
+ q=q.trim();const lq=q.toLowerCase();
+ const hit=q?A.filter(x=>(x.t+x.s+x.tag.join(' ')+(x.pc||'')).toLowerCase().includes(lq)).sort(byDate):[];
+ const tab=location.hash.split('/')[3]||'';
+ const groups=SEARCH_TABS.map(([k,n,bs])=>({k,n,r:hit.filter(x=>bs.includes(x.b))}));
+ const cur=groups.find(g=>g.k===tab)||groups.find(g=>g.r.length)||groups[0];
+ const hl=s=>q?esc(s).replace(new RegExp(esc(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${m}</mark>`):esc(s);
+ const enc=encodeURIComponent(q);
+ app.innerHTML=`<div class="wrap"><div class="page-head"><h1>통합 검색</h1>
+ <form class="sbox" style="margin-top:14px;max-width:560px" onsubmit="event.preventDefault();location.hash='#/search/'+encodeURIComponent(this.q.value)"><input name="q" style="width:100%" value="${esc(q)}" placeholder="예: 통신, AI, 구독" aria-label="검색어"><button class="cta">검색</button></form>
+ ${q?`<div class="tabs">${groups.map(g=>`<a href="#/search/${enc}/${g.k}" class="${g===cur?'on':''}">${g.n}<span class="n">${g.r.length}</span></a>`).join('')}</div>`:`<div class="tabs">${['통신','AI','구독','회원가입'].map(t=>`<a href="#/search/${t}">${t}</a>`).join('')}</div>`}</div>
+ <div class="list">${!q?'<div class="empty">찾으실 단어를 입력해 주세요. 제목, 요약, 해시태그에서 찾습니다.</div>':cur.r.length?cur.r.map(x=>`<a class="item noimg" href="${x.b==='faq'?'#/c/faq':'#/a/'+x.id}"><div><div class="cat">${label(x)}</div><h3>${hl(x.t)}</h3><p>${hl(x.s)}</p><div class="meta">${fmt(x.d)}</div></div></a>`).join(''):`<div class="empty">"${esc(q)}" 검색 결과가 없습니다. 다른 단어로 찾아보세요.</div>`}</div>
+ ${memo('통합 검색 (공고 4번)',['헤더 검색창 하나로 보도자료(토론회 포함)·공지·자료실·FAQ를 한 번에 찾고 결과를 탭으로 나눔. 탭 옆 숫자로 어디에 결과가 있는지 바로 보임','검색은 Relevanssi(무료)로 본문·해시태그·첨부 파일명까지 색인, 결과는 최신순'])}</div>`;
 }
-function report(){
- app.innerHTML=`<div class="wrap"><div class="page-head"><h1>제보·상담 신청</h1><p>소비자 피해 사례를 보내 주시면 상담원이 확인 후 연락드립니다. 제보 내용은 동의하신 범위에서만 조사에 사용합니다.</p></div>
- <div class="formwrap"><div id="fbox"><form id="rf" novalidate>
-  <div class="field"><label>신청 유형</label><div class="chips">${['피해 상담','제보','언론 취재 요청'].map((v,i)=>`<label><input type="radio" name="type" value="${v}" ${i?'':'checked'}>${v}</label>`).join('')}</div></div>
-  <div class="two"><div class="field"><label for="nm">이름</label><input id="nm" name="nm" autocomplete="name"><span class="err"></span></div>
-  <div class="field"><label for="ph">연락처</label><input id="ph" name="ph" inputmode="tel" placeholder="010-0000-0000" autocomplete="tel"><span class="err"></span></div></div>
-  <div class="two"><div class="field"><label for="fd">분야</label><select id="fd" name="fd"><option value="">선택해 주세요</option><option>온라인 쇼핑·배달</option><option>구독·통신</option><option>여행·항공</option><option>주거·계약</option><option>식품·생활화학</option><option>기타</option></select><span class="err"></span></div>
-  <div class="field"><label for="co">업체명</label><input id="co" name="co"><span class="help">모르시면 비워 두셔도 됩니다.</span></div></div>
-  <div class="field"><label for="ct">내용</label><textarea id="ct" name="ct" placeholder="언제, 어디서, 어떤 일이 있었는지 적어 주세요."></textarea><span class="help">20자 이상 적어 주세요.</span><span class="err"></span></div>
-  <div class="field"><label for="fl">증빙 파일</label><input id="fl" type="file" multiple accept=".jpg,.png,.pdf"><span class="help">영수증, 화면 캡처 등. 파일당 10MB까지 (시연용, 실제 업로드 안 됨)</span></div>
-  <div class="field"><label class="agree"><input type="checkbox" id="ag1"> [필수] 개인정보 수집·이용에 동의합니다. 이름·연락처는 상담 목적으로만 쓰고 처리 완료 후 1년 뒤 파기합니다.</label><span class="err" id="ag1e"></span></div>
-  <div class="field"><label class="agree"><input type="checkbox"> [선택] 개인 정보를 가린 사례를 조사·보도에 활용하는 데 동의합니다.</label></div>
-  <button class="cta" style="height:48px;padding:0 28px">신청하기</button>
- </form></div>
- <aside><h3 style="margin-top:0">처리 순서</h3><ol class="steps"><li>접수 즉시 접수번호 문자 발송</li><li>상담원 배정, 영업일 3일 안에 연락</li><li>사업자 중재 또는 관계기관 안내</li><li>결과 회신, 제보는 조사 반영 여부 안내</li></ol>
- ${memo('제보·상담 폼',['WPForms 또는 Fluent Forms로 구성, 접수 내용은 관리자 화면 목록과 담당자 메일로 동시에 전달','개인정보 동의는 필수 체크, 첨부 파일은 비공개 폴더 저장','스팸 방지는 reCAPTCHA v3 또는 Turnstile'])}</aside></div></div>`;
- const f=$('#rf');
- f.onsubmit=e=>{e.preventDefault();let ok=true;
-  const chk=(id,cond,msg)=>{const el=$('#'+id),er=el.closest('.field').querySelector('.err');er.textContent=cond?'':msg;if(!cond)ok=false};
-  chk('nm',f.nm.value.trim().length>=2,'이름을 입력해 주세요.');
-  chk('ph',/^01\d-?\d{3,4}-?\d{4}$/.test(f.ph.value.trim()),'연락처 형식을 확인해 주세요.');
-  chk('fd',f.fd.value,'분야를 선택해 주세요.');
-  chk('ct',f.ct.value.trim().length>=20,'내용을 20자 이상 적어 주세요.');
-  $('#ag1e').textContent=$('#ag1').checked?'':'개인정보 수집에 동의해 주셔야 접수됩니다.';if(!$('#ag1').checked)ok=false;
-  if(!ok){f.querySelector('.err:not(:empty)')?.closest('.field').scrollIntoView({block:'center'});return}
-  const no='C-'+new Date().toISOString().slice(2,10).replace(/-/g,'')+'-'+String(Math.floor(Math.random()*900)+100);
-  $('#fbox').innerHTML=`<div class="done"><h3>접수되었습니다</h3><p>접수번호 <b>${no}</b><br>${esc(f.nm.value)}님, ${esc(f.type.value)} 신청이 접수되었습니다. 영업일 3일 안에 연락드리겠습니다.</p><p class="meta">시연용 화면이라 실제로 전송되지 않았습니다.</p><a class="cta ghost" href="#/">홈으로</a></div>`;
- };
+function about(sec){
+ const S={greet:['인사말',`<p style="font-size:18px;line-height:1.8;margin-top:0">소비자시선은 소비자가 공정한 정보로 선택할 수 있도록 조사하고, 알리고, 바꾸기 위해 모인 비영리 단체입니다. 기업 광고와 협찬을 받지 않고 시민의 지지로 운영합니다.</p><p style="color:var(--sub)">대표 OOO (가상)</p>`],
+ hist:['연혁',`<div class="hist"><div><b>2026.12</b>단체 설립 (가상)</div><div><b>2026.11</b>홈페이지 오픈</div><div><b>2026.10</b>창립 준비위원회 구성</div></div>`],
+ org:['조직도',`<div class="org"><div class="row"><span class="top">총회</span></div><div class="row"><span>운영위원회</span><span>감사</span></div><div class="row"><span class="top">대표</span></div><div class="row"><span>정책팀</span><span>조사연구실</span><span>디지털소비자팀</span><span>사무국</span></div></div>`],
+ map:['오시는 길',`<p style="margin-top:0">서울특별시 OO구 OO로 00, 0층</p><div style="aspect-ratio:16/9;border-radius:8px;background:var(--acc-soft);display:grid;place-items:center;color:var(--acc);font-weight:700">카카오맵 임베드 자리 (시연용)</div>`]};
+ if(!S[sec])sec='greet';const [t,h]=S[sec];
+ app.innerHTML=`<div class="wrap"><div class="page-head"><div class="crumb">단체소개</div><h1>${t}</h1></div>
+ <div class="about"><nav>${Object.entries(S).map(([k,v])=>`<a href="#/about/${k}" class="${k===sec?'on':''}">${v[0]}</a>`).join('')}</nav><div>${h}</div></div>
+ ${memo('단체소개',['인사말·연혁·조직도·오시는 길은 Elementor 일반 페이지 4개. 직원이 글자와 사진만 바꾸면 되도록 전역 스타일로 고정'])}</div>`;
 }
-function support(){
- app.innerHTML=`<div class="wrap"><div class="page-head"><h1>후원·회원 안내</h1><p>소비자시선은 기업 광고와 협찬 없이 회원 회비와 시민 후원으로 운영합니다.</p></div>
- <div class="formwrap"><div id="sbox"><form id="sf">
-  <div class="field"><label>후원 방식</label><div class="chips"><label><input type="radio" name="kind" value="정기 회원" checked>정기 회원 (매월)</label><label><input type="radio" name="kind" value="일시 후원">일시 후원</label></div></div>
-  <div class="field"><label>금액</label><div class="chips amounts">${[10000,20000,30000,50000].map((v,i)=>`<label><input type="radio" name="amt" value="${v}" ${i==1?'checked':''}>${v.toLocaleString()}원</label>`).join('')}</div>
-  <input name="etc" inputmode="numeric" placeholder="직접 입력 (원)" aria-label="직접 입력 금액" style="margin-top:8px"></div>
-  <div class="two"><div class="field"><label for="snm">이름</label><input id="snm" name="snm" required></div><div class="field"><label for="sph">연락처</label><input id="sph" name="sph" inputmode="tel" required></div></div>
-  <div class="field"><label class="agree"><input type="checkbox" name="rc"> 연말정산용 기부금 영수증을 받겠습니다. (주민등록번호는 결제 단계에서 별도 수집)</label></div>
-  <button class="cta" style="height:48px;padding:0 28px">결제 단계로</button><p class="help meta">결제는 시연용입니다. 실제 구축 시 CMS 정기결제 또는 토스페이먼츠·나이스페이 중 선택.</p>
- </form></div>
- <aside><h3 style="margin-top:0">회원이 되시면</h3><ol class="steps"><li>월간 소비자 리포트 메일 발송</li><li>연구·조사 원문 보고서 우선 공개</li><li>정기총회 의결권 (정회원)</li><li>후원금 사용 내역 연 1회 공개</li></ol>
- ${memo('후원·회원',['후원 신청은 폼 플러그인 + 결제사 공식 워드프레스 플러그인으로 연결, 정기결제는 단체가 쓰는 CMS 업체 신청 링크로 대체 가능','기부금 영수증 발급용 정보는 사이트에 저장하지 않고 결제사·CMS 쪽에서 처리','회원 전용 자료가 필요하면 회원 등급 플러그인으로 보고서 열람 제한'])}</aside></div></div>`;
- $('#sf').onsubmit=e=>{e.preventDefault();const f=e.target;const amt=+f.etc.value.replace(/\D/g,'')||+f.amt.value;
-  if(!f.snm.value.trim()||!f.sph.value.trim())return toast('이름과 연락처를 입력해 주세요');
-  if(amt<1000)return toast('1,000원 이상 입력해 주세요');
-  $('#sbox').innerHTML=`<div class="done"><h3>감사합니다</h3><p>${esc(f.snm.value)}님의 ${f.kind.value} <b>${amt.toLocaleString()}원</b> 신청을 받았습니다. 실제 사이트에서는 이 다음에 결제창이 열립니다.</p><p class="meta">시연용 화면이라 결제되지 않았습니다.</p><a class="cta ghost" href="#/">홈으로</a></div>`};
+function admin(sec){
+ const nav=`<nav><a href="#/admin/tags" class="${sec!=='editor'?'on':''}">메인 해시태그</a><a href="#/admin/editor" class="${sec==='editor'?'on':''}">기사 에디터</a><a href="#/">사이트 보기</a></nav>`;
+ if(sec!=='editor'){
+  const tags=[...THEMES,...allTags().filter(t=>!THEMES.includes(t))];
+  app.innerHTML=`<div class="wrap"><div class="adm">${nav}<div class="panel"><h2>메인 최상단 테마 큐레이션</h2><p>체크한 해시태그가 메인 최상단 탭이 됩니다. 순서는 위아래 버튼으로 바꿉니다. 저장하면 메인이 바로 바뀝니다.</p>
+  <div>${tags.map(t=>{const i=THEMES.indexOf(t),n=A.filter(x=>['press','forum'].includes(x.b)&&x.tag.includes(t)).length;return `<div class="tagrow"><input type="checkbox" ${i>=0?'checked':''} onchange="tagToggle('${t}',this.checked)" aria-label="${t} 노출"><span><b>#${t}</b> <span class="cnt">글 ${n}건${i>=0?' · 탭 '+(i+1)+'번째':''}</span></span>${i>=0?`<button onclick="tagMove('${t}',-1)" aria-label="위로">위</button><button onclick="tagMove('${t}',1)" aria-label="아래로">아래</button>`:'<span></span><span></span>'}</div>`}).join('')}</div>
+  <div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap"><button class="cta" onclick="LS.set('cm_themes',THEMES);curTheme=0;location.hash='#/'">저장하고 메인 보기</button><button class="cta ghost" onclick="THEMES=[...DEF_THEMES];admin('tags')">처음 상태로</button></div>
+  ${memo('메인 설정 화면',['워드프레스 관리자 "메인 설정" 메뉴에 태그 선택 칸과 순서 바꾸기를 둠. 글을 쓸 때 해시태그만 달면 해당 테마에 자동으로 묶임','시연은 이 브라우저에만 저장됨'])}</div></div></div>`;
+  return;
+ }
+ app.innerHTML=`<div class="wrap"><div class="adm">${nav}<div class="panel"><h2>신문사형 기사 에디터 미리보기</h2><p>글자를 선택한 뒤 버튼을 눌러 보세요. 오른쪽에 실제 기사 모양이 바로 보입니다. HTML을 몰라도 됩니다.</p>
+ <div class="ed-tools"><button onclick="edFig()">사진 + 캡션</button><button onclick="edQuote()">인용구</button><button onclick="edMark()">형광펜</button><button onclick="edCmd('bold')"><b>굵게</b></button><button onclick="edCmd('formatBlock','h3')">소제목</button></div>
+ <div class="edgrid"><div><h3>작성 화면</h3><div class="ed" id="ed" contenteditable="true" spellcheck="false"><p>통신 3사 이용자 1,500명의 3개월 사용량을 분석한 결과, 이용자 상당수가 제공 데이터의 절반도 쓰지 않는 것으로 나타났습니다.</p><p>단체는 중저가 요금제 확대를 요구했습니다.</p></div></div>
+ <div><h3>기사 화면 미리보기</h3><div class="prev"><div class="body" id="prev"></div></div></div></div>
+ <div style="margin-top:16px"><button class="cta" onclick="toast('발행하면 메인과 기자 구독 메일에 자동 반영됩니다 (시연용)')">발행</button></div>
+ ${memo('에디터 (공고 7번)',['실제 구축은 워드프레스 블록 에디터를 다듬어 씀: 이미지 캡션, 인용구, 형광펜(텍스트 강조) 기능이 기본 내장이라 별도 에디터 플러그인 없이 업데이트에 안전','신문 스타일(캡션 선, 인용 굵은 선, 형광펜 밑줄형)은 테마 CSS로 고정해 누가 써도 같은 모양','휴대폰 브라우저에서도 글쓰기 가능'])}</div></div></div>`;
+ $('#ed').addEventListener('input',edSync);edSync();
 }
-function about(){
- app.innerHTML=`<div class="wrap"><div class="page-head"><h1>단체소개</h1><p>소비자가 공정한 정보로 선택할 수 있도록 조사하고, 알리고, 바꿉니다.</p></div>
- <div class="about-grid"><img src="${P('team',960,720)}" alt="활동 사진"><div>
-  <h2 class="sec">하는 일</h2><p style="color:var(--sub)">가격·약관·표시 실태를 직접 조사해 보도자료와 보고서로 공개합니다. 접수된 피해 사례는 상담과 중재로 돕고, 반복되는 문제는 제도 개선을 요청합니다.</p>
-  <h2 class="sec" style="margin-top:28px">연혁 (가상)</h2><div class="hist"><div><b>2026</b>구독 해지 실태조사, 다크패턴 상시 모니터링 시작</div><div><b>2024</b>소비자 상담센터 개소</div><div><b>2021</b>비영리 민간단체 등록</div></div>
-  <h2 class="sec" style="margin-top:28px">오시는 길</h2><p style="color:var(--sub)">서울특별시 OO구 OO로 00 (지도는 카카오맵 임베드 자리, 시연용)</p></div></div>
- ${memo('단체소개',['인사말·조직도·연혁·오시는 길은 일반 페이지 + Elementor 섹션, 직원이 글자만 바꾸면 되도록 전역 스타일 고정','연혁은 반복 필드(ACF Repeater) 대신 Elementor 목록 위젯으로 단순화'])}</div>`;
-}
+function edSync(){$('#prev').innerHTML=$('#ed').innerHTML}
+function edSel(){const s=getSelection();return s.rangeCount&&!s.isCollapsed&&$('#ed').contains(s.anchorNode)?s.getRangeAt(0):null}
+function edCmd(c,v){$('#ed').focus();document.execCommand(c,false,v);edSync()}
+function edMark(){const r=edSel();if(!r)return toast('형광펜을 칠할 글자를 먼저 선택해 주세요');const m=document.createElement('mark');m.appendChild(r.extractContents());r.insertNode(m);getSelection().removeAllRanges();edSync()}
+function edQuote(){const r=edSel();if(!r)return toast('인용할 문장을 먼저 선택해 주세요');const t=r.toString();r.deleteContents();const q=document.createElement('blockquote');q.textContent='“'+t+'”';const blk=r.startContainer.nodeType===1?r.startContainer:r.startContainer.parentElement;const p=blk.closest('#ed > *');p?p.after(q):$('#ed').appendChild(q);edSync()}
+function edFig(){const f=document.createElement('figure');f.innerHTML=`<img src="${P('pressconf',960,540)}" alt=""><figcaption>사진 캡션을 입력하세요. 예: 10월 19일 기자회견 현장</figcaption>`;$('#ed').appendChild(f);edSync()}
+function tagToggle(t,on){THEMES=on?[...THEMES,t]:THEMES.filter(x=>x!==t);admin('tags')}
+function tagMove(t,d){const i=THEMES.indexOf(t),j=i+d;if(j<0||j>=THEMES.length)return;[THEMES[i],THEMES[j]]=[THEMES[j],THEMES[i]];admin('tags')}
 function copyLink(){navigator.clipboard?.writeText(location.href).then(()=>toast('링크를 복사했습니다'),()=>toast('복사 실패, 주소창을 이용해 주세요'))}
 function route(){
  const h=location.hash.slice(2).split('/');gnb.classList.remove('open');document.title='소비자시선 미디어 시안';
- const k={c:h[1],report:'report',about:'about'}[h[0]];
- document.querySelectorAll('nav.gnb a').forEach(a=>a.classList.toggle('on',a.dataset.k===k||(h[0]==='a'&&a.dataset.k===A.find(x=>x.id==h[1])?.c)));
- ({c:()=>list(CATS[h[1]]?h[1]:'press'),a:()=>article(h[1]),search:()=>search(decodeURIComponent(h[1]||'')),report,support,about}[h[0]]||home)();
+ const g=h[0]==='about'?'about':h[0]==='c'?GROUP[h[1]]:h[0]==='a'?GROUP[A.find(x=>x.id==h[1])?.b]:'';
+ document.querySelectorAll('nav.gnb .m').forEach(m=>m.classList.toggle('on',m.dataset.k===g));
+ ({c:()=>BOARDS[h[1]]?list(h[1]):home(),a:()=>article(h[1]),search:()=>search(decodeURIComponent(h[1]||'')),about:()=>about(h[1]),admin:()=>admin(h[1])}[h[0]]||home)();
  scrollTo(0,0);
 }
 addEventListener('hashchange',route);route();
