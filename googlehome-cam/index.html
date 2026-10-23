@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>홈캠 앱 시연</title>
+<style>
+:root{--bg:#f3f4f6;--surface:#fff;--line:#e4e6ea;--text:#16181d;--sub:#5d6470;--acc:#1f6feb;--acc-soft:#e8f0fe;--ok:#14895a;--warn:#c2410c;--red:#d92d20;--r:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:15px/1.5 "Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;background:var(--bg);color:var(--text);padding-bottom:60px;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:12px 20px}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px}
+.brand i{width:26px;height:26px;border-radius:8px;background:var(--acc);display:grid;place-items:center;color:#fff;font-style:normal;font-size:13px}
+.tag{font-size:12px;color:var(--warn);background:#fff4ec;border:1px solid #fcd9c2;border-radius:99px;padding:2px 9px}
+.tabs{margin-left:auto;display:flex;background:#eef0f3;border-radius:10px;padding:3px}
+.tabs button{padding:7px 14px;border-radius:8px;font-size:14px;color:var(--sub);white-space:nowrap}
+.tabs button.on{background:#fff;color:var(--text);font-weight:600;box-shadow:0 1px 3px rgba(20,30,50,.12)}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px}
+.view{display:none}.view.on{display:block}
+/* app view */
+.stage{display:grid;grid-template-columns:400px 1fr;gap:48px;align-items:start}
+.phone{width:380px;height:780px;border-radius:46px;background:#111;padding:12px;box-shadow:0 30px 60px -20px rgba(20,30,60,.35);position:relative}
+.screen{width:100%;height:100%;border-radius:36px;background:#fff;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:110px;height:28px;background:#111;border-radius:20px;z-index:5}
+.sbar{height:44px;flex:none;display:flex;justify-content:space-between;align-items:flex-end;padding:0 26px 4px;font-size:13px;font-weight:600}
+.scr{display:none;flex:1;flex-direction:column;min-height:0}.scr.on{display:flex}
+.body{flex:1;overflow-y:auto;padding:8px 18px 18px}
+.h1{font-size:22px;font-weight:700;letter-spacing:-.02em}
+.muted{color:var(--sub);font-size:13px}
+/* login */
+.login{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 28px;gap:14px}
+.logo-big{width:64px;height:64px;border-radius:18px;background:var(--acc);color:#fff;display:grid;place-items:center;font-size:26px;font-weight:700}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid #d6d9de;border-radius:12px;padding:13px;font-weight:600;margin-top:18px;transition:transform .1s}
+.gbtn:active{transform:scale(.98)}
+.gdot{width:20px;height:20px;border-radius:50%;background:conic-gradient(#ea4335 0 25%,#fbbc05 0 50%,#34a853 0 75%,#4285f4 0)}
+/* devices */
+.dev{display:flex;gap:12px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:var(--r);margin-top:10px;width:100%;text-align:left;transition:background .15s}
+.dev:hover{background:#f8f9fb}
+.dev canvas{width:96px;height:54px;border-radius:9px;background:#222;flex:none}
+.dev b{display:block;font-size:15px}
+.st{font-size:12px;font-weight:600}.st.on{color:var(--ok)}.st.off{color:var(--sub)}
+.sw{margin-left:auto;width:42px;height:24px;border-radius:99px;background:#cfd3d9;position:relative;flex:none;transition:background .2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.sw.on{background:var(--acc)}.sw.on::after{transform:translateX(18px)}
+.home-chip{display:inline-flex;gap:6px;align-items:center;font-size:12px;background:var(--acc-soft);color:var(--acc);border-radius:99px;padding:3px 10px;margin-top:6px}
+/* live */
+.live{position:relative;background:#000;aspect-ratio:16/9;margin:0 -18px}
+.live canvas{width:100%;height:100%;display:block;image-rendering:auto}
+.ov{position:absolute;color:#fff;font-size:12px;text-shadow:0 1px 2px #000;font-variant-numeric:tabular-nums}
+.badge{background:var(--red);color:#fff;font-weight:700;border-radius:5px;padding:1px 7px;font-size:11px;text-shadow:none}
+.rec{display:none;align-items:center;gap:5px}.rec.on{display:flex}
+.rec::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--red);animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.2}}
+.offcover{position:absolute;inset:0;background:#15171b;color:#9aa1ac;display:none;place-items:center;font-size:14px}
+.offcover.on{display:grid}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.flash.go{animation:fl .35s}
+@keyframes fl{from{opacity:.9}to{opacity:0}}
+.ctrls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.cb{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:var(--sub)}
+.cb span{width:52px;height:52px;border-radius:50%;background:#f0f2f5;display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--text);transition:background .15s,transform .1s}
+.cb:active span{transform:scale(.94)}
+.cb.on span{background:var(--acc);color:#fff}
+.cb.red.on span{background:var(--red)}
+.back{font-size:14px;color:var(--acc);padding:4px 0}
+.mini{display:flex;gap:10px;margin-top:8px;overflow-x:auto}
+.mini div{flex:none;width:110px}
+.mini canvas{width:110px;height:62px;border-radius:8px;display:block}
+/* events */
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.chip{border:1px solid var(--line);border-radius:99px;padding:4px 11px;font-size:13px;color:var(--sub)}
+.chip.on{background:var(--text);color:#fff;border-color:var(--text)}
+.tl{margin-top:14px;border-left:2px solid var(--line);margin-left:6px}
+.ev{position:relative;display:flex;gap:10px;padding:0 0 14px 16px}
+.ev::before{content:"";position:absolute;left:-6px;top:6px;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--acc)}
+.ev.person::before{border-color:var(--warn)}
+.ev canvas{width:92px;height:52px;border-radius:8px;flex:none}
+.ev b{font-size:14px;display:block}
+.empty{padding:30px 0;text-align:center;color:var(--sub);font-size:14px}
+/* push */
+.push{position:absolute;top:50px;left:10px;right:10px;background:rgba(250,250,252,.97);border-radius:18px;padding:11px 13px;display:flex;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.18);transform:translateY(-140%);transition:transform .45s cubic-bezier(.16,1,.3,1);z-index:6;cursor:pointer}
+.push.on{transform:none}
+.push i{width:36px;height:36px;border-radius:9px;background:var(--acc);color:#fff;display:grid;place-items:center;font-style:normal;font-weight:700;flex:none}
+.push b{font-size:13px}.push p{font-size:13px;color:#333}
+.pl{padding:12px;border:1px solid var(--line);border-radius:var(--r);margin-top:10px;font-size:14px}
+/* nav */
+.nav{flex:none;display:flex;border-top:1px solid var(--line);padding:6px 0 18px}
+.nav button{flex:1;font-size:12px;color:var(--sub);padding:6px 0;display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav button.on{color:var(--acc);font-weight:600}
+.nav button::before{content:"";width:20px;height:3px;border-radius:2px;background:transparent}
+.nav button.on::before{background:var(--acc)}
+/* side */
+.side h2{font-size:28px;letter-spacing:-.02em;line-height:1.25}
+.side>p{color:var(--sub);margin-top:10px;max-width:56ch}
+.steps{margin-top:26px;display:grid;gap:2px}
+.step{display:flex;gap:14px;padding:14px 16px;border-radius:12px;text-align:left;transition:background .15s}
+.step:hover{background:#fff}
+.step.on{background:#fff;box-shadow:0 1px 3px rgba(20,30,50,.08)}
+.step em{font-style:normal;font-weight:700;color:var(--acc);width:20px;flex:none}
+.step b{display:block}.step span{color:var(--sub);font-size:14px}
+.cta{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+.btn{background:var(--acc);color:#fff;border-radius:10px;padding:11px 18px;font-weight:600;transition:transform .1s}
+.btn:active{transform:scale(.98)}
+.btn.ghost{background:#fff;color:var(--text);border:1px solid var(--line)}
+.note{margin-top:22px;font-size:13px;color:var(--sub);border-top:1px solid var(--line);padding-top:14px;max-width:60ch}
+/* admin */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.kpi small{color:var(--sub);font-size:13px}
+.kpi b{display:block;font-size:28px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:2px}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-top:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;min-width:0}
+.panel h3{font-size:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--sub);font-size:12px;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px;border-bottom:1px solid #f0f1f3;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.pill{font-size:12px;font-weight:600;border-radius:99px;padding:2px 9px}
+.pill.ok{background:#e7f6ee;color:var(--ok)}.pill.off{background:#f0f1f3;color:var(--sub)}.pill.w{background:#fff1e8;color:var(--warn)}
+.bars{display:flex;align-items:flex-end;gap:8px;height:150px;padding-top:10px}
+.bars div{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--sub);height:100%;justify-content:flex-end}
+.bars i{width:100%;background:var(--acc);border-radius:5px 5px 0 0;opacity:.85}
+.ret{margin-top:16px;font-size:14px;display:grid;gap:8px}
+.ret div{display:flex;justify-content:space-between;border-top:1px solid #f0f1f3;padding-top:8px}
+@media (max-width:1000px){.stage{grid-template-columns:1fr;justify-items:center}.side{max-width:560px}.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+@media (max-width:640px){
+ .top-in{flex-wrap:wrap;padding:10px 16px;gap:8px}.tabs{margin-left:0;width:100%}.tabs button{flex:1}
+ .wrap{padding:18px 16px}
+ .phone{width:100%;max-width:380px;height:740px;padding:9px;border-radius:40px}
+ .side h2{font-size:23px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+ <div class="brand"><i>H</i>홈렌즈 <span class="tag">시연용</span></div>
+ <div class="tabs"><button class="on" data-v="app">모바일 앱</button><button data-v="admin">관리자 웹</button></div>
+</div></header>
+
+<main class="wrap">
+<section class="view on" id="v-app">
+ <div class="stage">
+  <div class="phone"><div class="screen">
+   <div class="notch"></div>
+   <div class="sbar"><span id="clock">9:41</span><span>5G</span></div>
+   <div class="push" id="push"><i>H</i><div><b id="pushT">사람 감지</b><p id="pushB">거실 카메라에서 사람이 감지되었습니다.</p><span class="muted">지금</span></div></div>
+
+   <div class="scr on" id="s-login"><div class="login">
+    <div class="logo-big">H</div>
+    <div class="h1">우리 집을<br>어디서나 확인하세요</div>
+    <p class="muted">구글 홈에 연결된 카메라를 한 앱에서 보고 제어합니다.</p>
+    <button class="gbtn" id="gLogin"><span class="gdot"></span>Google 계정으로 계속하기</button>
+    <p class="muted" style="text-align:center;font-size:12px">시연용 화면으로 실제 로그인은 일어나지 않습니다</p>
+   </div></div>
+
+   <div class="scr" id="s-dev"><div class="body">
+    <div class="muted">김서연님의 집</div>
+    <div class="h1">카메라</div>
+    <div class="home-chip">구글 홈 연동됨 · 기기 3대</div>
+    <div id="devList"></div>
+    <p class="muted" style="margin-top:14px">카드를 누르면 실시간 보기로 들어갑니다. 오른쪽 스위치는 카메라 켜기/끄기입니다.</p>
+   </div></div>
+
+   <div class="scr" id="s-live"><div class="body">
+    <button class="back" data-go="dev">‹ 카메라</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:2px 0 10px"><div class="h1" id="liveName">거실</div><span class="st on" id="liveSt">온라인</span></div>
+    <div class="live">
+     <canvas id="cv" width="192" height="108"></canvas>
+     <div class="ov" style="top:8px;left:10px;display:flex;gap:8px;align-items:center"><span class="badge">LIVE</span><span class="rec" id="recBadge"><span id="recT">00:00</span></span></div>
+     <div class="ov" style="bottom:8px;left:10px" id="ts"></div>
+     <div class="ov" style="bottom:8px;right:10px">1080p · 시연용 가상 영상</div>
+     <div class="offcover" id="offc">카메라가 꺼져 있습니다</div>
+     <div class="flash" id="flash"></div>
+    </div>
+    <div class="ctrls">
+     <button class="cb red" id="bRec"><span>REC</span>녹화</button>
+     <button class="cb" id="bSnap"><span>SNAP</span>스냅샷</button>
+     <button class="cb" id="bMic"><span>MIC</span>마이크</button>
+     <button class="cb on" id="bPow"><span>ON</span>전원</button>
+    </div>
+    <div style="margin-top:20px;display:flex;justify-content:space-between"><b style="font-size:15px">이 카메라 최근 이벤트</b><button class="back" data-go="ev">전체 보기</button></div>
+    <div class="mini" id="miniEv"></div>
+   </div></div>
+
+   <div class="scr" id="s-ev"><div class="body">
+    <div class="h1">이벤트 기록</div>
+    <div class="chips" id="dateChips"></div>
+    <div class="chips" id="typeChips"></div>
+    <div class="tl" id="tl"></div>
+   </div></div>
+
+   <div class="scr" id="s-noti"><div class="body">
+    <div class="h1">알림</div>
+    <p class="muted" style="margin-top:4px">받을 알림을 고르세요. 꺼 둔 종류는 기록만 남습니다.</p>
+    <div id="notiSet"></div>
+    <div style="margin-top:18px"><b>최근 받은 알림</b></div>
+    <div id="notiList"></div>
+   </div></div>
+
+   <nav class="nav" id="nav" style="display:none"><button data-go="dev" class="on">카메라</button><button data-go="ev">이벤트</button><button data-go="noti">알림</button></nav>
+  </div></div>
+
+  <div class="side">
+   <h2>구글 홈 카메라를<br>한 앱에서 보고, 끄고, 기록합니다</h2>
+   <p>공고에 적힌 흐름을 순서대로 눌러 볼 수 있게 만든 시연 화면입니다. 영상과 기기, 알림은 모두 가상 데이터입니다.</p>
+   <div class="steps" id="steps">
+    <button class="step" data-go="login"><em>1</em><div><b>구글 계정 로그인</b><span>Google 로그인 후 구글 홈 권한 동의</span></div></button>
+    <button class="step" data-go="dev"><em>2</em><div><b>기기 목록</b><span>집에 등록된 카메라와 온라인 상태, 켜기/끄기</span></div></button>
+    <button class="step" data-go="live"><em>3</em><div><b>실시간 보기</b><span>LIVE 영상, 녹화, 스냅샷, 마이크, 전원</span></div></button>
+    <button class="step" data-go="ev"><em>4</em><div><b>이벤트 기록</b><span>움직임·사람 감지 썸네일, 날짜와 종류 필터</span></div></button>
+    <button class="step" data-go="noti"><em>5</em><div><b>푸시 알림</b><span>알림 종류 설정과 받은 알림 목록</span></div></button>
+   </div>
+   <div class="cta"><button class="btn" id="fire">가상 이벤트 발생</button><button class="btn ghost" data-v2="admin">관리자 웹 보기</button></div>
+   <p class="note">가상 이벤트를 누르면 휴대폰 상단에 푸시 알림이 내려오고, 이벤트 기록과 관리자 웹의 알림 로그에 같은 건이 함께 쌓입니다. 실제 서비스에서는 구글 홈 API의 카메라 이벤트를 Node.js 서버가 받아 FCM과 APNs로 보냅니다.</p>
+  </div>
+ </div>
+</section>
+
+<section class="view" id="v-admin">
+ <div style="display:flex;justify-content:space-between;align-items:end;margin-bottom:18px;gap:12px;flex-wrap:wrap">
+  <div><div class="h1" style="font-size:26px">운영 현황</div><p class="muted">관리자 웹 대시보드 · 시연용 가상 데이터</p></div>
+  <button class="btn ghost" id="fire2">가상 이벤트 발생</button>
+ </div>
+ <div class="kpis">
+  <div class="kpi"><small>가입 사용자</small><b id="kUsers">1,284</b><span class="muted">이번 주 +37</span></div>
+  <div class="kpi"><small>온라인 기기</small><b id="kOn">-</b><span class="muted" id="kOnSub"></span></div>
+  <div class="kpi"><small>오늘 보낸 알림</small><b id="kPush">-</b><span class="muted">사람 감지 포함</span></div>
+  <div class="kpi"><small>클립 저장 용량</small><b>412GB</b><span class="muted">보관 30일 기준</span></div>
+ </div>
+ <div class="grid2">
+  <div class="panel"><h3>기기 상태<span class="muted" style="font-weight:400">최근 확인 순</span></h3><div class="tw"><table><thead><tr><th>기기</th><th>사용자</th><th>상태</th><th>모델</th><th>마지막 신호</th></tr></thead><tbody id="aDev"></tbody></table></div></div>
+  <div class="panel"><h3>일별 신규 가입</h3><div class="bars" id="bars"></div>
+   <div class="ret"><b style="font-size:14px">저장 정책</b><div><span>움직임 클립</span><span>30일 보관 후 자동 삭제</span></div><div><span>스냅샷</span><span>90일</span></div><div><span>수동 녹화</span><span>사용자가 지울 때까지</span></div></div>
+  </div>
+ </div>
+ <div class="panel" style="margin-top:14px"><h3>알림 발송 로그</h3><div class="tw"><table><thead><tr><th>시각</th><th>기기</th><th>종류</th><th>대상</th><th>발송</th></tr></thead><tbody id="aLog"></tbody></table></div></div>
+</section>
+</main>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const pad=n=>String(n).padStart(2,'0');
+const cams=[
+ {id:'c1',name:'거실',model:'Nest Cam (실내)',on:true,online:true,hue:28,seed:1},
+ {id:'c2',name:'현관',model:'Nest Doorbell',on:true,online:true,hue:210,seed:2},
+ {id:'c3',name:'아이 방',model:'Nest Cam (실내)',on:false,online:true,hue:150,seed:3},
+];
+let cur=cams[0];
+const today=new Date();
+const dayLabel=d=>{const x=new Date(today);x.setDate(x.getDate()-d);return d===0?'오늘':d===1?'어제':`${x.getMonth()+1}.${x.getDate()}`};
+let events=[
+ {d:0,t:'09:12',cam:'c2',type:'person',txt:'현관 앞 사람 감지'},
+ {d:0,t:'08:47',cam:'c1',type:'motion',txt:'거실 움직임'},
+ {d:0,t:'07:30',cam:'c2',type:'motion',txt:'현관 움직임'},
+ {d:1,t:'21:05',cam:'c1',type:'person',txt:'거실 사람 감지'},
+ {d:1,t:'18:22',cam:'c2',type:'person',txt:'택배 기사 방문'},
+ {d:1,t:'13:40',cam:'c3',type:'motion',txt:'아이 방 움직임'},
+ {d:2,t:'16:03',cam:'c1',type:'motion',txt:'거실 움직임'},
+ {d:2,t:'10:18',cam:'c2',type:'person',txt:'현관 앞 사람 감지'},
+];
+let logs=[
+ {t:'09:12',cam:'현관',type:'사람 감지',to:'김서연 외 1명',ok:true},
+ {t:'08:47',cam:'거실',type:'움직임',to:'김서연',ok:true},
+ {t:'08:31',cam:'창고(박지훈)',type:'오프라인',to:'박지훈',ok:true},
+ {t:'07:30',cam:'현관',type:'움직임',to:'김서연',ok:false},
+];
+let pushCount=146;
+const noti={person:true,motion:true,offline:true};
+
+/* scene painter: simple room shapes + noise */
+function paint(c,cam,t,big){
+ const g=c.getContext('2d'),w=c.width,h=c.height;
+ const L=v=>`hsl(${cam.hue} 18% ${v}%)`;
+ g.fillStyle=L(34);g.fillRect(0,0,w,h);
+ g.fillStyle=L(24);g.fillRect(0,h*.68,w,h*.32);
+ g.fillStyle=L(46);g.fillRect(w*.08,h*.18,w*.22,h*.3);
+ g.fillStyle=L(18);g.fillRect(w*.45,h*.45,w*.38,h*.28);
+ g.fillStyle=L(55);g.fillRect(w*.72,h*.12,w*.12,h*.2);
+ if(cam.seed===2){g.fillStyle=L(14);g.fillRect(w*.38,h*.12,w*.22,h*.62)}
+ if(t!=null){const x=w*(.2+.25*Math.sin(t/2600+cam.seed));g.fillStyle='rgba(0,0,0,.35)';g.beginPath();g.ellipse(x,h*.42,w*.035,h*.07,0,0,7);g.fill();g.fillRect(x-w*.04,h*.48,w*.08,h*.22)}
+ const im=g.getImageData(0,0,w,h),d=im.data;
+ for(let i=0;i<d.length;i+=4){const n=(Math.random()-.5)*(big?38:22);d[i]+=n;d[i+1]+=n;d[i+2]+=n}
+ g.putImageData(im,0,0);
+}
+function thumb(cam,person){const c=document.createElement('canvas');c.width=96;c.height=54;paint(c,cam,person?1000*cam.seed:null);if(person){const g=c.getContext('2d');g.strokeStyle='#f59e0b';g.lineWidth=1.5;g.strokeRect(28,18,22,32)}return c}
+
+/* navigation */
+function go(s){
+ if(s!=='login'&&!logged){s='login'}
+ if(s==='login')$('#gLogin').innerHTML='<span class="gdot"></span>Google 계정으로 계속하기';
+ $$('.scr').forEach(x=>x.classList.toggle('on',x.id==='s-'+s));
+ $('#nav').style.display=s==='login'?'none':'flex';
+ $$('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===s||(s==='live'&&b.dataset.go==='dev')));
+ $$('.step').forEach(b=>b.classList.toggle('on',b.dataset.go===s));
+ if(s==='live')openLive();
+ if(s==='ev')renderEv();
+ if(s==='noti')renderNoti();
+ if(s==='dev')renderDev();
+}
+let logged=false;
+$('#gLogin').onclick=()=>{const b=$('#gLogin');b.textContent='계정 확인 중...';setTimeout(()=>{logged=true;go('dev')},700)};
+document.addEventListener('click',e=>{
+ const g=e.target.closest('[data-go]');if(g){if(g.dataset.go!=='login'&&!logged){logged=true}go(g.dataset.go)}
+ const v=e.target.closest('[data-v],[data-v2]');if(v)view(v.dataset.v||v.dataset.v2);
+});
+function view(v){$$('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));if(v==='admin')renderAdmin();scrollTo(0,0)}
+
+/* devices */
+function renderDev(){
+ const L=$('#devList');L.innerHTML='';
+ cams.forEach(c=>{
+  const el=document.createElement('div');el.className='dev';el.style.cursor='pointer';
+  const cv=document.createElement('canvas');cv.width=96;cv.height=54;
+  if(c.on)paint(cv,c,null);else{const g=cv.getContext('2d');g.fillStyle='#2a2d33';g.fillRect(0,0,96,54)}
+  el.append(cv);
+  el.insertAdjacentHTML('beforeend',`<div><b>${c.name}</b><span class="st ${c.on?'on':'off'}">${c.on?'온라인 · 녹화 대기':'꺼짐'}</span><div class="muted" style="font-size:12px">${c.model}</div></div><span class="sw ${c.on?'on':''}" role="switch" aria-checked="${c.on}" aria-label="${c.name} 켜기/끄기"></span>`);
+  el.onclick=e=>{if(e.target.classList.contains('sw')){c.on=!c.on;renderDev();return}cur=c;go('live')};
+  L.append(el);
+ });
+}
+
+/* live */
+let rec=false,recStart=0,mic=false;
+function openLive(){
+ $('#liveName').textContent=cur.name;syncPow();
+ const m=$('#miniEv');m.innerHTML='';
+ const list=events.filter(e=>e.cam===cur.id).slice(0,4);
+ if(!list.length)m.innerHTML='<p class="muted">아직 기록이 없습니다</p>';
+ list.forEach(e=>{const d=document.createElement('div');const c=thumb(cur,e.type==='person');d.append(c);d.insertAdjacentHTML('beforeend',`<span class="muted" style="font-size:12px">${dayLabel(e.d)} ${e.t} ${e.type==='person'?'사람':e.type==='snap'?'스냅샷':'움직임'}</span>`);m.append(d)});
+}
+function syncPow(){
+ $('#bPow').classList.toggle('on',cur.on);$('#bPow span').textContent=cur.on?'ON':'OFF';
+ $('#offc').classList.toggle('on',!cur.on);
+ $('#liveSt').textContent=cur.on?'온라인':'꺼짐';$('#liveSt').className='st '+(cur.on?'on':'off');
+ if(!cur.on&&rec)toggleRec();
+}
+function toggleRec(){if(!cur.on)return;rec=!rec;recStart=Date.now();$('#bRec').classList.toggle('on',rec);$('#recBadge').classList.toggle('on',rec)}
+$('#bRec').onclick=toggleRec;
+$('#bMic').onclick=()=>{mic=!mic;$('#bMic').classList.toggle('on',mic);$('#bMic').lastChild.textContent=mic?'말하는 중':'마이크'};
+$('#bPow').onclick=()=>{cur.on=!cur.on;syncPow()};
+$('#bSnap').onclick=()=>{if(!cur.on)return;const f=$('#flash');f.classList.remove('go');void f.offsetWidth;f.classList.add('go');const n=new Date();events.unshift({d:0,t:`${pad(n.getHours())}:${pad(n.getMinutes())}`,cam:cur.id,type:'snap',txt:`${cur.name} 스냅샷 저장`});openLive()};
+function loop(t){
+ if($('#s-live').classList.contains('on')&&cur.on){paint($('#cv'),cur,t,true)}
+ const n=new Date();$('#ts').textContent=`${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())} ${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;
+ if(rec){const s=Math.floor((Date.now()-recStart)/1000);$('#recT').textContent=`${pad(Math.floor(s/60))}:${pad(s%60)}`}
+ setTimeout(()=>requestAnimationFrame(loop),66);
+}
+requestAnimationFrame(loop);
+const tick=()=>{const n=new Date();$('#clock').textContent=`${n.getHours()}:${pad(n.getMinutes())}`};tick();setInterval(tick,10000);
+
+/* events */
+let fDay='all',fType='all';
+function renderEv(){
+ const days=[['all','전체'],[0,dayLabel(0)],[1,dayLabel(1)],[2,dayLabel(2)]];
+ $('#dateChips').innerHTML=days.map(([k,l])=>`<button class="chip ${String(fDay)===String(k)?'on':''}" data-d="${k}">${l}</button>`).join('');
+ $('#typeChips').innerHTML=[['all','모든 종류'],['person','사람'],['motion','움직임'],['snap','스냅샷']].map(([k,l])=>`<button class="chip ${fType===k?'on':''}" data-t="${k}">${l}</button>`).join('');
+ $$('#dateChips .chip').forEach(b=>b.onclick=()=>{fDay=b.dataset.d;renderEv()});
+ $$('#typeChips .chip').forEach(b=>b.onclick=()=>{fType=b.dataset.t;renderEv()});
+ const L=$('#tl');L.innerHTML='';
+ const list=events.filter(e=>(fDay==='all'||e.d==fDay)&&(fType==='all'||e.type===fType));
+ if(!list.length){L.innerHTML='<div class="empty">조건에 맞는 기록이 없습니다.<br>날짜나 종류를 바꿔 보세요.</div>';return}
+ list.forEach(e=>{const cam=cams.find(c=>c.id===e.cam);const el=document.createElement('div');el.className='ev'+(e.type==='person'?' person':'');el.append(thumb(cam,e.type==='person'));el.insertAdjacentHTML('beforeend',`<div><b>${e.txt}</b><span class="muted">${dayLabel(e.d)} ${e.t} · ${cam.name}</span><div class="muted" style="font-size:12px">${e.type==='snap'?'스냅샷 90일 보관':'클립 12초 · 30일 보관'}</div></div>`);L.append(el)});
+}
+
+/* notifications */
+function renderNoti(){
+ const S=$('#notiSet');S.innerHTML='';
+ [['person','사람 감지','사람으로 판단된 움직임만'],['motion','모든 움직임','고양이, 커튼도 포함될 수 있음'],['offline','기기 오프라인','10분 이상 신호가 없을 때']].forEach(([k,l,s])=>{
+  const el=document.createElement('div');el.className='pl';el.style.display='flex';el.style.alignItems='center';el.style.gap='10px';
+  el.innerHTML=`<div><b style="font-size:14px">${l}</b><div class="muted" style="font-size:12px">${s}</div></div><span class="sw ${noti[k]?'on':''}" role="switch" aria-checked="${noti[k]}" aria-label="${l}"></span>`;
+  el.querySelector('.sw').onclick=()=>{noti[k]=!noti[k];renderNoti()};S.append(el)});
+ $('#notiList').innerHTML=events.filter(e=>e.type!=='snap').slice(0,4).map(e=>`<div class="pl"><b>${e.type==='person'?'사람 감지':'움직임'}</b> <span class="muted">${dayLabel(e.d)} ${e.t}</span><div>${e.txt}</div></div>`).join('');
+}
+
+/* push */
+let pushTimer;
+function fire(){
+ const cam=cams.find(c=>c.on)||cams[0];const person=Math.random()>.4;const n=new Date();const t=`${pad(n.getHours())}:${pad(n.getMinutes())}`;
+ events.unshift({d:0,t,cam:cam.id,type:person?'person':'motion',txt:`${cam.name} ${person?'사람 감지':'움직임'}`});
+ const want=person?noti.person:noti.motion;
+ logs.unshift({t,cam:cam.name,type:person?'사람 감지':'움직임',to:'김서연',ok:want});
+ if(want){pushCount++;$('#pushT').textContent=person?'사람 감지':'움직임 감지';$('#pushB').textContent=`${cam.name} 카메라에서 ${person?'사람이':'움직임이'} 감지되었습니다.`;
+  const p=$('#push');p.classList.add('on');clearTimeout(pushTimer);pushTimer=setTimeout(()=>p.classList.remove('on'),3800);p.onclick=()=>{p.classList.remove('on');logged=true;fDay='all';fType='all';go('ev')}}
+ if($('#s-ev').classList.contains('on'))renderEv();
+ if($('#v-admin').classList.contains('on'))renderAdmin();
+}
+$('#fire').onclick=fire;$('#fire2').onclick=fire;
+
+/* admin */
+const others=[
+ {name:'창고',user:'박지훈',on:false,model:'Nest Cam (실외)',last:'38분 전'},
+ {name:'매장 입구',user:'이도윤',on:true,model:'Nest Cam (실외)',last:'방금'},
+ {name:'주방',user:'최하은',on:true,model:'Nest Cam (실내)',last:'1분 전'},
+];
+function renderAdmin(){
+ const rows=[...cams.map(c=>({name:c.name,user:'김서연',on:c.on,model:c.model,last:c.on?'방금':'꺼짐 상태'})),...others];
+ $('#aDev').innerHTML=rows.map(r=>`<tr><td><b>${r.name}</b></td><td>${r.user}</td><td><span class="pill ${r.on?'ok':r.last.includes('꺼짐')?'off':'w'}">${r.on?'온라인':r.last.includes('꺼짐')?'꺼짐':'오프라인'}</span></td><td>${r.model}</td><td>${r.last}</td></tr>`).join('');
+ const on=rows.filter(r=>r.on).length;$('#kOn').textContent=(1890+on).toLocaleString();$('#kOnSub').textContent='전체 2,097대 중';
+ $('#kPush').textContent=pushCount;
+ $('#aLog').innerHTML=logs.slice(0,8).map(l=>`<tr><td>${l.t}</td><td>${l.cam}</td><td>${l.type}</td><td>${l.to}</td><td><span class="pill ${l.ok?'ok':'off'}">${l.ok?'발송 완료':'설정으로 생략'}</span></td></tr>`).join('');
+ const v=[22,31,18,27,35,29,41];
+ $('#bars').innerHTML=v.map((x,i)=>`<div><span>${x}</span><i style="height:${x/41*100}%"></i>${dayLabel(6-i)}</div>`).join('');
+}
+go('login');
+</script>
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:99999;text-align:center;font:12px/1.6 system-ui,sans-serif;color:#fff;background:rgba(0,0,0,.62);padding:4px 8px;pointer-events:none">© 2026 ZTW · 제안용 시연 화면입니다. 화면·설계의 무단 복제·사용을 금합니다.</div>
+</body>
+</html>
