@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>뚜벅 아바타 시연</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--bg:#eef3ef;--ink:#1d2a23;--sub:#5c6b63;--mute:#8a978f;--line:#e2e9e4;--card:#fff;--acc:#18a46b;--acc-d:#0f7f52;--acc-l:#e6f6ee;--warn:#e5484d;--sky:#eaf4ff}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg)}
+body{font-family:Pretendard,system-ui,-apple-system,sans-serif;color:var(--ink);padding-bottom:44px;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,select{font:inherit;color:inherit}
+.top{position:sticky;top:0;z-index:20;background:rgba(238,243,239,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 20px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:17px}
+.brand i{width:30px;height:30px;border-radius:10px;background:var(--acc);display:grid;place-items:center}
+.seg{margin-left:auto;display:flex;background:#dfe8e2;border-radius:999px;padding:3px}
+.seg button{padding:7px 15px;border-radius:999px;font-weight:600;font-size:14px;color:var(--sub)}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(20,60,40,.12)}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:1fr 390px;gap:56px;align-items:start}
+.intro h1{font-size:40px;line-height:1.18;letter-spacing:-.035em;font-weight:800;margin-bottom:14px}
+.intro h1 em{font-style:normal;color:var(--acc)}
+.intro>p{font-size:17px;color:var(--sub);line-height:1.6;max-width:44ch}
+.stages{display:flex;gap:4px;margin:30px 0 8px;align-items:flex-end}
+.stages div{flex:1;text-align:center;font-size:13px;color:var(--sub);font-weight:600}
+.stages svg{width:100%;max-width:104px;display:block;margin:0 auto 4px}
+.guide{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.guide div{background:#fff;border-radius:16px;padding:14px 16px;font-size:14px;line-height:1.5;color:var(--sub)}
+.guide b{display:block;color:var(--ink);font-size:15px;margin-bottom:2px}
+.demo-note{margin-top:16px;font-size:13px;color:var(--mute)}
+.phone{width:390px;height:812px;border-radius:52px;background:#101512;padding:12px;box-shadow:0 30px 70px -20px rgba(20,60,40,.35);position:sticky;top:76px}
+.screen{position:relative;width:100%;height:100%;border-radius:41px;overflow:hidden;background:#f6f9f7;display:flex;flex-direction:column}
+.sbar{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 30px;font-size:14px;font-weight:700}
+.sbar span:last-child{display:flex;gap:5px;align-items:center}
+.scr{flex:1;overflow-y:auto;overflow-x:hidden;padding:4px 16px 20px;scrollbar-width:none}
+.scr::-webkit-scrollbar{display:none}
+.nav{flex:none;height:70px;display:flex;border-top:1px solid var(--line);background:#fff;padding-bottom:10px}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11.5px;font-weight:600;color:var(--mute)}
+.nav button.on{color:var(--acc)}
+.nav svg{width:23px;height:23px}
+.card{background:#fff;border-radius:22px;padding:18px;margin-bottom:12px}
+.h2{font-size:22px;font-weight:800;letter-spacing:-.03em;margin:10px 2px 14px;line-height:1.3}
+.lbl{font-size:13px;font-weight:600;color:var(--sub);margin-bottom:6px;display:block}
+.fld{margin-bottom:14px}
+.inp{width:100%;height:50px;border:1.5px solid var(--line);border-radius:14px;padding:0 14px;font-size:16px;background:#fff;outline:none}
+.inp:focus{border-color:var(--acc)}
+.unit{position:relative}.unit span{position:absolute;right:14px;top:15px;color:var(--mute);font-size:15px}
+.btn{width:100%;height:54px;border-radius:16px;background:var(--acc);color:#fff;font-weight:700;font-size:16px;transition:transform .12s}
+.btn:active,.chip:active,.mini:active{transform:scale(.97)}
+.btn.ghost{background:var(--acc-l);color:var(--acc-d)}
+.btn.line{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
+.mini{height:38px;padding:0 14px;border-radius:12px;font-weight:600;font-size:14px;background:var(--acc-l);color:var(--acc-d)}
+.note{font-size:13px;color:var(--sub);line-height:1.5;background:#f1f5f2;border-radius:12px;padding:10px 12px;display:flex;gap:8px}
+.note svg{flex:none;width:16px;height:16px;margin-top:1px}
+.dots{display:flex;gap:5px;margin:6px 2px 0}.dots i{height:5px;width:18px;border-radius:9px;background:#d8e2dc}.dots i.on{background:var(--acc);width:28px}
+.opt{display:flex;align-items:center;gap:12px;padding:15px;border:1.5px solid var(--line);border-radius:16px;background:#fff;width:100%;text-align:left;margin-bottom:9px}
+.opt.on{border-color:var(--acc);background:var(--acc-l)}
+.opt b{display:block;font-size:15px}.opt small{color:var(--sub);font-size:13px}
+.opt .ic{width:42px;height:42px;border-radius:12px;background:#f1f5f2;display:grid;place-items:center;font-weight:800;color:var(--acc-d);flex:none}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{padding:8px 12px;border-radius:999px;background:#f1f5f2;font-size:13.5px;font-weight:600;color:var(--sub);transition:transform .12s}
+.chip.on{background:var(--ink);color:#fff}
+.sw{display:inline-block;width:28px;height:28px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1.5px var(--line)}
+.sw.on{box-shadow:0 0 0 2.5px var(--ink)}
+.prev{background:linear-gradient(180deg,#e9f7f0,#f6fbf8);border-radius:22px;display:flex;flex-direction:column;align-items:center;padding:14px 0 10px;margin-bottom:14px;position:relative}
+.prev svg{width:150px}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:700;background:var(--acc-l);color:var(--acc-d)}
+.tag.gray{background:#eef1ef;color:var(--sub)}
+.tag.demo{background:#fff4d6;color:#8a6100}
+.hero{background:linear-gradient(170deg,#dff4e9 0%,#f3fbf7 70%);border-radius:26px;padding:16px 16px 14px;margin-bottom:12px;position:relative;overflow:hidden}
+.hero .row{display:flex;justify-content:space-between;align-items:center}
+.hero .av{width:168px;margin:2px auto 0;display:block}
+.hero .ground{position:absolute;left:0;right:0;bottom:0;height:92px;background:#cdeedb;border-radius:50% 50% 0 0/40% 40% 0 0;z-index:0}
+.hero>*{position:relative;z-index:1}
+.stg{font-size:13px;color:var(--sub)}.stg b{color:var(--ink);font-size:17px;display:block}
+.bar{height:10px;border-radius:9px;background:rgba(255,255,255,.8);overflow:hidden;margin:8px 0 6px}
+.bar i{display:block;height:100%;background:var(--acc);border-radius:9px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.small{font-size:12.5px;color:var(--sub)}
+.big{font-size:34px;font-weight:800;letter-spacing:-.04em;line-height:1}
+.today{display:flex;align-items:center;gap:16px}
+.ring{width:72px;height:72px;flex:none}
+.sim{border:1.5px dashed #d6c48a;background:#fffdf5}
+.sim h3{font-size:15px;display:flex;align-items:center;gap:8px;margin-bottom:12px}
+input[type=range]{width:100%;accent-color:var(--acc);height:28px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.btns .btn{height:46px;font-size:14.5px;border-radius:14px}
+.recs{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.rec{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:9px 11px;border-radius:11px;background:#fff;border:1px solid #f0ead6}
+.rec.no{color:var(--mute)}.rec.no s{color:var(--mute)}
+.rec em{font-style:normal;font-weight:700;font-size:12px}
+.rec.ok em{color:var(--acc-d)}.rec.no em{color:var(--warn)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.grid2 .card{margin:0;padding:15px}
+.kv{font-size:12.5px;color:var(--sub);font-weight:600}.kv b{display:block;font-size:22px;color:var(--ink);letter-spacing:-.03em;margin-top:4px}
+.chart{width:100%;height:170px;display:block}
+.ttl{display:flex;align-items:center;gap:12px;padding:10px 0}
+.ttl+.ttl{border-top:1px solid var(--line)}
+.ttl .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:13px;background:var(--acc-l);color:var(--acc-d);flex:none}
+.ttl.lock{opacity:.45}.ttl.lock .ic{background:#eef1ef;color:var(--mute)}
+.ttl b{display:block;font-size:14.5px}.ttl small{font-size:12.5px;color:var(--sub)}
+.plz-head{display:flex;gap:6px;align-items:center;margin:6px 0 10px}
+.plaza{position:relative;width:100%;aspect-ratio:36/43;border-radius:22px;overflow:hidden;touch-action:manipulation;user-select:none}
+.plaza>svg.bg{position:absolute;inset:0;width:100%;height:100%}
+.pc{position:absolute;transform:translate(-50%,-100%);transition:left 1.8s cubic-bezier(.45,.05,.55,.95),top 1.8s cubic-bezier(.45,.05,.55,.95);text-align:center;width:64px}
+.pc svg{width:48px;display:block;margin:0 auto}
+.pc .nm{font-size:10.5px;font-weight:700;background:rgba(255,255,255,.9);border-radius:7px;padding:1px 6px;display:inline-block;white-space:nowrap;margin-top:-2px}
+.pc.me .nm{background:var(--acc);color:#fff}
+.pc.walk svg{animation:bob .3s ease-in-out infinite alternate}
+.pc.jump svg{animation:jump .5s cubic-bezier(.3,1.5,.5,1) 2}
+.bub{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:#fff;border-radius:12px;padding:6px 9px;font-size:11.5px;font-weight:600;white-space:nowrap;max-width:170px;overflow:hidden;text-overflow:ellipsis;box-shadow:0 3px 10px rgba(20,50,35,.15);margin-bottom:2px;animation:bin .25s ease-out}
+.bub:after{content:"";position:absolute;left:50%;top:100%;margin-left:-5px;border:5px solid transparent;border-top-color:#fff}
+.bub.emo{font-size:17px;padding:3px 10px;color:#e2525f}
+.log{font-size:12.5px;line-height:1.55;color:var(--sub);margin:10px 2px 8px;min-height:58px}
+.log b{color:var(--ink)}
+.emos{display:flex;gap:7px;margin-bottom:9px}
+.emos button{flex:1;height:40px;border-radius:12px;background:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;gap:4px}
+.emos button span{font-size:16px;color:#e2525f}
+.chat{display:flex;gap:8px}
+.chat .inp{height:46px}
+.chat .mini{height:46px;background:var(--acc);color:#fff;flex:none}
+.ov{position:absolute;inset:0;background:rgba(15,25,20,.42);z-index:30;display:flex;align-items:flex-end;animation:fin .2s}
+.sheet{background:#fff;width:100%;border-radius:26px 26px 0 0;padding:18px 18px 26px;animation:sup .28s cubic-bezier(.2,.9,.3,1)}
+.sheet .grab{width:38px;height:5px;border-radius:9px;background:#dde4df;margin:-6px auto 14px}
+.prof{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+.prof svg{width:76px;background:#eef7f2;border-radius:20px;padding:4px}
+.prof b{font-size:18px;display:block}
+.cele{position:absolute;inset:0;z-index:40;background:radial-gradient(circle at 50% 40%,#fffbe8 0%,#e3f7ec 60%,#cfeedd 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;animation:fin .3s;overflow:hidden}
+.cele h2{font-size:26px;letter-spacing:-.03em;margin:8px 0 6px}
+.cele p{color:var(--sub);font-size:15px;line-height:1.5;margin-bottom:22px}
+.ba{display:flex;align-items:flex-end;gap:6px;margin-top:10px}
+.ba .old{width:96px;opacity:.5;filter:grayscale(.3)}
+.ba .new{width:160px;animation:pop .8s cubic-bezier(.3,1.6,.5,1)}
+.ba .arr{width:28px;margin-bottom:60px;color:var(--acc)}
+.cf{position:absolute;top:-14px;width:8px;height:13px;border-radius:2px;animation:fall 2.2s ease-in forwards}
+.toast{position:fixed;left:50%;top:84px;transform:translateX(-50%);z-index:100;background:#1d2a23;color:#fff;font-size:14px;font-weight:600;padding:11px 18px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.2);animation:tin .25s;max-width:340px;text-align:center}
+.toggle{width:46px;height:28px;border-radius:99px;background:#d6dfda;position:relative;flex:none;transition:background .2s}
+.toggle:after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.toggle.on{background:var(--acc)}.toggle.on:after{transform:translateX(18px)}
+.toggle.lock{opacity:.6}
+.set{display:flex;align-items:center;gap:10px;padding:12px 0}.set+.set{border-top:1px solid var(--line)}
+.set div{flex:1;font-size:14.5px;font-weight:600}.set small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:2px}
+.pick h4{font-size:13px;color:var(--sub);margin:14px 0 8px}
+/* admin */
+.admin{max-width:1180px;margin:0 auto;padding:26px 20px}
+.admin h1{font-size:26px;letter-spacing:-.03em;display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.admin .sub{color:var(--sub);font-size:14.5px;margin-bottom:20px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpis .card{margin:0}
+.acols{display:grid;grid-template-columns:1.05fr 1fr;gap:16px}
+.acols .card{padding:22px}
+.acols h3{font-size:17px;margin-bottom:4px}
+.acols .desc{font-size:13.5px;color:var(--sub);margin-bottom:14px;line-height:1.5}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:12.5px;color:var(--sub);font-weight:600;padding:8px 6px;border-bottom:1px solid var(--line)}
+td{padding:9px 6px;border-bottom:1px solid #f0f3f1;vertical-align:middle}
+td .inp{height:38px;font-size:14px;border-radius:10px;width:120px}
+.st{font-size:12px;font-weight:700;padding:3px 8px;border-radius:8px;white-space:nowrap}
+.st.w{background:#fff1d6;color:#8a5a00}.st.d{background:var(--acc-l);color:var(--acc-d)}.st.x{background:#eef1ef;color:var(--sub)}
+.acts{display:flex;gap:5px;flex-wrap:wrap}
+.acts button{font-size:12.5px;font-weight:600;padding:6px 9px;border-radius:9px;background:#f1f5f2}
+.acts button.r{background:#fdecec;color:#c23b40}
+.words{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.words span{background:#fdecec;color:#b8383d;font-size:13px;font-weight:600;padding:6px 10px;border-radius:9px;display:inline-flex;gap:6px;align-items:center}
+.words button{color:#b8383d;font-weight:800}
+.hide{display:none!important}
+@keyframes bob{to{transform:translateY(-3px) rotate(2deg)}}
+@keyframes jump{50%{transform:translateY(-14px)}}
+@keyframes breath{50%{transform:scale(1.025,.985)}}
+@keyframes pop{0%{transform:scale(.5);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes fall{to{transform:translateY(840px) rotate(620deg)}}
+@keyframes fin{from{opacity:0}}
+@keyframes sup{from{transform:translateY(100%)}}
+@keyframes bin{from{opacity:0;transform:translate(-50%,6px)}}
+@keyframes tin{from{opacity:0;transform:translate(-50%,-8px)}}
+.idle{animation:breath 2.8s ease-in-out infinite;transform-origin:50% 95%}
+.popin{animation:pop .7s cubic-bezier(.3,1.6,.5,1)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:1000px){.wrap{grid-template-columns:1fr;gap:28px}.phone{position:relative;top:0;margin:0 auto}.intro h1{font-size:32px}.kpis{grid-template-columns:1fr 1fr}.acols{grid-template-columns:1fr}}
+@media (max-width:520px){
+ .top-in{padding:10px 16px}.brand span{display:none}
+ .wrap{padding:0;gap:0}.intro{display:none}
+ .phone{width:100%;height:calc(100dvh - 99px);border-radius:0;padding:0;box-shadow:none}
+ .screen{border-radius:0}.sbar{display:none}
+ .toast{top:70px;max-width:calc(100% - 32px)}
+ .admin{padding:18px 16px}.kpis .card{padding:14px}
+ table{font-size:13px}td .inp{width:96px}
+ .acols .card{padding:16px;overflow-x:auto}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+ <div class="brand"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><ellipse cx="8" cy="15" rx="3.2" ry="4.6"/><ellipse cx="16" cy="9" rx="3.2" ry="4.6"/><circle cx="8" cy="8.4" r="1.4"/><circle cx="16" cy="2.6" r="1.4"/></svg></i>뚜벅 <span style="font-weight:600;color:var(--sub);font-size:14px">걸음으로 자라는 아바타</span></div>
+ <div class="seg"><button class="on" id="mApp" onclick="mode('app')">앱 화면</button><button id="mAdm" onclick="mode('admin')">관리자 웹</button></div>
+</div></header>
+
+<main id="appView" class="wrap">
+ <section class="intro">
+  <h1>걸은 만큼<br>캐릭터의 <em>체형이 바뀝니다</em></h1>
+  <p>가입 때 키와 몸무게로 시작 체형을 정하고, 워치와 휴대폰 걸음만 쌓아 다섯 단계로 변신합니다. 광장에서 다른 사람 캐릭터와 만나 이야기할 수 있습니다.</p>
+  <div class="stages" id="stageRow"></div>
+  <div class="guide">
+   <div><b>1. 온보딩</b>키·몸무게·생활습관을 넣으면 시작 체형이 정해집니다.</div>
+   <div><b>2. 걸음 추가</b>홈의 시뮬레이터로 걸음을 넣어 변신 연출을 봅니다.</div>
+   <div><b>3. 광장</b>빈 곳을 누르면 내 캐릭터가 걸어가고, 다른 캐릭터를 누르면 신고·차단이 열립니다.</div>
+   <div><b>4. 관리자 웹</b>체형 기준값을 바꾸면 앱에 바로 반영되고, 광장 신고가 쌓입니다.</div>
+  </div>
+  <p class="demo-note">시연용 화면입니다. HealthKit·Health Connect·실시간 서버는 연결되어 있지 않고, 광장의 다른 유저는 가상 캐릭터입니다.</p>
+ </section>
+ <div class="phone"><div class="screen" id="screen">
+  <div class="sbar"><span>9:41</span><span><svg width="17" height="11" viewBox="0 0 17 11"><rect x="0" y="7" width="3" height="4" rx="1" fill="#1d2a23"/><rect x="4.5" y="5" width="3" height="6" rx="1" fill="#1d2a23"/><rect x="9" y="2.5" width="3" height="8.5" rx="1" fill="#1d2a23"/><rect x="13.5" y="0" width="3" height="11" rx="1" fill="#1d2a23"/></svg><svg width="25" height="12" viewBox="0 0 25 12"><rect x=".5" y=".5" width="21" height="11" rx="3" fill="none" stroke="#1d2a23" opacity=".4"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#1d2a23"/><rect x="22.5" y="4" width="1.8" height="4" rx="1" fill="#1d2a23" opacity=".4"/></svg></span></div>
+  <div class="scr" id="scr"></div>
+  <nav class="nav hide" id="nav">
+   <button data-t="home" onclick="tab('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V20h-5v-6h-6v6H4z"/></svg>홈</button>
+   <button data-t="stats" onclick="tab('stats')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V11M12 20V5M19 20v-6"/></svg>기록</button>
+   <button data-t="plaza" onclick="tab('plaza')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.5 19c.6-3.3 2.8-5 5.5-5s4.9 1.7 5.5 5M15 14.2c2.6-.3 4.7 1.2 5.3 4.3"/></svg>광장</button>
+   <button data-t="me" onclick="tab('me')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="9" r="4"/><path d="M5 20c1-3.6 3.8-5.5 7-5.5s6 1.9 7 5.5"/></svg>내 캐릭터</button>
+  </nav>
+ </div></div>
+</main>
+
+<main id="admView" class="admin hide"></main>
+
+<script>
+const SKIN='#FFDCC4',INK='#2b2d42';
+const HAIR=[{k:'short',n:'짧은 머리'},{k:'bob',n:'단발'},{k:'pony',n:'포니테일'},{k:'bun',n:'똥머리'}];
+const OUTFIT=[{k:'tee',n:'티셔츠',c:'#78c3fb'},{k:'hood',n:'후드티',c:'#ffb057'},{k:'track',n:'트레이닝복',c:'#6573f0'},{k:'overall',n:'멜빵바지',c:'#ff8fa6'}];
+const ACC=[{k:'none',n:'없음'},{k:'cap',n:'캡모자'},{k:'glasses',n:'동글 안경'},{k:'band',n:'헤어밴드'}];
+const HC=['#3a2a22','#7a4a2a','#d39a5c','#4a4f6e'];
+const STAGES=['말랑이','몽글이','산뜻이','탄탄이','날쌘이'];
+let uid=0;
+function shade(h,p){const n=parseInt(h.slice(1),16),f=x=>Math.max(0,Math.min(255,Math.round(x*(1+p)))).toString(16).padStart(2,'0');return'#'+f(n>>16)+f(n>>8&255)+f(n&255)}
+function av(c,o={}){
+ const s=c.stage,id='cl'+(uid++);
+ const bw=[40,34,28.5,24,20.5][s],bry=[27,27.5,28,29,30][s],ch=[5,3.8,2.6,1.3,0][s];
+ const rx=33+ch*.7,ry=31+ch*.15,k=rx/33,by=110;
+ const oc=OUTFIT.find(x=>x.k===c.outfit).c,dk=shade(oc,-.2),hc=c.hc;
+ const shirt=c.outfit==='overall'?'#fff3c4':oc;
+ const lw=[13.5,12,10.5,9.5,8.5][s],gap=Math.max(7.5,bw*.42);
+ const pants=c.outfit==='overall'?oc:c.outfit==='track'?dk:'#45507a';
+ const sc=`transform="translate(60 0) scale(${k} 1) translate(-60 0)"`;
+ let g=`<ellipse cx="60" cy="152" rx="${bw*.95}" ry="4.5" fill="#1f2a24" opacity=".1"/>`;
+ for(const d of[-1,1]){const x=60+d*gap;g+=`<rect x="${x-lw/2}" y="122" width="${lw}" height="24" rx="${lw/2}" fill="${pants}"/><ellipse cx="${x+d*1.5}" cy="147.5" rx="${lw*.8}" ry="5" fill="#fff" stroke="#c8d1da" stroke-width="1.2"/>`}
+ if(c.hair==='pony')g+=`<g ${sc}><ellipse cx="95" cy="47" rx="10" ry="16" transform="rotate(28 95 47)" fill="${hc}"/></g>`;
+ if(c.hair==='bun')g+=`<g ${sc}><circle cx="34" cy="28" r="10" fill="${hc}"/><circle cx="86" cy="28" r="10" fill="${hc}"/></g>`;
+ for(const d of[-1,1]){const ax=60+d*(bw-2);g+=`<g transform="rotate(${-d*20} ${ax} 92)"><rect x="${ax-6}" y="89" width="12" height="25" rx="6" fill="${shirt}"/>${c.outfit==='track'?`<rect x="${ax-1}" y="91" width="2" height="20" rx="1" fill="#fff" opacity=".85"/>`:''}<circle cx="${ax}" cy="115" r="5.6" fill="${SKIN}"/></g>`}
+ g+=`<ellipse cx="60" cy="${by}" rx="${bw}" ry="${bry}" fill="${shirt}"/>`;
+ if(c.outfit==='overall')g+=`<clipPath id="${id}"><ellipse cx="60" cy="${by}" rx="${bw}" ry="${bry}"/></clipPath><g clip-path="url(#${id})"><rect x="0" y="${by+2}" width="120" height="50" fill="${oc}"/><rect x="51" y="${by-12}" width="18" height="16" rx="3" fill="${oc}"/><path d="M${60-bw*.55} 84 L53 ${by-10} M${60+bw*.55} 84 L67 ${by-10}" stroke="${oc}" stroke-width="4.5" stroke-linecap="round"/><circle cx="54.5" cy="${by-7}" r="1.8" fill="#fff"/><circle cx="65.5" cy="${by-7}" r="1.8" fill="#fff"/></g>`;
+ if(c.outfit==='hood')g+=`<path d="M${60-bw*.75} 87 Q60 102 ${60+bw*.75} 87" stroke="${dk}" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M56 93v11M64 93v11" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><rect x="${60-bw*.48}" y="${by+6}" width="${bw*.96}" height="12" rx="6" fill="${dk}" opacity=".45"/>`;
+ if(c.outfit==='track')g+=`<path d="M60 86V${by+bry-3}" stroke="#fff" stroke-width="1.8"/><path d="M${60-bw*.5} 86Q60 93 ${60+bw*.5} 86" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+ if(c.outfit==='tee')g+=`<g fill="#fff" opacity=".92"><ellipse cx="55.5" cy="${by+4}" rx="3" ry="4.4" transform="rotate(-12 55.5 ${by+4})"/><ellipse cx="64.5" cy="${by-2}" rx="3" ry="4.4" transform="rotate(12 64.5 ${by-2})"/></g>`;
+ g+=`<ellipse cx="${60-bw*.32}" cy="${by-7}" rx="${bw*.28}" ry="${bry*.3}" fill="#fff" opacity=".16"/>`;
+ g+=`<circle cx="${60-rx+1.5}" cy="61" r="6" fill="${SKIN}"/><circle cx="${60+rx-1.5}" cy="61" r="6" fill="${SKIN}"/><ellipse cx="60" cy="54" rx="${rx}" ry="${ry}" fill="${SKIN}"/>`;
+ if(o.happy)g+=`<path d="M43.5 61Q48 55 52.5 61M67.5 61Q72 55 76.5 61" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M54 66Q60 76 66 66Z" fill="#e2525f"/>`;
+ else g+=`<ellipse cx="48" cy="60" rx="3.7" ry="4.7" fill="${INK}"/><ellipse cx="72" cy="60" rx="3.7" ry="4.7" fill="${INK}"/><circle cx="49.3" cy="58.3" r="1.4" fill="#fff"/><circle cx="73.3" cy="58.3" r="1.4" fill="#fff"/><path d="M55.5 67Q60 71.5 64.5 67" stroke="${INK}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+ g+=`<ellipse cx="${40-ch*.5}" cy="67" rx="${5+ch*.5}" ry="3.2" fill="#ff8f9c" opacity=".5"/><ellipse cx="${80+ch*.5}" cy="67" rx="${5+ch*.5}" ry="3.2" fill="#ff8f9c" opacity=".5"/>`;
+ const hp=c.hair==='bob'?'M23 70C18 4 102 4 97 70C97 76 89 77 88 70C88 53 85 45 78 41C68 48 50 48 42 41C35 45 32 53 32 70C31 77 23 76 23 70Z':'M27 54C25 9 95 9 93 54C90 44 84 38 76 40C70 33 58 36 52 39C44 35 33 42 27 54Z';
+ g+=`<g ${sc}><path d="${hp}" fill="${hc}"/><path d="M39 31Q47 24 56 24" stroke="#fff" stroke-width="3" opacity=".3" fill="none" stroke-linecap="round"/>${c.hair==='pony'?'<circle cx="89" cy="37" r="4" fill="#ff6b8a"/>':''}${c.hair==='bun'?'<circle cx="41" cy="33" r="3" fill="#ffd34d"/><circle cx="79" cy="33" r="3" fill="#ffd34d"/>':''}</g>`;
+ if(c.acc==='cap')g+=`<g ${sc}><path d="M25 45C25 6 95 6 95 45Z" fill="#ff6b6b"/><path d="M58 44Q92 38 106 47Q93 53 58 49Z" fill="#e04f55"/><circle cx="60" cy="16" r="3" fill="#e04f55"/></g>`;
+ if(c.acc==='band')g+=`<g ${sc}><path d="M30 42Q60 26 90 42L89 50Q60 35 31 50Z" fill="#22c58b"/></g>`;
+ if(c.acc==='glasses')g+=`<g stroke="${INK}" stroke-width="2.2" fill="#fff" fill-opacity=".25"><circle cx="48" cy="60" r="8.5"/><circle cx="72" cy="60" r="8.5"/><path d="M56.5 59Q60 56.5 63.5 59" fill="none"/></g>`;
+ return `<svg viewBox="0 0 120 160"${o.cls?` class="${o.cls}"`:''} role="img" aria-label="${STAGES[s]} 캐릭터">${g}</svg>`;
+}
+
+const S={screen:'ob1',tab:'home',h:172,w:88,life:'sit',name:'뚜벅이',plat:'hc',
+ me:{stage:0,hair:'short',outfit:'hood',acc:'none',hc:HC[0]},
+ week:[5210,8840,9310,10240,8120,8650,1240],goal:8000,rg:5000,prog:0,recs:[],
+ pub:{steps:true,body:false},
+ cfg:{need:[20000,30000,40000,50000],cap:50000,bmi:[30,27,25,23]},
+ banned:['바보','멍청이','꺼져','시발'],blocked:new Set(),space:0,
+ reports:[{id:1,who:'퇴근길걷기',reason:'도배',msg:'같은 문장을 반복해서 올림',t:'10:12',st:'대기'},{id:2,who:'익명산책',reason:'불쾌한 닉네임',msg:'닉네임에 비속어 포함',t:'어제',st:'처리 완료'}]};
+const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString('ko-KR');
+const bmi=()=>S.w/((S.h/100)**2);
+function startStage(){const b=bmi(),c=S.cfg.bmi;return b>=c[0]?0:b>=c[1]?1:b>=c[2]?2:b>=c[3]?3:4}
+const total=()=>S.week.reduce((a,b)=>a+b,0);
+const level=()=>Math.floor(total()/10000)+1;
+const TITLES=[[1,'첫걸음 산책러'],[5,'동네 한바퀴'],[10,'공원 탐험가'],[15,'만보 수집가'],[20,'마라톤 꿈나무']];
+const title=l=>TITLES.filter(t=>l>=t[0]).pop()[1];
+function streak(){let i=S.week[6]>=S.goal?6:5,n=0;while(i>=0&&S.week[i]>=S.goal){n++;i--}return n}
+function toast(m){document.querySelectorAll('.toast').forEach(e=>e.remove());const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
+const IC={info:'<svg viewBox="0 0 16 16" fill="none" stroke="#18a46b" stroke-width="1.6"><rect x="3" y="7" width="10" height="7" rx="2"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>'};
+
+function go(sc){S.screen=sc;render()}
+function tab(t){S.tab=t;S.screen='app';render()}
+function render(){
+ const sc=$('scr');stopPlaza();
+ $('nav').classList.toggle('hide',S.screen!=='app');
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tab));
+ if(S.screen==='ob1')sc.innerHTML=ob1();
+ else if(S.screen==='ob2')sc.innerHTML=ob2();
+ else if(S.screen==='ob3')sc.innerHTML=ob3();
+ else sc.innerHTML={home,stats,plaza,me}[S.tab]();
+ if(S.screen==='app'&&S.tab==='plaza')startPlaza();
+ sc.scrollTop=0;
+}
+const dots=n=>`<div class="dots">${[1,2,3].map(i=>`<i class="${i===n?'on':''}"></i>`).join('')}</div>`;
+function ob1(){return `${dots(1)}<h2 class="h2">반가워요.<br>지금 내 몸에서 시작할게요</h2>
+ <div class="prev" id="obPrev">${av({...S.me,stage:startStage()},{cls:'idle'})}<span class="tag" id="obStage">${STAGES[startStage()]}로 시작</span></div>
+ <div class="grid2" style="margin-bottom:6px"><div class="fld"><label class="lbl" for="iH">키</label><div class="unit"><input class="inp" id="iH" type="number" inputmode="decimal" value="${S.h}" oninput="obIn()"><span>cm</span></div></div>
+ <div class="fld"><label class="lbl" for="iW">몸무게</label><div class="unit"><input class="inp" id="iW" type="number" inputmode="decimal" value="${S.w}" oninput="obIn()"><span>kg</span></div></div></div>
+ <div class="note" style="margin-bottom:16px">${IC.info}<span>키와 몸무게는 시작 체형을 정하는 데만 쓰고 기본값은 나만 보기입니다. 다른 사람에게는 캐릭터 모습만 보여요.</span></div>
+ <button class="btn" onclick="obNext()">다음</button>`}
+function obIn(){const h=+$('iH').value,w=+$('iW').value;if(h>=100&&h<=230&&w>=30&&w<=250){S.h=h;S.w=w;const s=startStage();$('obPrev').firstElementChild.outerHTML=av({...S.me,stage:s},{cls:'idle'});$('obStage').textContent=`BMI ${bmi().toFixed(1)} · ${STAGES[s]}로 시작`}}
+function obNext(){const h=+$('iH').value,w=+$('iW').value;if(!(h>=100&&h<=230&&w>=30&&w<=250))return toast('키는 100~230cm, 몸무게는 30~250kg 사이로 넣어 주세요');S.h=h;S.w=w;go('ob2')}
+const LIFE=[{k:'sit',ic:'6천',n:'주로 앉아서 지내요',d:'사무실·재택 위주, 하루 목표 6,000걸음',g:6000},{k:'mid',ic:'8천',n:'가끔 걸어요',d:'출퇴근길 정도, 하루 목표 8,000걸음',g:8000},{k:'act',ic:'1만',n:'자주 움직여요',d:'운동이나 산책 습관, 하루 목표 10,000걸음',g:10000}];
+function ob2(){return `${dots(2)}<h2 class="h2">평소 생활은<br>어느 쪽에 가까운가요?</h2>
+ ${LIFE.map(l=>`<button class="opt ${S.life===l.k?'on':''}" onclick="S.life='${l.k}';S.goal=${l.g};go('ob2')"><span class="ic">${l.ic}</span><span><b>${l.n}</b><small>${l.d}</small></span></button>`).join('')}
+ <div class="note" style="margin:8px 0 16px">${IC.info}<span>목표 걸음은 나중에 설정에서 바꿀 수 있어요.</span></div>
+ <button class="btn" onclick="go('ob3')">다음</button><button class="btn line" style="margin-top:8px;height:46px" onclick="go('ob1')">이전</button>`}
+function pickers(prefix){return `<div class="pick">
+ <h4>헤어</h4><div class="chips">${HAIR.map(x=>`<button class="chip ${S.me.hair===x.k?'on':''}" onclick="setMe('hair','${x.k}','${prefix}')">${x.n}</button>`).join('')}</div>
+ <h4>머리색</h4><div class="chips">${HC.map(x=>`<button class="sw ${S.me.hc===x?'on':''}" style="background:${x}" aria-label="머리색" onclick="setMe('hc','${x}','${prefix}')"></button>`).join('')}</div>
+ <h4>의상</h4><div class="chips">${OUTFIT.map(x=>`<button class="chip ${S.me.outfit===x.k?'on':''}" onclick="setMe('outfit','${x.k}','${prefix}')">${x.n}</button>`).join('')}</div>
+ <h4>액세서리</h4><div class="chips">${ACC.map(x=>`<button class="chip ${S.me.acc===x.k?'on':''}" onclick="setMe('acc','${x.k}','${prefix}')">${x.n}</button>`).join('')}</div></div>`}
+function setMe(k,v,p){S.me[k]=v;if(p==='ob'){const n=$('iN');if(n)S.name=n.value.trim()||S.name}render()}
+function ob3(){if(S.screen==='ob3')S.me.stage=startStage();return `${dots(3)}<h2 class="h2">내 캐릭터가 생겼어요</h2>
+ <div class="prev">${av(S.me,{cls:'idle'})}<span class="tag">${STAGES[S.me.stage]} · ${S.me.stage+1}단계에서 출발</span></div>
+ <div class="fld"><label class="lbl" for="iN">닉네임</label><input class="inp" id="iN" maxlength="10" value="${S.name}"></div>
+ ${pickers('ob')}
+ <div class="card" style="margin:18px 0 12px;background:#f1f5f2"><b style="font-size:15px">걷기 데이터 연결</b><p class="small" style="margin:4px 0 10px">휴대폰과 워치 걸음을 자동으로 가져옵니다. 손으로 입력한 기록은 체형 변화에 넣지 않아요.</p>
+ <div class="chips"><button class="chip ${S.plat==='hc'?'on':''}" onclick="S.plat='hc';keepName();render()">Health Connect (안드로이드)</button><button class="chip ${S.plat==='hk'?'on':''}" onclick="S.plat='hk';keepName();render()">HealthKit (아이폰)</button></div></div>
+ <button class="btn" onclick="finish()">연결하고 시작하기</button>`}
+function keepName(){const n=$('iN');if(n)S.name=n.value.trim()||S.name}
+function finish(){keepName();S.screen='app';S.tab='home';S.recs=[{t:'08:42',n:1240,src:src(),ok:true}];render();toast(`지난 7일 걸음 ${fmt(total())}걸음을 불러왔어요 (시연용)`)}
+const src=()=>S.plat==='hc'?'갤럭시 워치 · Health Connect':'애플워치 · HealthKit';
+const nowT=()=>{const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+
+function ring(p){const r=30,c=2*Math.PI*r;return `<svg class="ring" viewBox="0 0 72 72"><circle cx="36" cy="36" r="${r}" fill="none" stroke="#e8efe9" stroke-width="8"/><circle cx="36" cy="36" r="${r}" fill="none" stroke="#18a46b" stroke-width="8" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-Math.min(1,p))}" transform="rotate(-90 36 36)"/><text x="36" y="41" text-anchor="middle" font-size="15" font-weight="800" fill="#1d2a23">${Math.round(Math.min(1,p)*100)}%</text></svg>`}
+function home(){const m=S.me,max=m.stage>=4,need=S.cfg.need[m.stage]||1,today=S.week[6];
+ return `<div style="display:flex;justify-content:space-between;align-items:center;margin:8px 2px 12px"><div><div class="small">${S.name}님, 오늘도 한 걸음</div><b style="font-size:20px;letter-spacing:-.03em">${STAGES[m.stage]}의 하루</b></div><span class="tag">${streak()}일 연속 달성</span></div>
+ <div class="hero"><div class="ground"></div>
+  <div class="row"><div class="stg">현재 체형<b>${m.stage+1}단계 ${STAGES[m.stage]}</b></div><span class="tag gray">Lv.${level()} ${title(level())}</span></div>
+  <div id="homeAv">${av(m,{cls:'av idle'})}</div>
+  <div class="bar"><i style="width:${max?100:Math.min(100,S.prog/need*100)}%"></i></div>
+  <div class="small" style="display:flex;justify-content:space-between"><span>${max?'최종 단계에 도착했어요':`다음 변신 <b style="color:var(--ink)">${STAGES[m.stage+1]}</b>까지 ${fmt(need-S.prog)}걸음`}</span><span>${max?'':fmt(S.prog)+' / '+fmt(need)}</span></div>
+ </div>
+ <div class="card today"><div style="flex:1"><div class="small">오늘 걸음</div><div class="big" style="margin:6px 0 4px">${fmt(today)}</div><div class="small">목표 ${fmt(S.goal)}걸음 · 약 ${(today*0.00072).toFixed(1)}km</div></div>${ring(today/S.goal)}</div>
+ <div class="card sim"><h3>걸음 시뮬레이터 <span class="tag demo">시연용</span></h3>
+  <label class="lbl" for="rg">한 번에 넣을 걸음 <b id="rgv" style="color:var(--ink)">${fmt(S.rg)}</b>걸음</label>
+  <input id="rg" type="range" min="500" max="20000" step="500" value="${S.rg}" oninput="S.rg=+this.value;$('rgv').textContent=fmt(this.value)">
+  <div class="btns"><button class="btn" onclick="addSteps(+$('rg').value,false)">워치 동기화</button><button class="btn ghost" onclick="addSteps(+$('rg').value,true)">손으로 입력</button></div>
+  <div class="recs">${S.recs.slice(0,4).map(r=>`<div class="rec ${r.ok?'ok':'no'}"><span>${r.t} · ${r.src}<br>${r.ok?`<b>${fmt(r.n)}걸음</b>`:`<s>${fmt(r.n)}걸음</s>`}${r.cut?` <span class="small">(하루 상한으로 ${fmt(r.cut)}만 반영)</span>`:''}</span><em>${r.ok?'반영':'제외'}</em></div>`).join('')}</div>
+  <p class="small" style="margin-top:10px">실제 앱은 기록의 출처(기기·앱·수동 여부)를 보고 수동 입력을 자동으로 걸러냅니다.</p>
+ </div>`}
+function addSteps(n,manual){
+ if(manual){S.recs.unshift({t:nowT(),n,src:'건강 앱 수동 입력',ok:false});render();return toast('손으로 입력한 걸음은 체형 변화와 기록에 넣지 않아요')}
+ const room=Math.max(0,S.cfg.cap-S.week[6]),use=Math.min(n,room);
+ S.recs.unshift({t:nowT(),n,src:src(),ok:use>0,cut:use<n&&use>0?use:0});
+ if(!use){render();return toast(`하루 최대 ${fmt(S.cfg.cap)}걸음까지만 반영돼요`)}
+ const lv0=level(),st0=S.me.stage;S.week[6]+=use;
+ if(S.me.stage<4){S.prog+=use;while(S.me.stage<4&&S.prog>=S.cfg.need[S.me.stage]){S.prog-=S.cfg.need[S.me.stage];S.me.stage++}if(S.me.stage>=4)S.prog=0}
+ render();
+ if(S.me.stage>st0)celebrate(st0);
+ else if(level()>lv0)toast(`레벨 업! Lv.${level()} ${title(level())}`);
+ else toast(`${fmt(use)}걸음이 반영됐어요`);
+}
+function celebrate(from){const c=document.createElement('div');c.className='cele';
+ const cols=['#18a46b','#ffb057','#ff8fa6','#78c3fb','#ffd34d','#6573f0'];
+ c.innerHTML=Array.from({length:34},(_,i)=>`<i class="cf" style="left:${Math.random()*100}%;background:${cols[i%6]};animation-delay:${Math.random()*.6}s;transform:rotate(${Math.random()*90}deg)"></i>`).join('')+
+ `<span class="tag">${S.me.stage+1}단계 달성</span><h2>${STAGES[S.me.stage]}로 변신했어요</h2><p>${S.name}님이 걸은 걸음이 모여<br>캐릭터가 한결 가벼워졌어요.</p>
+ <div class="ba"><div class="old">${av({...S.me,stage:from})}</div><svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg><div class="new">${av(S.me,{happy:true})}</div></div>
+ <button class="btn" style="margin-top:26px;max-width:280px" onclick="this.parentNode.remove()">좋아요</button>`;
+ $('screen').appendChild(c)}
+
+const DAYS=['토','일','월','화','수','목','오늘'];
+function stats(){const mx=Math.max(S.goal*1.25,...S.week),W=330,H=170,bw=28,step=(W-20)/7,lv=level(),into=total()%10000;
+ const gy=H-24-(S.goal/mx)*(H-44);
+ const bars=S.week.map((v,i)=>{const h=Math.max(4,(v/mx)*(H-44)),x=12+i*step+(step-bw)/2,ok=v>=S.goal;return `<rect x="${x}" y="${H-24-h}" width="${bw}" height="${h}" rx="8" fill="${ok?'#18a46b':'#bfe3cf'}"/><text x="${x+bw/2}" y="${H-6}" text-anchor="middle" font-size="11.5" fill="#5c6b63" font-weight="${i===6?800:500}">${DAYS[i]}</text><text x="${x+bw/2}" y="${H-29-h}" text-anchor="middle" font-size="9.5" fill="#5c6b63">${(v/1000).toFixed(1)}k</text>`}).join('');
+ const ach=S.week.filter(v=>v>=S.goal).length;
+ return `<h2 class="h2">걸음 기록</h2>
+ <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:15px">최근 7일</b><span class="small">평균 ${fmt(total()/7)}걸음 · 점선 목표 ${fmt(S.goal)}</span></div>
+ <svg class="chart" viewBox="0 0 ${W} ${H}"><line x1="8" x2="${W-6}" y1="${gy}" y2="${gy}" stroke="#18a46b" stroke-dasharray="4 4" opacity=".6"/>${bars}</svg></div>
+ <div class="grid2"><div class="card kv">오늘 달성률<b>${Math.min(100,Math.round(S.week[6]/S.goal*100))}%</b></div><div class="card kv">이번 주 목표 달성<b>${ach} / 7일</b></div><div class="card kv">연속 달성<b>${streak()}일</b></div><div class="card kv">누적 걸음<b>${fmt(total())}</b></div></div>
+ <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="small">레벨</div><b style="font-size:20px">Lv.${lv} ${title(lv)}</b></div><span class="tag">다음 레벨까지 ${fmt(10000-into)}</span></div>
+ <div class="bar" style="background:#eef3ef"><i style="width:${into/100}%"></i></div><p class="small">1만 걸음마다 레벨이 오르고, 레벨에 따라 칭호가 열립니다.</p></div>
+ <div class="card"><b style="font-size:15px">칭호</b>${TITLES.map(t=>`<div class="ttl ${lv>=t[0]?'':'lock'}"><span class="ic">Lv${t[0]}</span><span><b>${t[1]}</b><small>${lv>=t[0]?'획득했어요':`Lv.${t[0]}에 열려요`}</small></span></div>`).join('')}</div>`}
+
+function me(){const m=S.me;return `<h2 class="h2">내 캐릭터</h2>
+ <div class="prev">${av(m,{cls:'idle'})}<span class="tag">${m.stage+1}단계 ${STAGES[m.stage]} · Lv.${level()}</span></div>
+ <div class="card">${pickers('me')}<p class="small" style="margin-top:14px">체형은 걸음으로만 바뀌고, 헤어·의상·액세서리는 언제든 바꿀 수 있어요.</p></div>
+ <div class="card"><b style="font-size:15px">나만 보는 정보</b><p class="small" style="margin:2px 0 8px">키 ${S.h}cm · 몸무게 ${S.w}kg · BMI ${bmi().toFixed(1)}</p>
+ <div class="set"><div>키·몸무게 공개<small>민감정보라 공개 기능을 두지 않았어요</small></div><span class="toggle lock" aria-label="비공개 고정"></span></div>
+ <div class="set"><div>걸음 수 공개<small>광장 프로필에 오늘 걸음을 보여 줘요</small></div><button class="toggle ${S.pub.steps?'on':''}" aria-label="걸음 수 공개" onclick="S.pub.steps=!S.pub.steps;render()"></button></div>
+ <div class="set"><div>차단한 사용자<small>${S.blocked.size?[...S.blocked].map(id=>NPCS.find(n=>n.id===id).name).join(', '):'없음'}</small></div>${S.blocked.size?`<button class="mini" onclick="S.blocked.clear();render();toast('차단을 모두 풀었어요')">모두 해제</button>`:''}</div></div>
+ <button class="btn line" style="height:46px" onclick="S.screen='ob1';S.prog=0;render()">처음부터 다시 보기</button>`}
+
+/* plaza */
+const NPCS=[
+ {id:'n1',name:'산책왕민지',lv:14,c:{stage:3,hair:'pony',outfit:'track',acc:'band',hc:'#7a4a2a'}},
+ {id:'n2',name:'하루만보',lv:9,c:{stage:2,hair:'short',outfit:'tee',acc:'cap',hc:'#3a2a22'}},
+ {id:'n3',name:'퇴근길걷기',lv:4,c:{stage:0,hair:'bob',outfit:'hood',acc:'glasses',hc:'#4a4f6e'}},
+ {id:'n4',name:'강아지랑',lv:11,c:{stage:1,hair:'bun',outfit:'overall',acc:'none',hc:'#d39a5c'}},
+ {id:'n5',name:'새벽러너',lv:22,c:{stage:4,hair:'short',outfit:'track',acc:'none',hc:'#3a2a22'}},
+ {id:'n6',name:'점심산책',lv:6,c:{stage:1,hair:'bob',outfit:'tee',acc:'band',hc:'#7a4a2a'}}];
+const LINES=['오늘 만보 찍었어요','다들 몇 걸음 걸으셨어요?','공원 한 바퀴 더 돌고 올게요','어제 몽글이로 변신했어요','비 와서 실내에서 걸었어요','같이 저녁 산책 하실 분','계단 오르기도 걸음에 들어가요?'];
+const SPACES=['중앙 광장','호숫가 산책로'];
+let pT=null,pos={};
+function plazaBg(){if(S.space===0)return `<svg class="bg" viewBox="0 0 360 430"><rect width="360" height="430" fill="#bfe6b3"/><path d="M0 250 Q180 200 360 260 L360 310 Q180 250 0 300Z" fill="#f2e3c4"/><path d="M155 0 Q170 215 150 430 L210 430 Q190 215 205 0Z" fill="#f2e3c4"/><circle cx="180" cy="262" r="54" fill="#e4d4b0"/><circle cx="180" cy="262" r="40" fill="#8fd3f4"/><circle cx="180" cy="262" r="12" fill="#c8ecfb"/><ellipse cx="166" cy="250" rx="10" ry="4" fill="#fff" opacity=".5"/>${[[40,60],[300,50],[60,380],[320,370],[300,170]].map(([x,y])=>`<ellipse cx="${x}" cy="${y+30}" rx="22" ry="5" fill="#1d2a23" opacity=".08"/><rect x="${x-4}" y="${y+6}" width="8" height="24" rx="3" fill="#a5784f"/><circle cx="${x}" cy="${y}" r="24" fill="#6cc26f"/><circle cx="${x-8}" cy="${y-6}" r="9" fill="#86d488"/>`).join('')}<rect x="250" y="320" width="48" height="10" rx="4" fill="#c58f5d"/><rect x="254" y="330" width="5" height="10" fill="#a5784f"/><rect x="289" y="330" width="5" height="10" fill="#a5784f"/>${[[90,150],[110,170],[250,120],[95,330],[270,230]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3.5" fill="#ff9fb4"/><circle cx="${x+8}" cy="${y+4}" r="3" fill="#ffe17a"/>`).join('')}</svg>`;
+ return `<svg class="bg" viewBox="0 0 360 430"><rect width="360" height="430" fill="#c5e9b8"/><path d="M0 0H360V130Q260 175 180 140Q90 105 0 150Z" fill="#7fc9ee"/><path d="M0 0H360V100Q260 140 180 110Q90 80 0 118Z" fill="#9ad8f5"/><ellipse cx="90" cy="60" rx="26" ry="5" fill="#fff" opacity=".45"/><ellipse cx="260" cy="40" rx="18" ry="4" fill="#fff" opacity=".45"/><path d="M-10 230 Q120 180 200 260 T380 280 L380 330 Q290 320 200 305 Q110 230 -10 280Z" fill="#d9b588"/><path d="M-10 236 Q120 186 200 266 T380 286" stroke="#bf9a6c" stroke-width="2" fill="none" stroke-dasharray="10 8"/>${[[40,390],[320,190],[300,400],[150,370]].map(([x,y])=>`<ellipse cx="${x}" cy="${y+28}" rx="20" ry="5" fill="#1d2a23" opacity=".08"/><rect x="${x-4}" y="${y+4}" width="8" height="24" rx="3" fill="#a5784f"/><circle cx="${x}" cy="${y}" r="22" fill="#5fb764"/><circle cx="${x-7}" cy="${y-6}" r="8" fill="#80cf83"/>`).join('')}<path d="M40 150 l4 -14 l4 14 M52 152 l3 -11 l3 11" stroke="#4f9e52" stroke-width="2.5" fill="none"/></svg>`}
+function plaza(){const vis=NPCS.filter(n=>!S.blocked.has(n.id));
+ return `<div class="plz-head">${SPACES.map((s,i)=>`<button class="chip ${S.space===i?'on':''}" onclick="S.space=${i};render()">${s}</button>`).join('')}<span class="tag demo" style="margin-left:auto">시연용</span></div>
+ <div class="plaza" id="plz" onclick="plzTap(event)">${plazaBg()}
+  ${vis.map(n=>pc(n.id,n.name,n.c,false)).join('')}${pc('me',S.name,S.me,true)}</div>
+ <div class="log" id="log"><span class="small">빈 곳을 누르면 내 캐릭터가 걸어가요. ${vis.length+1}명이 ${SPACES[S.space]}에 있어요.</span></div>
+ <div class="emos">${[['♥','하트'],['♪','신나요'],['!','반가워요'],['zZ','피곤해요']].map(e=>`<button onclick="emote('${e[0]}')"><span>${e[0]}</span>${e[1]}</button>`).join('')}</div>
+ <div class="chat"><label class="hide" for="msg">메시지</label><input class="inp" id="msg" maxlength="40" placeholder="광장에 한마디 남기기" onkeydown="if(event.key==='Enter')say()"><button class="mini" onclick="say()">보내기</button></div>
+ <p class="small" style="margin-top:8px">금칙어는 보내기 전에 가려지고, 키·몸무게는 다른 사람에게 보이지 않아요.</p>`}
+function pc(id,name,c,isMe){const p=pos[id+S.space]||(pos[id+S.space]=isMe?{x:50,y:78}:{x:12+Math.random()*76,y:32+Math.random()*58});
+ return `<div class="pc ${isMe?'me':''}" id="pc_${id}" data-id="${id}" style="left:${p.x}%;top:${p.y}%;z-index:${Math.round(p.y)}">${av(c)}<span class="nm">${isMe?'나':name}</span></div>`}
+function moveTo(id,x,y){const e=$('pc_'+id);if(!e)return;pos[id+S.space]={x,y};e.classList.add('walk');e.style.left=x+'%';e.style.top=y+'%';e.style.zIndex=Math.round(y);clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('walk'),1800)}
+function bubble(id,txt,emo){const e=$('pc_'+id);if(!e)return;e.querySelectorAll('.bub').forEach(b=>b.remove());const b=document.createElement('div');b.className='bub'+(emo?' emo':'');b.textContent=txt;e.appendChild(b);setTimeout(()=>b.remove(),3600)}
+function logLine(who,txt){const l=$('log');if(!l)return;if(l.querySelector('.small'))l.innerHTML='';l.insertAdjacentHTML('beforeend',`<div><b></b> </div>`);const d=l.lastElementChild;d.firstChild.textContent=who;d.append(txt);while(l.children.length>3)l.firstElementChild.remove()}
+function plzTap(ev){const t=ev.target.closest('.pc');if(t){if(t.dataset.id!=='me')openUser(t.dataset.id);return}
+ const r=$('plz').getBoundingClientRect();moveTo('me',Math.max(8,Math.min(92,(ev.clientX-r.left)/r.width*100)),Math.max(26,Math.min(96,(ev.clientY-r.top)/r.height*100)))}
+function startPlaza(){pT=setInterval(()=>{const vis=NPCS.filter(n=>!S.blocked.has(n.id));const n=vis[Math.floor(Math.random()*vis.length)];if(!n)return;
+ if(Math.random()<.6)moveTo(n.id,10+Math.random()*80,30+Math.random()*62);
+ if(Math.random()<.35){const ln=LINES[Math.floor(Math.random()*LINES.length)];n.last=ln;bubble(n.id,ln);logLine(n.name,ln)}},1700)}
+function stopPlaza(){clearInterval(pT)}
+function clean(t){let hit=false;S.banned.forEach(w=>{if(w&&t.includes(w)){hit=true;t=t.split(w).join('*'.repeat(w.length))}});return[t,hit]}
+function say(){const i=$('msg'),v=i.value.trim();if(!v)return;const[t,hit]=clean(v);bubble('me',t);logLine(S.name,t);i.value='';if(hit)toast('금칙어가 포함돼 가려서 보냈어요')}
+function emote(e){bubble('me',e,true);const m=$('pc_me');m.classList.remove('jump');void m.offsetWidth;m.classList.add('jump');
+ const vis=NPCS.filter(n=>!S.blocked.has(n.id));const n=vis[Math.floor(Math.random()*vis.length)];if(n)setTimeout(()=>{bubble(n.id,'♥',true)},900)}
+function openUser(id){const n=NPCS.find(x=>x.id===id),o=document.createElement('div');o.className='ov';o.onclick=e=>{if(e.target===o)o.remove()};
+ o.innerHTML=`<div class="sheet"><div class="grab"></div><div class="prof">${av(n.c)}<div><b>${n.name}</b><span class="small">Lv.${n.lv} ${title(n.lv)}</span><div style="margin-top:6px;display:flex;gap:5px"><span class="tag">${n.c.stage+1}단계 ${STAGES[n.c.stage]}</span><span class="tag gray">오늘 ${fmt(3000+n.lv*412)}걸음</span></div></div></div>
+ <div class="note" style="margin-bottom:14px">${IC.info}<span>다른 사람의 키·몸무게는 볼 수 없어요. 캐릭터 모습과 레벨만 공개됩니다.</span></div>
+ <div id="rp"><div class="btns" style="margin-top:0"><button class="btn line" style="color:#c23b40" onclick="reportUI('${id}')">신고하기</button><button class="btn line" onclick="block('${id}')">차단하기</button></div></div></div>`;
+ $('screen').appendChild(o)}
+function reportUI(id){$('rp').innerHTML=`<b style="font-size:15px">신고 사유를 골라 주세요</b><div class="chips" style="margin:10px 0 14px">${['욕설·비하','도배','불쾌한 닉네임','성적인 발언'].map(r=>`<button class="chip" onclick="report('${id}','${r}')">${r}</button>`).join('')}</div>`}
+function report(id,r){const n=NPCS.find(x=>x.id===id);S.reports.unshift({id:Date.now(),who:n.name,reason:r,msg:n.last?`최근 메시지: ${n.last}`:'최근 메시지 없음',t:nowT(),st:'대기'});document.querySelector('.ov').remove();toast('신고가 접수됐어요. 관리자 웹에서 확인할 수 있어요')}
+function block(id){S.blocked.add(id);document.querySelector('.ov').remove();const e=$('pc_'+id);if(e)e.remove();toast('차단했어요. 이 사용자의 캐릭터와 메시지가 보이지 않아요')}
+
+/* admin */
+function mode(m){$('appView').classList.toggle('hide',m!=='app');$('admView').classList.toggle('hide',m!=='admin');$('mApp').classList.toggle('on',m==='app');$('mAdm').classList.toggle('on',m==='admin');if(m==='admin'){stopPlaza();admin()}else render();window.scrollTo(0,0)}
+function admin(){const wait=S.reports.filter(r=>r.st==='대기').length;
+ $('admView').innerHTML=`<h1>뚜벅 관리자 <span class="tag demo">시연용</span></h1><p class="sub">여기서 바꾼 기준값과 금칙어는 옆의 앱 화면에 바로 반영됩니다. 숫자는 가상 데이터입니다.</p>
+ <div class="kpis"><div class="card kv">전체 회원<b>1,284명</b></div><div class="card kv">오늘 걸음 동기화<b>412명</b></div><div class="card kv">평균 걸음(7일)<b>6,930</b></div><div class="card kv">대기 중인 신고<b style="color:${wait?'#c23b40':'inherit'}">${wait}건</b></div></div>
+ <div class="acols">
+ <div class="card"><h3>체형 변화 기준값</h3><p class="desc">각 단계에서 다음 단계로 넘어가는 데 필요한 누적 걸음입니다. 수동 입력 걸음은 계산에서 빠집니다.</p>
+  <table><tr><th>구간</th><th>필요 걸음</th><th>미리보기</th></tr>
+  ${S.cfg.need.map((v,i)=>`<tr><td>${i+1}단계 ${STAGES[i]}<br><span class="small">다음: ${STAGES[i+1]}</span></td><td><input class="inp" type="number" min="1000" step="1000" id="nd${i}" value="${v}"></td><td><span style="display:inline-flex;width:100px">${av({stage:i,hair:'short',outfit:'tee',acc:'none',hc:HC[0]}).replace('<svg','<svg width="48"')}${av({stage:i+1,hair:'short',outfit:'tee',acc:'none',hc:HC[0]}).replace('<svg','<svg width="48"')}</span></td></tr>`).join('')}
+  <tr><td>시작 단계 BMI 경계<br><span class="small">이상이면 그 단계에서 출발</span></td><td colspan="2"><div style="display:flex;gap:5px;flex-wrap:wrap">${S.cfg.bmi.map((b,i)=>`<label class="small" style="display:flex;flex-direction:column;gap:2px">${i+1}단계<input class="inp" style="width:62px" type="number" step=".5" id="bm${i}" value="${b}"></label>`).join('')}</div></td></tr>
+  <tr><td>하루 최대 반영 걸음<br><span class="small">비정상 기록 차단</span></td><td colspan="2"><input class="inp" type="number" step="1000" id="cap" value="${S.cfg.cap}"></td></tr></table>
+  <button class="btn" style="margin-top:14px;height:48px" onclick="saveCfg()">저장하고 앱에 반영</button></div>
+ <div><div class="card"><h3>신고 처리</h3><p class="desc">광장에서 들어온 신고입니다. 앱에서 캐릭터를 눌러 신고하면 여기에 쌓입니다.</p>
+  <table><tr><th>대상</th><th>사유·내용</th><th>상태</th><th></th></tr>${S.reports.map(r=>`<tr><td><b>${r.who}</b><br><span class="small">${r.t}</span></td><td>${r.reason}<br><span class="small">${r.msg}</span></td><td><span class="st ${r.st==='대기'?'w':r.st==='기각'?'x':'d'}">${r.st}</span></td><td>${r.st==='대기'?`<div class="acts"><button onclick="act(${r.id},'경고 발송')">경고</button><button class="r" onclick="act(${r.id},'채팅 24시간 제한')">채팅 제한</button><button onclick="act(${r.id},'기각')">기각</button></div>`:''}</td></tr>`).join('')}</table></div>
+ <div class="card"><h3>금칙어</h3><p class="desc">광장 채팅에서 자동으로 가려집니다.</p><div class="words">${S.banned.map((w,i)=>`<span>${w}<button aria-label="삭제" onclick="S.banned.splice(${i},1);admin()">×</button></span>`).join('')}</div>
+  <div class="chat"><label class="hide" for="nw">금칙어 추가</label><input class="inp" id="nw" placeholder="추가할 단어" onkeydown="if(event.key==='Enter')addWord()"><button class="mini" onclick="addWord()">추가</button></div></div></div>
+ </div>`}
+function saveCfg(){const nd=S.cfg.need.map((_,i)=>+$('nd'+i).value),bm=S.cfg.bmi.map((_,i)=>+$('bm'+i).value),cap=+$('cap').value;
+ if(nd.some(v=>!(v>=1000)))return toast('필요 걸음은 1,000 이상으로 넣어 주세요');
+ if(!(bm[0]>bm[1]&&bm[1]>bm[2]&&bm[2]>bm[3]&&bm[3]>15))return toast('BMI 경계는 1단계부터 큰 값 순서로 넣어 주세요');
+ if(!(cap>=5000))return toast('하루 최대 반영 걸음은 5,000 이상이어야 해요');
+ S.cfg={need:nd,cap,bmi:bm};admin();toast('저장했어요. 앱의 다음 변신 기준이 바뀌었어요')}
+function act(id,st){S.reports.find(r=>r.id===id).st=st==='기각'?'기각':st;admin();toast(st==='기각'?'신고를 기각했어요':`${st} 처리했어요`)}
+function addWord(){const v=$('nw').value.trim();if(v&&!S.banned.includes(v))S.banned.push(v);admin();$('nw').focus()}
+
+$('stageRow').innerHTML=STAGES.map((s,i)=>`<div>${av({stage:i,hair:['short','bob','pony','bun','short'][i],outfit:['hood','overall','tee','track','track'][i],acc:['none','none','glasses','band','cap'][i],hc:HC[i%4]})}${i+1}. ${s}</div>`).join('');
+render();
+</script>
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:99999;text-align:center;font:12px/1.6 system-ui,sans-serif;color:#fff;background:rgba(0,0,0,.62);padding:4px 8px;pointer-events:none">© 2026 ZTW · 제안용 시연 화면입니다. 화면·설계의 무단 복제·사용을 금합니다.</div>
+</body>
+</html>
