@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>영상 견적비교 시연</title>
+<meta name="description" content="영상 제작 수요자와 공급업체를 잇는 역경매 견적비교 기능 제안용 작동 데모">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="ribbon">제안용 작동 데모 · 가상 데이터이며 실제 납품 실적이 아닙니다</div>
+
+<header class="top">
+  <div class="in">
+    <div class="logo">필름매치<small>견적비교 모듈 (가칭)</small></div>
+    <nav class="roles" id="roles" aria-label="역할 전환">
+      <button data-role="buyer">수요자</button>
+      <button data-role="supplier">공급업체</button>
+      <button data-role="admin">관리자</button>
+    </nav>
+    <button class="reset" data-act="reset">데이터 초기화</button>
+  </div>
+</header>
+
+<div class="wrap layout">
+  <main id="app" aria-live="polite"></main>
+  <aside class="talk" aria-label="알림톡 미리보기">
+    <div class="talk-head">
+      <div>
+        <h2>알림톡 미리보기</h2>
+        <p class="mu">요청 등록·견적 제출·업체 선정 때 나갈 카카오 알림톡입니다. 실제 발송되지 않습니다.</p>
+      </div>
+      <button class="link" data-act="clearlog">비우기</button>
+    </div>
+    <div id="talk"></div>
+  </aside>
+</div>
+
+<section class="wrap design" id="design">
+  <h2 class="sec-title">기존 서버에 붙이는 설계</h2>
+  <p class="lead">회원·업체 테이블은 그대로 두고 견적 전용 테이블 4개만 추가합니다. 기존 Spring Boot 인증(세션 또는 JWT)의 회원 ID와 업체 ID로 권한을 판단합니다.</p>
+
+  <h3>ERD</h3>
+  <div class="erd-wrap" id="erd"></div>
+  <p class="mu">회색 상자는 기존 테이블(참조만), 파란 테두리는 신규 테이블입니다. quote_selection.request_id에 UNIQUE를 걸어 요청당 선정은 한 번만 가능하게 DB에서 막습니다.</p>
+
+  <h3>REST API</h3>
+  <div class="table-wrap">
+    <table class="api">
+      <thead><tr><th>메서드</th><th>경로</th><th>설명</th><th>권한</th></tr></thead>
+      <tbody id="api"></tbody>
+    </table>
+  </div>
+
+  <h3>범위 나눔</h3>
+  <div class="scope">
+    <div class="scope-col primary">
+      <h4>1차 MVP · 11월 안에 심사 가능한 범위</h4>
+      <ul>
+        <li>견적 테이블 4종 생성, 기존 member·company 연결</li>
+        <li>요청 등록·목록·상세, 견적 작성·제출·내역 API</li>
+        <li>요청별 견적 비교·정렬, 업체 선정 API</li>
+        <li>본인 요청·본인 업체 견적만 보이는 권한 검사</li>
+        <li>알림톡 3종(요청 등록, 견적 도착, 선정 안내) 연동</li>
+        <li>관리자 현황표, 공급업체 대리 견적 등록</li>
+        <li>웹(React) 화면과 앱(React Native) 핵심 화면, API 연동 검증</li>
+      </ul>
+    </div>
+    <div class="scope-col">
+      <h4>2차 · 심사 이후</h4>
+      <ul>
+        <li>견적 수정 이력과 재견적 요청</li>
+        <li>견적 마감 자동 처리 스케줄러, 마감 임박 알림</li>
+        <li>업체 선정 후 계약서·결제 연동</li>
+        <li>견적 통계 차트, 업체별 낙찰률 리포트</li>
+        <li>미선정 업체 안내 알림톡, 리뷰 연동</li>
+      </ul>
+    </div>
+  </div>
+  <p class="mu">진행은 채팅·문서·녹화 영상으로 합니다. 기능 정의서는 첫 주에 문서로 드리고 화면별 확인을 받은 뒤 개발합니다.</p>
+
+  <p class="copy">이 화면과 설계는 ZTW의 제안용 저작물입니다. 사전 동의 없는 복제·배포·사용을 금합니다.</p>
+</section>
+
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:99999;text-align:center;font:12px/1.6 system-ui,sans-serif;color:#fff;background:rgba(0,0,0,.62);padding:4px 8px;pointer-events:none">© 2026 ZTW · 제안용 시연 화면입니다. 화면·설계의 무단 복제·사용을 금합니다.</div>
+<script src="app.js"></script>
+</body>
+</html>
