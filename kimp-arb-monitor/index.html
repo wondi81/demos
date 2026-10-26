@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>김프 차익거래 모니터</title>
+<meta name="description" content="업비트 현물과 비트겟 선물 간 김치 프리미엄 차익거래 프로그램 제안용 작동 데모 (가상 시세)">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="ribbon">제안용 작동 데모 · 가상 시세 시뮬레이터 · 실제 납품 실적 아님. 업비트·비트겟 서버에 연결하지 않으며 주문도 나가지 않습니다.</div>
+
+<header class="top">
+  <div class="brand">
+    <span class="mark" aria-hidden="true">K</span>
+    <div><b>김프 차익거래 모니터</b><small>업비트 현물 × 비트겟 USDT-M 선물</small></div>
+  </div>
+  <div class="top-ctrl">
+    <span class="mode-chip" id="modeChip">모의 모드</span>
+    <div class="seg" role="radiogroup" aria-label="시뮬레이션 배속">
+      <button role="radio" aria-checked="true" data-speed="1">1배</button>
+      <button role="radio" aria-checked="false" data-speed="10">10배</button>
+    </div>
+    <button class="btn" id="runBtn" aria-pressed="true">일시정지</button>
+    <button class="btn ghost" id="resetBtn">초기화</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>김프 차이만 남기고,<br>코인 가격 위험은 선물로 지웁니다.</h1>
+    <p class="lead">업비트 현물과 같은 수량의 비트겟 선물을 반대로 잡아 가격 변동을 상쇄합니다. 남는 것은 진입·청산 시점의 김프 차이에서 수수료·슬리피지·펀딩비를 뺀 값입니다.</p>
+  </section>
+
+  <section class="kpis" aria-label="요약">
+    <div class="kpi"><span>USDT/KRW <em>업비트 KRW-USDT 마켓 기준</em></span><b id="kRate">-</b></div>
+    <div class="kpi"><span>실현 순손익</span><b id="kPnl">-</b></div>
+    <div class="kpi"><span>미실현 (지금 청산 시)</span><b id="kUnreal">-</b></div>
+    <div class="kpi"><span>보유 포지션</span><b id="kPos">-</b></div>
+    <div class="kpi"><span>체결 / 정리</span><b id="kTrades">-</b></div>
+  </section>
+
+  <section class="grid">
+    <div class="panel board-panel">
+      <div class="phead">
+        <h2>실시간 김프 보드</h2>
+        <span class="muted" id="clock">-</span>
+      </div>
+      <div class="tbl-wrap">
+        <table class="board" aria-label="코인별 김프">
+          <thead><tr><th>코인</th><th>업비트 KRW</th><th>비트겟 USDT</th><th>원화 환산</th><th>김프</th><th>상태</th></tr></thead>
+          <tbody id="board"></tbody>
+        </table>
+      </div>
+      <p class="foot-note">김프 = 업비트 원화가 ÷ (비트겟 USDT가 × USDT/KRW) − 1. 시세는 1초마다 바뀌는 가상 랜덤워크입니다.</p>
+    </div>
+
+    <div class="panel set-panel">
+      <div class="phead"><h2>진입·청산 조건</h2></div>
+      <form id="setForm" class="set-form" autocomplete="off">
+        <label>매수·숏 진입: 김프 ≤ (%)<input type="number" step="0.1" id="sEntry" value="0.6"></label>
+        <label>매수·숏 청산: 김프 ≥ (%)<input type="number" step="0.1" id="sExit" value="2.2"></label>
+        <label>매도·롱 진입: 김프 ≥ (%)<input type="number" step="0.1" id="sREntry" value="3.2"></label>
+        <label>매도·롱 청산: 김프 ≤ (%)<input type="number" step="0.1" id="sRExit" value="1.6"></label>
+        <label>1회 금액 (원)<input type="number" step="100000" min="100000" id="sAmt" value="3000000"></label>
+        <label>최대 포지션 (개)<input type="number" step="1" min="1" max="6" id="sMax" value="3"></label>
+        <label>슬리피지 (% / 한쪽)<input type="number" step="0.01" min="0" id="sSlip" value="0.03"></label>
+        <label>최대 손실 중지 (원)<input type="number" step="10000" min="0" id="sLoss" value="150000"></label>
+        <label>업비트 수수료 (%)<input type="number" step="0.01" min="0" id="sFeeU" value="0.05"></label>
+        <label>비트겟 선물 테이커 (%)<input type="number" step="0.01" min="0" id="sFeeB" value="0.06"></label>
+        <label class="chk span2"><input type="checkbox" id="sRev" checked> 김프 축소 방향도 사용 (업비트 보유 코인 매도 + 비트겟 선물 롱)</label>
+      </form>
+      <p class="foot-note">수수료는 설정값입니다. 실제 요율은 계정 등급·이벤트에 따라 다르니 각 거래소에서 확인해 넣습니다.</p>
+      <div class="cost-line" id="costLine"></div>
+    </div>
+
+    <div class="panel flow-panel">
+      <div class="phead"><h2>전략 구조</h2></div>
+      <ol class="flow">
+        <li><b>매수·숏 진입</b><span>김프가 낮을 때(역김프 포함): 업비트 현물 매수 + 비트겟 선물 숏 (같은 수량, 1배 격리)</span></li>
+        <li><b>가격 위험 상쇄</b><span>코인 가격이 오르든 내리든 현물 손익과 선물 손익이 서로 지워지고 김프 변화만 남음</span></li>
+        <li><b>매수·숏 청산</b><span>김프가 다시 벌어지면: 업비트 현물 매도 + 선물 숏 청산</span></li>
+        <li><b>김프 축소 방향</b><span>김프가 높을 때: 미리 보유한 업비트 코인 매도 + 선물 롱, 김프가 줄면 재매수 + 롱 청산</span></li>
+        <li><b>순이익</b><span>김프 차이 − 양쪽 수수료(진입·청산 4회) − 슬리피지 ± 펀딩비</span></li>
+      </ol>
+      <p class="foot-note callout">현물 매수 + 선물 숏은 김프가 오를 때 이익이고, 김프가 줄면 손실입니다. 김프 축소에서 이익을 보려면 반대 구조가 필요해 두 방향을 모두 넣었습니다.</p>
+      <p class="foot-note">선물 증거금(USDT) 자체의 환율 변동은 손익 계산에 따로 표시하지 않았습니다. 실제 버전에서는 증거금 환산 손익도 기록합니다.</p>
+    </div>
+
+    <div class="panel chart-panel">
+      <div class="phead"><h2>누적 순손익</h2><span class="muted">실현 기준 · 원</span></div>
+      <div class="chart-box"><canvas id="chart" aria-label="누적 순손익 차트"></canvas></div>
+    </div>
+
+    <div class="panel pos-panel">
+      <div class="phead"><h2>포지션</h2><span class="muted" id="posCount">0개</span></div>
+      <div class="tbl-wrap">
+        <table class="pos" aria-label="보유 포지션">
+          <thead><tr><th>코인</th><th>방향</th><th>진입 김프</th><th>현재 김프</th><th>수량</th><th>펀딩 누적</th><th>지금 청산 시</th><th>보유</th></tr></thead>
+          <tbody id="pos"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel log-panel">
+      <div class="phead"><h2>체결 시뮬레이션 로그</h2><span class="muted">최근 60건</span></div>
+      <ol class="log" id="log" aria-live="polite"></ol>
+    </div>
+
+    <div class="panel safe-panel">
+      <div class="phead"><h2>안전장치</h2><span class="status" id="safeStatus">정상 감시 중</span></div>
+      <ul class="safe">
+        <li><b>출금 권한 없는 API 키</b><span>조회·주문 권한만 발급. 키가 새도 자산이 밖으로 나가지 않음</span></li>
+        <li><b>IP 고정</b><span>프로그램이 도는 서버 IP만 양쪽 거래소 키에 등록</span></li>
+        <li><b>한쪽만 체결 시 즉시 정리</b><span>다른 쪽 주문이 실패하면 체결된 쪽을 바로 반대 주문으로 닫음</span></li>
+        <li><b>최대 손실 중지</b><span>누적 실현 손실이 설정값에 닿으면 전 포지션 정리 후 신규 진입 중단</span></li>
+        <li><b>텔레그램 알림</b><span>진입·청산·정리·중지·오류를 즉시 전송</span></li>
+        <li><b>거래소 점검 시 자동 정지</b><span>점검 공지·입출금 중단·API 오류 감지 시 신규 진입 멈춤</span></li>
+      </ul>
+      <div class="sim-row">
+        <button class="btn ghost small" data-sim="oneleg">한쪽 체결 실패 시험</button>
+        <button class="btn ghost small" data-sim="maint">업비트 점검 시험</button>
+        <button class="btn ghost small" data-sim="loss">손실 한도 시험</button>
+      </div>
+      <div class="tg" aria-label="텔레그램 알림 미리보기">
+        <div class="tg-head">텔레그램 알림 미리보기</div>
+        <ol id="tg"></ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="notice" aria-label="꼭 알려드릴 점">
+    <h2>꼭 알려드릴 점</h2>
+    <ul>
+      <li>이 프로그램은 정해 둔 조건대로 주문을 내는 도구이며 <b>수익을 보장하지 않습니다.</b> 화면의 손익은 가상 시세로 계산한 예시입니다.</li>
+      <li>김프는 국내외 송금 제한, 환율, 거래소별 유동성 차이 때문에 생기고, 같은 이유로 예고 없이 줄거나 반대로 벌어집니다. 진입 뒤 김프가 더 커지면 청산까지 오래 걸리거나 손실로 끝날 수 있습니다.</li>
+      <li>해외 거래소 이용, 자산 이동, 세금 신고와 관련된 법규와 각 거래소 약관 확인은 이용자 몫입니다. 저희는 프로그램 개발과 설정만 맡습니다.</li>
+    </ul>
+  </section>
+
+  <section class="deliver" aria-label="납품 구성">
+    <h2>납품 구성</h2>
+    <div class="deliver-grid">
+      <div class="dcol">
+        <h3>무엇을 드리나</h3>
+        <dl>
+          <dt>Python 상시 실행 프로그램</dt><dd>고객님 서버(VPS) 또는 PC에서 24시간 동작. 꺼지면 자동 재시작, 재시작 시 기존 포지션을 거래소에서 다시 읽어 이어감</dd>
+          <dt>설정 파일</dt><dd>진입·청산 김프, 금액, 코인 목록, 수수료, 손실 한도를 파일 하나에서 수정</dd>
+          <dt>기록</dt><dd>체결·정리·펀딩 내역을 CSV로 남겨 손익을 다시 맞춰볼 수 있음</dd>
+          <dt>운영 문서</dt><dd>설치, 키 등록, 정지·재개, 장애 대응 순서</dd>
+        </dl>
+      </div>
+      <div class="dcol">
+        <h3>설정 파일 예시</h3>
+<pre class="code">mode: paper          # paper(모의) | live(실거래)
+symbols: [BTC, ETH, XRP, SOL, DOGE, ADA]
+buy_short:           # 현물 매수 + 선물 숏
+  entry_below_pct: 0.6
+  exit_above_pct: 2.2
+sell_long:           # 보유분 매도 + 선물 롱
+  enabled: true
+  entry_above_pct: 3.2
+  exit_below_pct: 1.6
+order_krw: 3000000
+max_positions: 3
+max_loss_krw: 150000
+fees:                # 계정 등급 확인 후 입력
+  upbit_pct: 0.05
+  bitget_taker_pct: 0.06
+bitget:
+  margin: isolated
+  leverage: 1
+telegram:
+  chat_id: "고객님 채팅 ID"</pre>
+      </div>
+      <div class="dcol">
+        <h3>진행 순서</h3>
+        <ol class="steps">
+          <li><b>모의 모드</b><span>실제 시세만 받아 가상 체결. 진입 횟수·예상 손익을 며칠간 확인</span></li>
+          <li><b>소액 실거래</b><span>1회 금액을 작게 잡고 실제 주문. 양쪽 체결 시차와 실제 슬리피지 측정</span></li>
+          <li><b>금액 조정</b><span>측정값으로 조건을 다시 맞춘 뒤 고객님이 금액을 정함</span></li>
+        </ol>
+        <p class="foot-note">진행은 채팅·문서·녹화 영상으로 합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="copy">이 화면과 설계(전략 흐름, 손익 계산 방식, 안전장치 구성, 화면 배치)는 ZTW의 제안용 저작물입니다. 견적 검토 외의 목적으로 무단 복제·사용·재배포할 수 없습니다.</p>
+</main>
+
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:99999;text-align:center;font:12px/1.6 system-ui,sans-serif;color:#fff;background:rgba(0,0,0,.62);padding:4px 8px;pointer-events:none">© 2026 ZTW · 제안용 시연 화면입니다. 화면·설계의 무단 복제·사용을 금합니다.</div>
+<script src="app.js"></script>
+</body>
+</html>
