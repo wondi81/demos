@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>3D AR 가발 체험 시연</title>
+<meta name="description" content="상용 AR SDK 기반 3D 가발 체험 앱 제안용 작동 데모. 가닥 레이어·이방성 하이라이트·경계 페이드·측면 정합.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+</head>
+<body>
+<div class="ribbon">제안용 작동 데모 · 가상 데이터로 구성한 화면이며 실제 납품 실적이 아닙니다</div>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand"><span class="mark">Z</span>가발 AR 체험 <small>Flutter 앱 제안 시연</small></div>
+    <a class="toplink" href="#sdk">SDK 선택</a>
+    <a class="toplink" href="#flow">앱 화면 흐름</a>
+  </div>
+</header>
+
+<main class="app">
+  <section class="tryon">
+    <div class="stage" id="stage">
+      <div class="view" id="view">
+        <video id="video" playsinline muted></video>
+        <canvas id="gl"></canvas>
+      </div>
+
+      <div class="hud">
+        <span class="chip" id="modeChip">마네킹 모드 · 자동 회전</span>
+        <span class="chip mono" id="poseChip">yaw 0°</span>
+        <span class="chip mono" id="fpsChip">-- fps</span>
+      </div>
+      <div class="hint" id="hint" hidden></div>
+
+      <div class="stage-actions">
+        <button class="ghost" id="camBtn" type="button">내 얼굴로 착용</button>
+        <button class="shutter" id="shotBtn" type="button" aria-label="촬영"><span></span></button>
+        <button class="ghost" id="dragTip" type="button" tabindex="-1">드래그로 돌려보기</button>
+      </div>
+
+      <div class="result" id="result" hidden>
+        <img id="shotImg" alt="촬영 결과 미리보기">
+        <div class="result-bar">
+          <p>앨범 저장은 실제 앱에서 동작합니다. 이 화면에서는 미리보기만 제공합니다.</p>
+          <div class="result-btns">
+            <button class="ghost" id="retakeBtn" type="button">다시 찍기</button>
+            <button class="primary" id="okBtn" type="button">확인</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tray">
+      <div class="tray-head">
+        <div class="tabs" role="tablist">
+          <button class="on" data-g="all" type="button">전체</button>
+          <button data-g="m" type="button">남성</button>
+          <button data-g="f" type="button">여성</button>
+        </div>
+        <div class="swatches" id="swatches"></div>
+      </div>
+      <div class="wigs" id="wigs"></div>
+      <label class="density">
+        <span>가닥 수 <b id="countVal">-</b></span>
+        <input type="range" id="count" min="1000" max="12000" step="500">
+        <small id="autoNote">프레임이 30 아래로 떨어지면 자동으로 줄입니다</small>
+      </label>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <h2>사실감을 만드는 4가지</h2>
+    <p class="lead">기존 테스트가 평면적으로 보인 원인은 대부분 머리카락 표현과 경계 처리입니다. 각 항목을 끄고 켜서 차이를 직접 확인할 수 있습니다.</p>
+
+    <ol class="fx">
+      <li>
+        <label class="fx-row"><input type="checkbox" data-fx="aniso" checked><span class="sw"></span><strong>이방성 하이라이트</strong></label>
+        <p>머리카락은 결 방향으로 빛이 길게 번집니다. Kajiya-Kay 근사로 흰 1차 반사와 머리색이 섞인 2차 반사를 결을 따라 어긋나게 둡니다. 끄면 플라스틱처럼 둥근 광택만 남습니다.</p>
+      </li>
+      <li>
+        <label class="fx-row"><input type="checkbox" data-fx="layers" checked><span class="sw"></span><strong>가닥 레이어 볼륨</strong></label>
+        <p>한 장짜리 껍데기 대신 두피에서 바깥으로 여러 겹의 가닥 카드를 쌓고, 안쪽 겹일수록 어둡게 처리합니다. 끄면 겉면 한 겹만 남아 얇고 납작해집니다.</p>
+      </li>
+      <li>
+        <label class="fx-row"><input type="checkbox" data-fx="edge" checked><span class="sw"></span><strong>경계 알파 페이드 + 두상 오클루전</strong></label>
+        <p>이마 헤어라인과 가닥 끝은 투명도를 서서히 낮추고, 보이지 않는 두상·귀 메시로 뒤쪽 가닥을 가립니다. 끄면 경계가 칼로 자른 듯 딱딱해집니다.</p>
+      </li>
+      <li>
+        <label class="fx-row"><input type="checkbox" data-fx="smooth" checked><span class="sw"></span><strong>측면 60도 정합 (포즈 스무딩)</strong></label>
+        <p>고개를 돌리면 추적값이 흔들려 가발이 들뜹니다. One Euro 필터로 느린 움직임은 강하게, 빠른 움직임은 약하게 걸러 냅니다. 마네킹 모드는 추적 노이즈를 모의로 넣어 비교합니다.</p>
+      </li>
+    </ol>
+
+    <details class="calib" id="calib">
+      <summary>얼굴 정합 보정 (카메라 모드)</summary>
+      <label>크기 <input type="range" id="cScale" min="0.8" max="1.25" step="0.01" value="1"></label>
+      <label>높이 <input type="range" id="cY" min="-2" max="6" step="0.1" value="2"></label>
+      <label>앞뒤 <input type="range" id="cZ" min="-7" max="3" step="0.1" value="-2.4"></label>
+      <small>실제 앱에서는 가발별 기준점을 납품 시 맞춰 고정합니다.</small>
+    </details>
+  </aside>
+</main>
+
+<section class="block" id="sdk">
+  <h2>상용 SDK 선택 비교</h2>
+  <p class="lead">수치는 계약 전 각 사 견적과 실기기 테스트로 확인할 항목이라 넣지 않았습니다. 특징과 이번 과제와의 관련성만 정리했습니다.</p>
+  <div class="cmp">
+    <div class="cmp-row cmp-h"><span>선택지</span><span>강점</span><span>주의할 점</span><span>이번 과제 관점</span></div>
+    <div class="cmp-row"><span>Banuba Face AR</span><span>얼굴 추적과 헤어 관련 기능을 함께 다루는 상용 SDK, 모바일 플랫폼 지원</span><span>상용 라이선스 견적제, Flutter 연동 방식은 도입 시점 버전으로 확인</span><span>본인 머리 흐림까지 한 SDK로 묶을 수 있는지 1순위 검증 대상</span></div>
+    <div class="cmp-row"><span>DeepAR</span><span>효과 제작 도구와 가벼운 SDK, 빠른 시제품 제작</span><span>기존 1차 테스트에서 평면감 문제 발생</span><span>원인은 SDK보다 가발 에셋·셰이더 쪽일 가능성이 커, 커스텀 셰이더 범위 확인 필요</span></div>
+    <div class="cmp-row"><span>Snap Camera Kit</span><span>Lens Studio 기반의 높은 렌즈 표현력</span><span>Snap 측 승인·정책 절차, Flutter는 네이티브 브릿지 작업 필요</span><span>표현력은 좋지만 발주사 명의 운영·심사 절차 부담 확인 필요</span></div>
+    <div class="cmp-row rec"><span>자체 MediaPipe + 렌더러</span><span>셰이더·경계 처리 전권, MediaPipe는 Apache 2.0</span><span>추적·렌더 연동을 직접 구현하는 공수, 기기별 최적화 부담</span><span>이 시연이 해당 방식. 사실감 통제가 가장 쉬움</span></div>
+  </div>
+  <p class="note">권장 진행: 첫 2주에 같은 가발 1종을 Banuba와 자체 렌더 두 방식으로 올려 녹화 영상으로 비교한 뒤 확정합니다. 진행은 채팅·문서·녹화 영상으로 합니다.</p>
+</section>
+
+<section class="block split">
+  <div>
+    <h2>본인 머리카락 흐림</h2>
+    <p class="lead">가발 밖으로 삐져나온 본인 머리를 지우는 방식은 헤어 세그멘테이션 마스크 + 블러입니다.</p>
+  </div>
+  <ol class="steps">
+    <li><b>머리카락 마스크 추정</b><span>헤어 세그멘테이션 모델(MediaPipe 헤어 모델 또는 SDK 내장 기능)로 프레임마다 머리 영역을 얻습니다.</span></li>
+    <li><b>가발이 덮는 영역 빼기</b><span>렌더된 가발의 알파를 마스크에서 빼서 가발 밖으로 보이는 본인 머리만 남깁니다.</span></li>
+    <li><b>주변색으로 블러</b><span>남은 영역을 이마·배경 쪽 색으로 넓게 블러해 덮습니다. 짧은 머리는 이것으로 충분합니다.</span></li>
+    <li><b>경계 페더</b><span>마스크 가장자리를 부드럽게 풀어 흐림 자국이 보이지 않게 합니다. 긴 머리는 한계를 미리 문서로 안내합니다.</span></li>
+  </ol>
+</section>
+
+<section class="block" id="flow">
+  <h2>Flutter 실제 앱 화면 흐름</h2>
+  <div class="flow">
+    <figure><div class="ph"><div class="w-logo"></div><div class="w-line s"></div><div class="w-line"></div><div class="w-btn"></div></div><figcaption>시작<small>로고 · 카메라 권한 동의</small></figcaption></figure>
+    <figure><div class="ph cam"><div class="w-face"></div><div class="w-shut"></div></div><figcaption>체험<small>실시간 착용 · 촬영</small></figcaption></figure>
+    <figure><div class="ph"><div class="w-tabs"></div><div class="w-grid"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><figcaption>목록<small>남성 · 여성 즉시 전환</small></figcaption></figure>
+    <figure><div class="ph"><div class="w-photo"></div><div class="w-row"><div class="w-btn s"></div><div class="w-btn s"></div></div></div><figcaption>결과<small>확인 · 앨범 저장 · 다시 찍기</small></figcaption></figure>
+    <figure><div class="ph"><div class="w-item"></div><div class="w-item"></div><div class="w-item"></div><div class="w-line s"></div></div><figcaption>설정<small>약관 · 개인정보 · 버전</small></figcaption></figure>
+  </div>
+</section>
+
+<p class="copy">이 화면과 설계(가발 렌더링 구성, 화면 흐름, 비교 정리)는 ZTW의 제안용 저작물입니다. 제안 검토 목적 외의 무단 복제·사용을 금합니다. 화면의 가발 스타일과 이름은 모두 가상 데이터입니다.</p>
+
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:99999;text-align:center;font:12px/1.6 system-ui,sans-serif;color:#fff;background:rgba(0,0,0,.62);padding:4px 8px;pointer-events:none">© 2026 ZTW · 제안용 시연 화면입니다. 화면·설계의 무단 복제·사용을 금합니다.</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
