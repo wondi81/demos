@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>QA 테스트 리포트 데모</title>
+<meta name="description" content="게임 기능·멀티 접속·성능·자동화 테스트 산출물 샘플 (가상 프로젝트 X, 가상 데이터)">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="ribbon">제안용 작동 데모 · 가상 데이터 · 실제 납품 실적 아님. 게임명 "가상 프로젝트 X"와 모든 케이스·버그·수치는 견적 설명용으로 만든 샘플입니다.</div>
+
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">X</span>
+      <div>
+        <b>가상 프로젝트 X · QA 산출물</b>
+        <small>빌드 0.9.4 (가상) · 테스트 기간 11/16 ~ 11/28</small>
+      </div>
+    </div>
+    <p class="mode">원격으로 테스트하고, 채팅·문서·녹화 영상으로 진행합니다.</p>
+  </div>
+  <nav class="tabs wrap" role="tablist" aria-label="산출물">
+    <button role="tab" data-tab="plan" aria-selected="true">테스트 계획서</button>
+    <button role="tab" data-tab="cases" aria-selected="false">테스트 케이스</button>
+    <button role="tab" data-tab="bugs" aria-selected="false">버그 리포트</button>
+    <button role="tab" data-tab="perf" aria-selected="false">성능·부하</button>
+    <button role="tab" data-tab="auto" aria-selected="false">자동화</button>
+    <button role="tab" data-tab="summary" aria-selected="false">최종 요약</button>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<!-- 1. 계획서 -->
+<section class="panel" id="plan" role="tabpanel">
+  <h1>테스트 계획서</h1>
+  <p class="lead">요청 두 건을 한 계획서로 묶었습니다. A는 게임 기능 검증, B는 기능·비기능·성능과 회귀 자동화입니다.</p>
+
+  <div class="scope">
+    <article>
+      <h3><span class="tag a">A</span> 게임 기능 테스트</h3>
+      <ul>
+        <li>버그 탐색: 튜토리얼, 전투, 상점, 인벤토리</li>
+        <li>로그인: 소셜(구글·애플·카카오 가상 연동), 게스트, 중복 로그인, 세션 만료</li>
+        <li>멀티 접속: 동일 계정 2기기, 방 입장 동시성, 끊김 후 재접속</li>
+      </ul>
+    </article>
+    <article>
+      <h3><span class="tag b">B</span> 기능·비기능·성능·자동화</h3>
+      <ul>
+        <li>기능: 결제 흐름 일부, 인벤토리 정합성</li>
+        <li>비기능: 호환성, 저사양 기기 발열·프레임, 약한 네트워크</li>
+        <li>성능: 동시접속 100 → 1,000 VU 램프업 (k6)</li>
+        <li>자동화: 웹 Playwright, 모바일 Appium, CI 연동</li>
+      </ul>
+    </article>
+    <article class="out">
+      <h3>범위 밖</h3>
+      <ul>
+        <li>서버 소스 코드 리뷰, 보안 침투 테스트</li>
+        <li>실결제 승인 (샌드박스 결제만 사용)</li>
+        <li>밸런스·재미 평가</li>
+      </ul>
+    </article>
+  </div>
+
+  <h2>환경 매트릭스</h2>
+  <div class="tbl-wrap">
+    <table class="matrix" id="matrix"></table>
+  </div>
+  <p class="note">● 전체 케이스 실행 · ○ 스모크만 실행 · 빈칸 미대상</p>
+
+  <h2>일정</h2>
+  <ol class="timeline" id="timeline"></ol>
+
+  <div class="criteria">
+    <div>
+      <h3>진입 기준</h3>
+      <ul>
+        <li>테스트 빌드와 테스트 계정 10개 전달 완료</li>
+        <li>스모크 케이스 10건 중 9건 이상 통과</li>
+        <li>결제 샌드박스, 부하 테스트용 스테이징 서버 접근 가능</li>
+      </ul>
+    </div>
+    <div>
+      <h3>종료 기준</h3>
+      <ul>
+        <li>계획한 케이스 100% 실행, 통과율 95% 이상</li>
+        <li>미해결 치명 버그 0건, 높음 2건 이하(회피 방법 문서화)</li>
+        <li>1,000 VU에서 p95 800ms 이하, 오류율 1% 이하</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 케이스 -->
+<section class="panel" id="cases" role="tabpanel" hidden>
+  <h1>테스트 케이스</h1>
+  <div class="filters">
+    <label class="f-search"><span class="sr">검색</span>
+      <input type="search" id="q" placeholder="ID, 제목, 단계로 검색">
+    </label>
+    <label><span class="sr">영역</span><select id="fArea"><option value="">전체 영역</option></select></label>
+    <label><span class="sr">결과</span><select id="fRes">
+      <option value="">전체 결과</option><option>Pass</option><option>Fail</option><option>Block</option>
+    </select></label>
+    <span class="count" id="caseCount"></span>
+  </div>
+  <div class="tbl-wrap">
+    <table class="cases">
+      <thead><tr><th>ID</th><th>케이스</th><th>사전조건</th><th>단계</th><th>기대결과</th><th>결과</th></tr></thead>
+      <tbody id="caseBody"></tbody>
+    </table>
+  </div>
+  <p class="empty" id="caseEmpty" hidden>조건에 맞는 케이스가 없습니다. 검색어나 필터를 바꿔 보세요.</p>
+</section>
+
+<!-- 3. 버그 -->
+<section class="panel" id="bugs" role="tabpanel" hidden>
+  <h1>버그 리포트</h1>
+  <div class="sev-strip" id="sevStrip"></div>
+  <div class="bug-layout">
+    <ul class="bug-list" id="bugList" aria-label="버그 목록"></ul>
+    <article class="bug-detail" id="bugDetail" aria-live="polite"></article>
+  </div>
+</section>
+
+<!-- 4. 성능 -->
+<section class="panel" id="perf" role="tabpanel" hidden>
+  <h1>성능·부하 테스트</h1>
+  <p class="lead">스테이징 서버 대상, 로그인 → 로비 → 방 입장 시나리오를 100에서 1,000 VU까지 2분 간격으로 늘렸습니다.</p>
+  <div class="kpis" id="perfKpi"></div>
+  <div class="charts">
+    <figure><figcaption>응답시간 (ms)<span class="legend"><i class="l1"></i>p50 <i class="l2"></i>p95 <i class="l3"></i>목표 800</span></figcaption><canvas id="cLat" height="220"></canvas></figure>
+    <figure><figcaption>오류율 (%)<span class="legend"><i class="l2"></i>오류율 <i class="l3"></i>목표 1%</span></figcaption><canvas id="cErr" height="220"></canvas></figure>
+    <figure class="wide"><figcaption>처리량 (요청/초)</figcaption><canvas id="cRps" height="200"></canvas></figure>
+  </div>
+  <p class="finding" id="perfFinding"></p>
+  <h2>k6 스크립트 예시</h2>
+  <div class="code"><button class="copy" data-copy="k6">복사</button><pre id="k6"></pre></div>
+</section>
+
+<!-- 5. 자동화 -->
+<section class="panel" id="auto" role="tabpanel" hidden>
+  <h1>테스트 자동화</h1>
+  <h2>CI 실행 흐름</h2>
+  <ol class="flow" id="flow"></ol>
+  <h2>최근 실행 결과</h2>
+  <div class="tbl-wrap"><table class="runs" id="runs"></table></div>
+  <div class="code-tabs" role="tablist" aria-label="스크립트">
+    <button role="tab" data-code="pw" aria-selected="true">Playwright (웹)</button>
+    <button role="tab" data-code="ap" aria-selected="false">Appium (모바일)</button>
+  </div>
+  <div class="code"><button class="copy" data-copy="codeView">복사</button><pre id="codeView"></pre></div>
+</section>
+
+<!-- 6. 요약 -->
+<section class="panel" id="summary" role="tabpanel" hidden>
+  <h1>최종 요약</h1>
+  <div class="verdict" id="verdict"></div>
+  <div class="kpis" id="sumKpi"></div>
+  <div class="sum-grid">
+    <div><h3>영역별 통과율</h3><div id="areaBars"></div></div>
+    <div><h3>전달물</h3>
+      <ul class="deliver">
+        <li><b>테스트 계획서·케이스</b>엑셀과 PDF</li>
+        <li><b>버그 리포트</b>재현 단계와 녹화 영상 링크 포함</li>
+        <li><b>성능 리포트</b>k6 원본 결과와 그래프</li>
+        <li><b>자동화 스크립트</b>저장소 전달, CI 설정 포함</li>
+      </ul>
+      <p class="note">원격으로 테스트하고, 결과는 문서와 녹화 영상으로 전달합니다.</p>
+    </div>
+  </div>
+</section>
+
+<p class="copyright">이 화면과 설계는 ZTW의 제안용 저작물이며, 무단 복제·사용을 금합니다. 화면의 게임명·데이터는 모두 가상입니다.</p>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="app.js"></script>
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:99999;text-align:center;font:12px/1.6 system-ui,sans-serif;color:#fff;background:rgba(0,0,0,.62);padding:4px 8px;pointer-events:none">© 2026 ZTW · 제안용 시연 화면입니다. 화면·설계의 무단 복제·사용을 금합니다.</div>
+</body>
+</html>
