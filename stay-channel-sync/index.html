@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>숙박 채널 연동 시연</title>
+<meta name="description" content="채널 매니저 연동 숙박 관리 웹의 예약·재고 동기화, 요금 역산·일괄 전송, AI 메시지 단계적 자동발송을 가상 데이터로 시연합니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f2ee; --bg2:#ebe9e3; --shell:rgba(20,20,15,.04); --hair:rgba(20,20,15,.08);
+  --card:#fbfaf7; --ink:#17171a; --ink2:#55555c; --ink3:#8b8b92;
+  --acc:#2f5d50; --acc-soft:rgba(47,93,80,.1); --warn:#a4621a; --warn-soft:rgba(164,98,26,.11);
+  --bad:#a63a32; --bad-soft:rgba(166,58,50,.1); --ok:#2f7a4f; --ok-soft:rgba(47,122,79,.1);
+  --stop:#6b4fa3; --stop-soft:rgba(107,79,163,.12);
+  --shadow:0 1px 1px rgba(20,20,15,.03),0 12px 40px -18px rgba(20,20,15,.18);
+  --inset:inset 0 1px 0 rgba(255,255,255,.7);
+  --ease:cubic-bezier(.32,.72,0,1);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#08090a; --bg2:#0f1012; --shell:rgba(255,255,255,.035); --hair:rgba(255,255,255,.08);
+  --card:#121315; --ink:#ecebe8; --ink2:#a9a9b0; --ink3:#73737b;
+  --acc:#7fc4ae; --acc-soft:rgba(127,196,174,.12); --warn:#e0a35a; --warn-soft:rgba(224,163,90,.12);
+  --bad:#ec8a80; --bad-soft:rgba(236,138,128,.12); --ok:#7fd3a0; --ok-soft:rgba(127,211,160,.12);
+  --stop:#b9a2ef; --stop-soft:rgba(185,162,239,.14);
+  --shadow:0 1px 1px rgba(0,0,0,.4),0 20px 50px -24px rgba(0,0,0,.8); --inset:inset 0 1px 0 rgba(255,255,255,.05);
+}}
+:root[data-theme="dark"]{
+  --bg:#08090a; --bg2:#0f1012; --shell:rgba(255,255,255,.035); --hair:rgba(255,255,255,.08);
+  --card:#121315; --ink:#ecebe8; --ink2:#a9a9b0; --ink3:#73737b;
+  --acc:#7fc4ae; --acc-soft:rgba(127,196,174,.12); --warn:#e0a35a; --warn-soft:rgba(224,163,90,.12);
+  --bad:#ec8a80; --bad-soft:rgba(236,138,128,.12); --ok:#7fd3a0; --ok-soft:rgba(127,211,160,.12);
+  --stop:#b9a2ef; --stop-soft:rgba(185,162,239,.14);
+  --shadow:0 1px 1px rgba(0,0,0,.4),0 20px 50px -24px rgba(0,0,0,.8); --inset:inset 0 1px 0 rgba(255,255,255,.05);
+}
+*{box-sizing:border-box;margin:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-size:14px;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.mono{font-family:"Geist Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:disabled{cursor:not-allowed;opacity:.42}
+input,select{font:inherit;color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 16px 80px}
+.notice{display:flex;gap:10px;align-items:center;font-size:12.5px;color:var(--warn);background:var(--warn-soft);border-radius:999px;padding:8px 16px;width:fit-content;max-width:100%}
+.notice b{font-weight:600}
+header.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin:40px 0 28px;flex-wrap:wrap}
+.eyebrow{display:inline-block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;color:var(--ink2);background:var(--shell);box-shadow:0 0 0 1px var(--hair);border-radius:999px;padding:4px 12px;margin-bottom:14px}
+h1{font-size:clamp(28px,4.4vw,46px);line-height:1.12;letter-spacing:-.035em;font-weight:600;max-width:15em}
+h1 em{font-style:normal;color:var(--acc)}
+.lede{color:var(--ink2);margin-top:12px;max-width:40em}
+.theme{width:40px;height:40px;border-radius:50%;background:var(--shell);box-shadow:0 0 0 1px var(--hair);display:grid;place-items:center;transition:transform .5s var(--ease)}
+.theme:active{transform:scale(.94)}
+.tabs{position:sticky;top:10px;z-index:5;display:flex;gap:4px;padding:5px;border-radius:999px;background:color-mix(in srgb,var(--card) 72%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 0 0 1px var(--hair),var(--shadow);width:fit-content;max-width:100%;overflow-x:auto;margin-bottom:28px;scrollbar-width:none}
+.tab{white-space:nowrap;padding:9px 18px;border-radius:999px;color:var(--ink2);font-weight:500;transition:background .5s var(--ease),color .5s var(--ease)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.tab small{font-family:"Geist Mono",monospace;opacity:.6;margin-right:6px;font-size:11px}
+.panel{display:none}
+.panel.on{display:block;animation:rise .8s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:18px}
+.c12{grid-column:span 12}.c8{grid-column:span 8}.c7{grid-column:span 7}.c5{grid-column:span 5}.c4{grid-column:span 4}.c6{grid-column:span 6}
+@media (max-width:900px){.c8,.c7,.c5,.c4,.c6{grid-column:span 12}}
+.shell{background:var(--shell);box-shadow:0 0 0 1px var(--hair);border-radius:26px;padding:6px;min-width:0}
+.core{background:var(--card);border-radius:20px;box-shadow:var(--inset),var(--shadow);padding:22px;height:100%;min-width:0}
+@media (max-width:600px){.core{padding:16px}.shell{border-radius:22px}.core{border-radius:17px}}
+.core h2{font-size:15px;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.core h2 .id{font-family:"Geist Mono",monospace;font-size:10.5px;font-weight:500;color:var(--acc);background:var(--acc-soft);padding:2px 8px;border-radius:999px;letter-spacing:.02em}
+.sub{color:var(--ink3);font-size:12.5px;margin-top:4px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:8px 8px 8px 16px;border-radius:999px;background:var(--bg2);box-shadow:0 0 0 1px var(--hair);font-size:13px;font-weight:500;transition:transform .45s var(--ease),background .45s var(--ease)}
+.btn .ic{width:24px;height:24px;border-radius:50%;background:var(--shell);box-shadow:0 0 0 1px var(--hair);display:grid;place-items:center;font-size:12px;transition:transform .45s var(--ease)}
+.btn:hover:not(:disabled) .ic{transform:translate(2px,-1px) scale(1.06)}
+.btn:active:not(:disabled){transform:scale(.97)}
+.btn.pri{background:var(--ink);color:var(--bg);box-shadow:none}
+.btn.pri .ic{background:rgba(127,127,127,.25);box-shadow:none}
+.btn.ghost{background:transparent}
+.btn.plain{padding:8px 16px}
+.stat{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:999px;background:var(--shell);box-shadow:0 0 0 1px var(--hair);color:var(--ink2);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok);box-shadow:none}
+.pill.warn{background:var(--warn-soft);color:var(--warn);box-shadow:none}
+.pill.bad{background:var(--bad-soft);color:var(--bad);box-shadow:none}
+.pill.stop{background:var(--stop-soft);color:var(--stop);box-shadow:none}
+.pill.acc{background:var(--acc-soft);color:var(--acc);box-shadow:none}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.scroll{overflow-x:auto;margin-top:14px;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{font-weight:500;color:var(--ink3);text-align:left;padding:8px 10px;border-bottom:1px solid var(--hair);white-space:nowrap;font-size:11.5px}
+td{padding:9px 10px;border-bottom:1px solid var(--hair);white-space:nowrap;vertical-align:middle}
+tr.new td{animation:flash 1.4s var(--ease)}
+@keyframes flash{from{background:var(--acc-soft)}to{background:transparent}}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:16px}
+.cal .h{font-size:11px;color:var(--ink3);text-align:center}
+.day{border-radius:12px;background:var(--bg2);box-shadow:0 0 0 1px var(--hair);padding:7px 6px 8px;min-height:74px;display:flex;flex-direction:column;gap:4px;text-align:left;transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
+.day:active{transform:scale(.96)}
+.day .d{font-size:11px;color:var(--ink3);font-family:"Geist Mono",monospace}
+.day .n{font-size:18px;font-weight:600;font-family:"Geist Mono",monospace;line-height:1}
+.day .n small{font-size:10.5px;color:var(--ink3);font-weight:400}
+.bars{display:flex;gap:2px;margin-top:auto}
+.bars i{height:4px;flex:1;border-radius:2px;background:var(--hair)}
+.bars i.b1{background:var(--acc)}.bars i.b2{background:var(--warn)}.bars i.b3{background:var(--ink3)}
+.day.stop{box-shadow:0 0 0 1.5px var(--stop)}
+.day .tag{font-size:9.5px;color:var(--stop);font-weight:600;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:clip}
+@media (max-width:520px){.cal{gap:4px}.day{padding:6px 4px 7px;min-height:66px}.day .d{font-size:10px}.day .n{font-size:16px}}
+.day.pulse{animation:pulse 1.2s var(--ease)}
+@keyframes pulse{0%{box-shadow:0 0 0 2px var(--acc)}100%{box-shadow:0 0 0 1px var(--hair)}}
+.day.drift{box-shadow:0 0 0 1.5px var(--bad)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--ink3);margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:4px;border-radius:2px;display:inline-block}
+.log{margin-top:14px;max-height:330px;overflow:auto;display:flex;flex-direction:column;gap:2px;font-size:12px}
+.log div{display:grid;grid-template-columns:62px 1fr;gap:8px;padding:6px 8px;border-radius:8px;animation:rise .6s var(--ease) both}
+.log div:nth-child(odd){background:var(--shell)}
+.log time{font-family:"Geist Mono",monospace;color:var(--ink3);font-size:11px}
+.log .w{color:var(--warn)}.log .e{color:var(--bad)}.log .g{color:var(--ok)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:12.5px;margin-top:12px}
+.kv dt{color:var(--ink3)}.kv dd{min-width:0}
+.field{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--ink3)}
+.field input,.field select{background:var(--bg2);border:0;box-shadow:0 0 0 1px var(--hair);border-radius:12px;padding:9px 12px;font-size:14px;width:100%;min-width:0}
+.field input:focus,.field select:focus{outline:2px solid var(--acc);outline-offset:1px}
+.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+@media (max-width:520px){.fields{grid-template-columns:1fr 1fr}}
+.chk{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chk label{display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border-radius:999px;background:var(--bg2);box-shadow:0 0 0 1px var(--hair);font-size:12.5px;cursor:pointer}
+.chk input{accent-color:var(--acc)}
+.steps{display:flex;gap:4px;align-items:center}
+.steps i{width:22px;height:6px;border-radius:3px;background:var(--hair);transition:background .5s var(--ease)}
+.steps i.ok{background:var(--ok)}.steps i.run{background:var(--warn);animation:blink 1s infinite}.steps i.bad{background:var(--bad)}
+@keyframes blink{50%{opacity:.35}}
+.msgs{display:flex;flex-direction:column;gap:6px;margin-top:14px}
+.msg{text-align:left;padding:10px 12px;border-radius:14px;background:var(--bg2);box-shadow:0 0 0 1px var(--hair);font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center;transition:transform .45s var(--ease)}
+.msg[aria-pressed="true"]{box-shadow:0 0 0 1.5px var(--acc)}
+.msg span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bubble{background:var(--bg2);border-radius:16px 16px 16px 4px;padding:12px 14px;margin-top:14px;font-size:13.5px}
+.draft{background:var(--acc-soft);border-radius:16px 16px 4px 16px;padding:14px;margin-top:10px;font-size:13.5px;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere}
+.draft.blocked{background:var(--bad-soft)}
+.src{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.src div{display:flex;justify-content:space-between;gap:10px;font-size:12px;padding:7px 10px;border-radius:10px;background:var(--shell);flex-wrap:wrap}
+.src div span:last-child{color:var(--ink3);font-size:11.5px}
+.types{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.type{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--bg2);box-shadow:0 0 0 1px var(--hair)}
+.type b{font-weight:500;font-size:13px}
+.type .sub{margin:0;font-size:11.5px}
+.weeks{display:flex;gap:3px}
+.weeks i{width:12px;height:12px;border-radius:4px;background:var(--hair)}
+.weeks i.on{background:var(--ok)}
+.sw{position:relative;width:40px;height:24px;border-radius:999px;background:var(--hair);transition:background .45s var(--ease);flex-shrink:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .45s var(--ease)}
+.sw[aria-checked="true"]{background:var(--acc)}
+.sw[aria-checked="true"]::after{transform:translateX(16px)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px}
+.kpi{background:var(--bg2);border-radius:12px;padding:10px;text-align:left}
+.kpi b{display:block;font-family:"Geist Mono",monospace;font-size:20px;font-weight:500}
+.kpi span{font-size:11px;color:var(--ink3)}
+.foot{margin-top:40px;color:var(--ink3);font-size:12px;text-align:center}
+.hint{font-size:12px;color:var(--ink3);margin-top:10px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="notice"><span class="dot"></span><span><b>가상 데이터</b> · 실제 숙소·예약·플랫폼·Channex 계정과 연결되지 않은 시연 화면입니다.</span></div>
+
+  <header class="top">
+    <div>
+      <span class="eyebrow">Channel sync demo</span>
+      <h1>예약은 순서대로, 재고는 <em>해당 구간만</em>, 답장은 검증된 것부터.</h1>
+      <p class="lede">채널 매니저 연동 숙박 관리 웹에서 예약 수신·요금 전송·AI 메시지가 어떻게 동작하고 어떻게 검수되는지 버튼으로 직접 확인하실 수 있습니다.</p>
+    </div>
+    <button class="theme" id="themeBtn" aria-label="화면 밝기 전환">◐</button>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="res"><small>RES</small>예약·재고</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="rate"><small>RATE</small>요금</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="ai"><small>AI</small>메시지</button>
+  </nav>
+
+  <!-- ① 예약 -->
+  <section class="panel on" id="p-res">
+    <div class="grid">
+      <div class="shell c7"><div class="core">
+        <h2>예약 알림 흘려보내기 <span class="id">RES-01·02</span></h2>
+        <p class="sub">버튼을 누르면 채널 매니저가 보낸 것처럼 알림이 들어옵니다. 알림은 예약 번호만 알려 주고, 실제 내용은 원본을 다시 조회해 저장한 뒤 ACK를 보냅니다.</p>
+        <div class="btns">
+          <button class="btn" id="bNew">신규 예약 <span class="ic">↗</span></button>
+          <button class="btn" id="bMod" disabled>일정 변경 <span class="ic">↗</span></button>
+          <button class="btn" id="bCan" disabled>취소 <span class="ic">↗</span></button>
+          <button class="btn" id="bDup" disabled>중복 알림 <span class="ic">↗</span></button>
+          <button class="btn" id="bRev">역순 도착 <span class="ic">↗</span></button>
+          <button class="btn" id="bLost">알림 누락 <span class="ic">↗</span></button>
+        </div>
+        <div class="btns">
+          <button class="btn pri" id="bFeed">미확인 목록 점검 <span class="ic">↻</span></button>
+          <button class="btn" id="bDrift">플랫폼 재고 대조 <span class="ic">⇄</span></button>
+          <button class="btn ghost plain" id="bReset">처음으로</button>
+        </div>
+        <div class="stat" id="resStat"></div>
+        <div class="scroll"><table>
+          <thead><tr><th>수신</th><th>revision</th><th>예약</th><th>상태</th><th>경로</th><th>처리</th><th>ACK</th></tr></thead>
+          <tbody id="revBody"><tr><td colspan="7" style="color:var(--ink3)">아직 받은 알림이 없습니다.</td></tr></tbody>
+        </table></div>
+      </div></div>
+
+      <div class="shell c5"><div class="core">
+        <h2>재고 캘린더 <span class="id">RES-03</span></h2>
+        <p class="sub">한옥스테이 서촌 · 온돌방 3실 · 11월. 날짜를 누르면 수동 판매중지를 켜고 끕니다.</p>
+        <div class="cal" id="cal"></div>
+        <div class="legend">
+          <span><i style="background:var(--ink3)"></i>기존 예약</span>
+          <span><i style="background:var(--acc)"></i>B-2001</span>
+          <span><i style="background:var(--warn)"></i>B-2002·2003</span>
+          <span><i style="background:var(--stop)"></i>수동 판매중지</span>
+        </div>
+      </div></div>
+
+      <div class="shell c12"><div class="core">
+        <h2>연동 로그 <span class="id">RES-04 · CHX-03</span></h2>
+        <p class="sub">마지막 확인 시각, 실패 원인, 원본 재조회, 재처리 이력이 모두 남습니다.</p>
+        <div class="log" id="resLog"></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ② 요금 -->
+  <section class="panel" id="p-rate">
+    <div class="grid">
+      <div class="shell c12"><div class="core">
+        <h2>목표 실수령액에서 등록가 역산 <span class="id">RATE-01·02</span></h2>
+        <p class="sub">숙소가 받고 싶은 금액을 넣으면 플랫폼별 수수료와 숙소 부담 할인을 되짚어 등록가를 계산합니다. 조건이 확정되지 않은 플랫폼은 확인 필요로 표시합니다.</p>
+        <div class="fields">
+          <label class="field">평일 목표 실수령액<input id="tWd" type="number" inputmode="numeric" value="120000" step="1000" min="0"></label>
+          <label class="field">주말 목표 실수령액<input id="tWe" type="number" inputmode="numeric" value="160000" step="1000" min="0"></label>
+          <label class="field">지정일 11/14 목표<input id="tSp" type="number" inputmode="numeric" value="190000" step="1000" min="0"></label>
+        </div>
+        <div class="scroll"><table>
+          <thead><tr><th>플랫폼</th><th>수수료</th><th>할인</th><th>할인 부담</th><th>평일 등록가</th><th>주말 등록가</th><th>지정일 등록가</th><th>예상 실수령(평일)</th><th>상태</th></tr></thead>
+          <tbody id="calcBody"></tbody>
+        </table></div>
+        <p class="hint">계산식: 등록가 = 목표 실수령액 ÷ (1 − 숙소 부담 할인율) ÷ (1 − 수수료율), 100원 단위 올림. 수수료가 할인 전 금액에 붙는지는 플랫폼 계약서로 확정합니다.</p>
+      </div></div>
+
+      <div class="shell c12"><div class="core">
+        <h2>일괄 변경과 단계별 전송 <span class="id">RATE-03·04</span></h2>
+        <p class="sub">여러 숙소·객실을 골라 미리보기를 확인한 뒤 전송합니다. 전송 중에는 다시 누를 수 없고, 실패한 줄만 다시 보냅니다.</p>
+        <div class="chk" id="roomChk"></div>
+        <div class="btns">
+          <button class="btn" id="bPrev">미리보기 <span class="ic">◎</span></button>
+          <button class="btn pri" id="bSend" disabled>전송 <span class="ic">↗</span></button>
+          <button class="btn" id="bRetry" disabled>실패만 재전송 <span class="ic">↻</span></button>
+        </div>
+        <div class="stat" id="rateStat"></div>
+        <div class="scroll"><table>
+          <thead><tr><th>숙소 · 객실</th><th>플랫폼</th><th>구분</th><th>등록가</th><th>내부저장 · 접수 · 재조회 · 반영</th><th>결과</th></tr></thead>
+          <tbody id="sendBody"><tr><td colspan="6" style="color:var(--ink3)">객실을 고르고 미리보기를 눌러 주세요.</td></tr></tbody>
+        </table></div>
+        <div class="log" id="rateLog" style="max-height:200px"></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ③ AI -->
+  <section class="panel" id="p-ai">
+    <div class="grid">
+      <div class="shell c4"><div class="core">
+        <h2>받은 문의 <span class="id">AI-01</span></h2>
+        <p class="sub">예약 B-2001에 연결된 손님 문의입니다.</p>
+        <div class="msgs" id="msgList"></div>
+      </div></div>
+
+      <div class="shell c8"><div class="core">
+        <h2>AI 초안과 근거 <span class="id">AI-01·02</span></h2>
+        <p class="sub">검증된 예약 정보와 숙소 안내만 근거로 초안을 만들고, 어떤 정보를 언제 확인했는지 함께 남깁니다.</p>
+        <div class="bubble" id="qText"></div>
+        <div class="draft" id="dText"></div>
+        <div class="stat" id="dStat"></div>
+        <div class="src" id="dSrc"></div>
+        <div class="btns">
+          <button class="btn pri" id="bAsIs">그대로 발송 <span class="ic">↗</span></button>
+          <button class="btn" id="bEdit">수정 후 발송 <span class="ic">✎</span></button>
+        </div>
+        <p class="hint">시연에서는 발송 1회를 1주 관찰 기록으로 셉니다. 같은 문의에는 한 번만 발송됩니다.</p>
+      </div></div>
+
+      <div class="shell c7"><div class="core">
+        <h2>유형별 자동발송 허용 <span class="id">AI-02</span></h2>
+        <p class="sub">4주 연속 운영자가 고치지 않은 유형만 자동발송을 켤 수 있습니다. 한 번이라도 고치면 0주로 돌아갑니다.</p>
+        <div class="btns"><button class="btn plain" id="bKill">전체 자동발송 중지</button></div>
+        <div class="types" id="typeList"></div>
+      </div></div>
+
+      <div class="shell c5"><div class="core">
+        <h2>분류와 기본 통계 <span class="id">AI-03</span></h2>
+        <p class="sub">환불·금액·클레임은 기록이 좋아도 자동발송하지 않고 운영자에게 넘깁니다.</p>
+        <div class="kpis" id="kpis"></div>
+        <div class="log" id="aiLog" style="max-height:220px"></div>
+      </div></div>
+    </div>
+  </section>
+
+  <p class="foot">시연용 가상 화면 · 숙소명, 예약번호, 금액, 수수료율은 모두 임의 값입니다.</p>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const won = n => n.toLocaleString('ko-KR');
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+let clock = new Date(2026, 10, 9, 10, 40, 0);
+const now = () => { clock = new Date(clock.getTime() + 7000); return clock.toTimeString().slice(0, 8); };
+function log(el, text, cls = '') {
+  const d = document.createElement('div');
+  d.innerHTML = `<time>${now()}</time><span class="${cls}">${text}</span>`;
+  el.prepend(d);
+}
+
+/* theme */
+$('#themeBtn').onclick = () => {
+  const r = document.documentElement;
+  const dark = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  r.dataset.theme = dark ? 'light' : 'dark';
+};
+/* tabs */
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('on', p.id === 'p-' + t.dataset.tab));
+});
+
+/* ================= ① 예약·재고 ================= */
+const CAP = 3, DAYS = 21, START = 9; // 11/9 ~ 11/29
+let R;
+function resetRes() {
+  R = {
+    channex: [],           // 채널 매니저 쪽 revision 원본 {id,booking,seq,status,from,to,acked}
+    seen: new Set(),       // 이미 처리한 revision id
+    bookings: { 'B-1001': { seq: 1, status: 'new', from: 12, to: 15, color: 'b3' }, 'B-1002': { seq: 1, status: 'new', from: 17, to: 19, color: 'b3' } },
+    stop: new Set([22]),   // 수동 판매중지
+    rows: [], revN: 0, lastDup: null, drift: null, last: '10:40:00', fail: 0
+  };
+  $('#resLog').innerHTML = '';
+  $('#revBody').innerHTML = '<tr><td colspan="7" style="color:var(--ink3)">아직 받은 알림이 없습니다.</td></tr>';
+  log($('#resLog'), '연결 확인: 시험 계정 · 시험 숙소 1곳 · 운영 계정과 분리됨', 'g');
+  renderRes();
+}
+const used = d => Object.values(R.bookings).filter(b => b.status !== 'cancelled' && d >= b.from && d < b.to);
+function renderCal(pulse = []) {
+  const wk = ['월', '화', '수', '목', '금', '토', '일'];
+  let h = wk.map(w => `<div class="h">${w}</div>`).join('');
+  for (let d = START; d < START + DAYS; d++) {
+    const u = used(d), stop = R.stop.has(d), avail = stop ? 0 : Math.max(0, CAP - u.length);
+    const drift = R.drift && R.drift.day === d;
+    const bars = Array.from({ length: CAP }, (_, i) => `<i class="${u[i] ? u[i].color : ''}"></i>`).join('');
+    h += `<button class="day ${stop ? 'stop' : ''} ${pulse.includes(d) ? 'pulse' : ''} ${drift ? 'drift' : ''}" data-d="${d}" aria-label="11월 ${d}일 판매 가능 ${avail}실">
+      <span class="d">11/${d}</span><span class="n">${avail}<small>/${CAP}</small></span>
+      ${stop ? '<span class="tag">중지</span>' : drift ? '<span class="tag" style="color:var(--bad)">불일치</span>' : ''}
+      <span class="bars">${bars}</span></button>`;
+  }
+  $('#cal').innerHTML = h;
+}
+$('#cal').onclick = e => {
+  const b = e.target.closest('.day'); if (!b) return;
+  const d = +b.dataset.d;
+  R.stop.has(d) ? R.stop.delete(d) : R.stop.add(d);
+  log($('#resLog'), `11/${d} 수동 판매중지 ${R.stop.has(d) ? '설정' : '해제'} → 재고 값 전송(stop_sell)`);
+  renderCal([d]);
+};
+function renderRes(pulse) {
+  renderCal(pulse);
+  const b = R.bookings['B-2001'];
+  $('#bMod').disabled = !b || b.status === 'cancelled';
+  $('#bCan').disabled = !b || b.status === 'cancelled';
+  $('#bDup').disabled = !R.lastDup;
+  const pend = R.channex.filter(r => !r.acked).length;
+  $('#resStat').innerHTML =
+    `<span class="pill ${R.fail ? 'warn' : 'ok'}"><span class="dot"></span>연동 ${R.fail ? '확인 필요' : '정상'}</span>
+     <span class="pill">마지막 확인 <span class="mono">${R.last}</span></span>
+     <span class="pill ${pend ? 'warn' : ''}">ACK 대기 <span class="mono">${pend}</span></span>
+     <span class="pill">처리 revision <span class="mono">${R.seen.size}</span></span>`;
+}
+function issue(booking, status, from, to, seq) {
+  const r = { id: 'rv_' + (++R.revN).toString().padStart(3, '0'), booking, seq, status, from, to, acked: false };
+  R.channex.push(r); return r;
+}
+function addRow(r, via, result, cls) {
+  if (R.rows.length === 0) $('#revBody').innerHTML = '';
+  const tr = document.createElement('tr'); tr.className = 'new';
+  const st = { new: '신규', modified: '변경', cancelled: '취소' }[r.status];
+  tr.innerHTML = `<td class="mono">${clock.toTimeString().slice(0, 8)}</td><td class="mono">${r.id}·#${r.seq}</td><td class="mono">${r.booking}</td>
+    <td>${st} ${r.status === 'cancelled' ? '' : `<span class="mono" style="color:var(--ink3)">11/${r.from}–${r.to}</span>`}</td>
+    <td>${via}</td><td><span class="pill ${cls}">${result}</span></td><td class="ack"><span class="pill warn">대기</span></td>`;
+  $('#revBody').prepend(tr); R.rows.push(tr);
+  return tr;
+}
+async function processRev(r, via) {
+  // 알림은 id만 → 원본 재조회
+  log($('#resLog'), `${via === '알림' ? '알림 수신' : '미확인 목록'}: ${r.booking} / ${r.id} → 원본 재조회`);
+  let result, cls, pulse = [];
+  const cur = R.bookings[r.booking];
+  if (R.seen.has(r.id)) { result = '중복 · 무시'; cls = ''; log($('#resLog'), `${r.id} 이미 처리한 revision이라 저장 생략, ACK만 다시 보냄`, 'w'); }
+  else if (cur && r.seq <= cur.seq) { result = '구버전 · 무시'; cls = 'warn'; R.seen.add(r.id); log($('#resLog'), `${r.booking} 현재 #${cur.seq}보다 오래된 #${r.seq}라 덮어쓰지 않음`, 'w'); }
+  else {
+    R.seen.add(r.id);
+    const color = r.booking === 'B-2001' ? 'b1' : 'b2';
+    if (r.status === 'cancelled') {
+      if (cur) { for (let d = cur.from; d < cur.to; d++) pulse.push(d); cur.status = 'cancelled'; cur.seq = r.seq; }
+      result = '반영 · 재고 해제'; cls = 'ok';
+      log($('#resLog'), `${r.booking} 취소: 11/${cur.from}–${cur.to} 구간만 재고 해제. 다른 예약·수동 판매중지는 유지`, 'g');
+    } else {
+      if (cur && cur.status !== 'cancelled') for (let d = cur.from; d < cur.to; d++) pulse.push(d);
+      R.bookings[r.booking] = { seq: r.seq, status: r.status, from: r.from, to: r.to, color };
+      for (let d = r.from; d < r.to; d++) pulse.push(d);
+      result = cur && cur.status !== 'cancelled' ? '반영 · 구간 이동' : '반영 · 재고 차감'; cls = 'ok';
+      log($('#resLog'), `${r.booking} #${r.seq} 저장 완료: 온돌방 · 11/${r.from}–${r.to} · 성인 2 · 확정`, 'g');
+    }
+  }
+  const tr = addRow(r, via, result, cls);
+  renderRes(pulse);
+  await sleep(500);
+  r.acked = true; R.last = clock.toTimeString().slice(0, 8);
+  tr.querySelector('.ack').innerHTML = '<span class="pill ok">200</span>';
+  log($('#resLog'), `저장 후 ACK 전송: ${r.id} → 200 OK`);
+  R.lastDup = r;
+  renderRes();
+}
+function lock(on) { document.querySelectorAll('#p-res .btn').forEach(b => { if (on) { b.dataset.was = b.disabled; b.disabled = true; } }); if (!on) renderResBtns(); }
+function renderResBtns() { ['bNew', 'bRev', 'bLost', 'bFeed', 'bDrift', 'bReset'].forEach(i => $('#' + i).disabled = false); renderRes(); }
+const run = fn => async () => { lock(true); try { await fn(); } finally { lock(false); } };
+
+$('#bNew').onclick = run(async () => {
+  if (R.bookings['B-2001'] && R.bookings['B-2001'].status !== 'cancelled') { log($('#resLog'), 'B-2001은 이미 들어와 있습니다. 변경·취소를 눌러 보세요.', 'w'); return; }
+  const seq = R.bookings['B-2001'] ? R.bookings['B-2001'].seq + 1 : 1;
+  await processRev(issue('B-2001', 'new', 20, 23, seq), '알림');
+});
+$('#bMod').onclick = run(async () => { const b = R.bookings['B-2001']; await processRev(issue('B-2001', 'modified', b.from + 1, b.to + 1, b.seq + 1), '알림'); });
+$('#bCan').onclick = run(async () => { const b = R.bookings['B-2001']; await processRev(issue('B-2001', 'cancelled', b.from, b.to, b.seq + 1), '알림'); });
+$('#bDup').onclick = run(async () => { log($('#resLog'), `같은 알림이 한 번 더 도착: ${R.lastDup.id}`, 'w'); await processRev(R.lastDup, '알림(재전송)'); });
+$('#bRev').onclick = run(async () => {
+  if (R.bookings['B-2002']) { log($('#resLog'), 'B-2002 시나리오는 이미 진행했습니다. 처음으로를 누르면 다시 볼 수 있습니다.', 'w'); return; }
+  const r1 = issue('B-2002', 'new', 10, 12, 1), r2 = issue('B-2002', 'modified', 25, 27, 2);
+  log($('#resLog'), 'B-2002: 변경(#2) 알림이 신규(#1)보다 먼저 도착', 'w');
+  await processRev(r2, '알림'); await sleep(250); await processRev(r1, '알림(지연)');
+});
+$('#bLost').onclick = run(async () => {
+  if (R.bookings['B-2003'] || R.channex.some(r => r.booking === 'B-2003')) { log($('#resLog'), 'B-2003은 이미 발생했습니다. 미확인 목록 점검을 눌러 보세요.', 'w'); return; }
+  issue('B-2003', 'new', 13, 14, 1); R.fail = 1;
+  log($('#resLog'), '채널 매니저에 B-2003이 생겼지만 알림이 도착하지 않음 (ACK 대기 1건)', 'e');
+  log($('#resLog'), '감시: ACK 대기 revision이 남아 있어 연동 상태를 확인 필요로 바꿈', 'w');
+  renderRes();
+});
+$('#bFeed').onclick = run(async () => {
+  const pend = R.channex.filter(r => !r.acked).sort((a, b) => a.id.localeCompare(b.id));
+  log($('#resLog'), `미확인 목록 조회(오래된 순): ${pend.length}건`);
+  for (const r of pend) await processRev(r, '목록 보충');
+  R.fail = 0; R.last = clock.toTimeString().slice(0, 8);
+  if (!pend.length) log($('#resLog'), '누락 없음. 마지막 확인 시각 갱신', 'g'); else log($('#resLog'), `누락 ${pend.length}건 보충 완료`, 'g');
+  renderRes();
+});
+$('#bDrift').onclick = run(async () => {
+  const day = 21;
+  const mine = R.stop.has(day) ? 0 : Math.max(0, CAP - used(day).length);
+  const theirs = mine + 1;
+  R.drift = { day }; renderRes();
+  log($('#resLog'), `대조: 11/${day} 내부 ${mine}실 · 플랫폼 ${theirs}실 → 불일치 감지`, 'e');
+  await sleep(600);
+  log($('#resLog'), `11/${day} 원본 재조회: 예약 기준 판매 가능 ${mine}실이 맞음 → 보정값 재전송`);
+  await sleep(600);
+  R.drift = null; renderRes([day]);
+  log($('#resLog'), `11/${day} 재조회 결과 일치. 오류·복구 이력에 기록`, 'g');
+});
+$('#bReset').onclick = () => resetRes();
+resetRes();
+
+/* ================= ② 요금 ================= */
+const PLAT = [
+  { name: '플랫폼 A', fee: .15, disc: .10, payer: '숙소', ok: true },
+  { name: '플랫폼 B', fee: .18, disc: .05, payer: '플랫폼', ok: true },
+  { name: '플랫폼 C', fee: .12, disc: .08, payer: '미확인', ok: false },
+];
+const ROOMS = [
+  { id: 'h1', name: '한옥스테이 서촌 · 온돌방' }, { id: 'h2', name: '한옥스테이 서촌 · 마당방' },
+  { id: 's1', name: '바다뷰 펜션 · 오션 트윈' }, { id: 's2', name: '바다뷰 펜션 · 패밀리' },
+];
+const listPrice = (net, p) => {
+  const host = p.payer === '숙소' || p.payer === '미확인' ? p.disc : 0; // 미확인은 보수적으로 숙소 부담 가정
+  return Math.ceil(net / (1 - host) / (1 - p.fee) / 100) * 100;
+};
+const netBack = (lp, p) => { const host = p.payer === '숙소' || p.payer === '미확인' ? p.disc : 0; return Math.floor(lp * (1 - host) * (1 - p.fee)); };
+const T = () => ({ wd: +$('#tWd').value || 0, we: +$('#tWe').value || 0, sp: +$('#tSp').value || 0 });
+function renderCalc() {
+  const t = T();
+  $('#calcBody').innerHTML = PLAT.map(p => `<tr><td>${p.name}</td><td class="mono">${p.fee * 100}%</td><td class="mono">${p.disc * 100}%</td>
+    <td>${p.payer === '미확인' ? '<span class="pill warn">확인 필요</span>' : p.payer}</td>
+    <td class="mono">${won(listPrice(t.wd, p))}</td><td class="mono">${won(listPrice(t.we, p))}</td><td class="mono">${won(listPrice(t.sp, p))}</td>
+    <td class="mono">${won(netBack(listPrice(t.wd, p), p))}</td>
+    <td>${p.ok ? '<span class="pill ok">조건 확정</span>' : '<span class="pill warn">부담 주체 미확인 · 숙소 부담 가정</span>'}</td></tr>`).join('');
+  if (Q.length && !sending) { Q = []; $('#bSend').disabled = true; $('#sendBody').innerHTML = '<tr><td colspan="6" style="color:var(--ink3)">금액이 바뀌었습니다. 미리보기를 다시 눌러 주세요.</td></tr>'; }
+}
+['#tWd', '#tWe', '#tSp'].forEach(s => $(s).addEventListener('input', renderCalc));
+$('#roomChk').innerHTML = ROOMS.map((r, i) => `<label><input type="checkbox" value="${r.id}" ${i < 3 ? 'checked' : ''}>${r.name}</label>`).join('');
+let Q = [], sending = false, batchN = 0;
+function rateStat() {
+  const c = s => Q.filter(q => q.state === s).length;
+  $('#rateStat').innerHTML = Q.length ? `<span class="pill">대상 <span class="mono">${Q.length}</span>줄</span>
+    <span class="pill ok">반영 <span class="mono">${c('done')}</span></span>
+    <span class="pill bad">실패 <span class="mono">${c('fail')}</span></span>
+    <span class="pill">대기 <span class="mono">${c('wait')}</span></span>` : '';
+  $('#bRetry').disabled = sending || !c('fail');
+  $('#bSend').disabled = sending || !c('wait');
+  $('#bPrev').disabled = sending;
+}
+function drawQ() {
+  $('#sendBody').innerHTML = Q.map((q, i) => `<tr><td>${q.room}</td><td>${q.plat}</td><td>${q.kind}</td><td class="mono">${won(q.price)}</td>
+    <td><span class="steps">${[0, 1, 2, 3].map(s => `<i class="${q.step > s ? 'ok' : q.step === s && q.state === 'run' ? 'run' : q.step === s && q.state === 'fail' ? 'bad' : ''}"></i>`).join('')}</span></td>
+    <td>${q.state === 'done' ? '<span class="pill ok">반영 확인</span>' : q.state === 'fail' ? `<span class="pill bad">${q.err}</span>` : q.state === 'run' ? '<span class="pill warn">진행 중</span>' : '<span class="pill">대기</span>'}
+    ${q.warn ? ' <span class="pill warn">확인 필요</span>' : ''}</td></tr>`).join('');
+  rateStat();
+}
+$('#bPrev').onclick = () => {
+  const sel = [...document.querySelectorAll('#roomChk input:checked')].map(i => ROOMS.find(r => r.id === i.value));
+  if (!sel.length) { $('#sendBody').innerHTML = '<tr><td colspan="6" style="color:var(--warn)">객실을 하나 이상 골라 주세요.</td></tr>'; Q = []; rateStat(); return; }
+  const t = T();
+  Q = [];
+  sel.forEach(r => PLAT.forEach(p => [['평일', t.wd], ['주말', t.we], ['11/14', t.sp]].forEach(([k, v]) =>
+    Q.push({ room: r.name, plat: p.name, kind: k, price: listPrice(v, p), warn: !p.ok, step: 0, state: 'wait', tries: 0 }))));
+  log($('#rateLog'), `미리보기: 객실 ${sel.length}개 × 플랫폼 ${PLAT.length}곳 × 3구분 = ${Q.length}줄. 확인 필요 ${Q.filter(q => q.warn).length}줄 포함`);
+  drawQ();
+};
+async function pipe(list) {
+  sending = true; rateStat();
+  const id = ++batchN;
+  log($('#rateLog'), `전송 #${id} 시작 (${list.length}줄). 같은 작업 중복 실행 잠금`);
+  for (const q of list) {
+    q.state = 'run'; q.tries++;
+    for (q.step = 0; q.step < 4; q.step++) {
+      drawQ(); await sleep(40);
+      const first = q.tries === 1;
+      if (first && q.step === 1 && q.room.includes('오션') && q.plat === '플랫폼 B' && q.kind === '주말') { q.state = 'fail'; q.err = '접수 거절 429'; break; }
+      if (first && q.step === 2 && q.room.includes('마당') && q.plat === '플랫폼 C' && q.kind === '평일') { q.state = 'fail'; q.err = '재조회 값 다름'; break; }
+    }
+    if (q.state === 'fail') log($('#rateLog'), `${q.room} · ${q.plat} · ${q.kind}: ${q.err}`, 'e');
+    else { q.state = 'done'; q.step = 4; }
+    drawQ();
+  }
+  sending = false;
+  const f = Q.filter(q => q.state === 'fail').length;
+  log($('#rateLog'), `전송 #${id} 종료: 반영 ${Q.filter(q => q.state === 'done').length} · 실패 ${f}`, f ? 'w' : 'g');
+  rateStat();
+}
+$('#bSend').onclick = () => { if (!sending) pipe(Q.filter(q => q.state === 'wait')); };
+$('#bRetry').onclick = () => { if (sending) return; const f = Q.filter(q => q.state === 'fail'); f.forEach(q => { q.state = 'wait'; q.step = 0; }); log($('#rateLog'), `실패 ${f.length}줄만 다시 전송 (성공한 줄은 건드리지 않음)`); pipe(f); };
+renderCalc();
+
+/* ================= ③ AI 메시지 ================= */
+const BOOK = { id: 'B-2001', room: '한옥스테이 서촌 · 온돌방', from: '11월 20일(금)', to: '11월 23일(월)', pax: '성인 2명', status: '확정', at: '10:42' };
+const INFO = { checkin: '15:00', checkout: '11:00', parking: '골목 입구 공영주차장(숙소에서 도보 3분), 1일 1만 원은 손님 부담', wifi: 'seochon_guest / 비밀번호는 객실 안내문', at: '10-28 운영자 확인' };
+const TYPES = {
+  checkin: { name: '체크인·체크아웃 안내', weeks: 4, auto: false },
+  parking: { name: '주차 안내', weeks: 2, auto: false },
+  wifi: { name: '와이파이·편의시설', weeks: 3, auto: false },
+  people: { name: '인원 변경', weeks: 0, auto: false },
+  refund: { name: '환불', ex: true }, price: { name: '금액 문의', ex: true }, claim: { name: '클레임', ex: true },
+};
+const MSGS = [
+  { id: 'm1', type: 'checkin', q: '안녕하세요, 20일에 몇 시부터 들어갈 수 있나요?' },
+  { id: 'm2', type: 'parking', q: '차 가져가는데 주차할 곳 있을까요?' },
+  { id: 'm3', type: 'wifi', q: '와이파이 비밀번호가 뭔가요?' },
+  { id: 'm4', type: 'people', q: '친구 한 명 더 데려가도 될까요?' },
+  { id: 'm5', type: 'refund', q: '일정이 꼬여서 취소하면 환불 얼마나 되나요?' },
+  { id: 'm6', type: 'price', q: '하루 더 연장하면 얼마예요?' },
+  { id: 'm7', type: 'claim', q: '지난번 방문 때 청소가 안 돼 있었는데 이번엔 괜찮나요?' },
+];
+const A = { cur: 'm1', sent: new Set(), kill: false, stat: { sent: 0, edit: 0, ex: 0, lack: 0 } };
+function draft(m) {
+  const g = '안녕하세요, 한옥스테이 서촌입니다.\n';
+  switch (m.type) {
+    case 'checkin': return { text: `${g}${BOOK.from} 체크인은 오후 ${INFO.checkin}부터, ${BOOK.to} 체크아웃은 오전 ${INFO.checkout}까지입니다. 도착 전에 연락 주시면 출입 방법을 안내해 드리겠습니다.`, src: [['예약 일정 · ' + BOOK.from + '–' + BOOK.to, '재조회 ' + BOOK.at], ['숙소 안내 · 체크인 ' + INFO.checkin + ' / 체크아웃 ' + INFO.checkout, INFO.at]] };
+    case 'parking': return { text: `${g}숙소 전용 주차장은 없고, ${INFO.parking}입니다. 짐이 많으시면 숙소 앞에서 잠시 내리신 뒤 주차하시면 편합니다.`, src: [['숙소 안내 · 주차', INFO.at], ['예약 상태 · ' + BOOK.status, '재조회 ' + BOOK.at]] };
+    case 'wifi': return { text: `${g}와이파이 이름은 ${INFO.wifi.split(' / ')[0]}이고, 비밀번호는 객실 안 안내문에 적어 두었습니다.`, src: [['숙소 안내 · 와이파이', INFO.at]] };
+    case 'people': return { lack: true, text: `${g}현재 예약은 ${BOOK.pax}입니다. 인원 추가 가능 여부와 추가 요금은 확인 후 바로 안내드리겠습니다.`, src: [['예약 인원 · ' + BOOK.pax, '재조회 ' + BOOK.at], ['숙소 안내 · 최대 인원·추가 요금', '등록 안 됨']] };
+    default: return { ex: true, text: `${g}문의 주셔서 감사합니다. 담당자가 예약 내용을 확인한 뒤 직접 답변드리겠습니다.`, src: [['자동발송 제외 유형 · ' + TYPES[m.type].name, '운영자 확인 필요']] };
+  }
+}
+function renderAI() {
+  $('#msgList').innerHTML = MSGS.map(m => `<button class="msg" aria-pressed="${m.id === A.cur}" data-id="${m.id}"><span>${m.q}</span>
+    ${A.sent.has(m.id) ? '<span class="pill ok">발송됨</span>' : TYPES[m.type].ex ? '<span class="pill bad">제외</span>' : '<span class="pill">' + TYPES[m.type].name.split('·')[0] + '</span>'}</button>`).join('');
+  const m = MSGS.find(x => x.id === A.cur), d = draft(m), t = TYPES[m.type];
+  $('#qText').textContent = m.q;
+  $('#dText').textContent = d.text;
+  $('#dText').className = 'draft' + (d.ex ? ' blocked' : '');
+  $('#dStat').innerHTML = `<span class="pill">${t.name}</span>` +
+    (d.ex ? '<span class="pill bad">자동발송 제외 · 운영자 직접 답변</span>' : d.lack ? '<span class="pill warn">정보 부족 · 숙소 안내 보충 필요</span>' : '<span class="pill ok">근거 일치</span>') +
+    (!t.ex && t.auto && !A.kill ? '<span class="pill acc">이 유형 자동발송 허용됨</span>' : '');
+  $('#dSrc').innerHTML = d.src.map(([a, b]) => `<div><span>${a}</span><span>${b}</span></div>`).join('');
+  const sent = A.sent.has(m.id);
+  $('#bAsIs').disabled = sent || d.ex || d.lack; $('#bEdit').disabled = sent;
+  $('#bAsIs').firstChild.textContent = sent ? '발송 완료 ' : '그대로 발송 ';
+  $('#typeList').innerHTML = Object.entries(TYPES).map(([k, v]) => v.ex
+    ? `<div class="type"><div><b>${v.name}</b><p class="sub">기록과 관계없이 항상 운영자 확인</p></div><span class="pill bad">제외</span><span></span></div>`
+    : `<div class="type"><div><b>${v.name}</b><p class="sub">무수정 ${v.weeks}/4주${v.weeks < 4 ? ' · 관찰 중' : ' · 허용 가능'}</p></div>
+       <span class="weeks">${[0, 1, 2, 3].map(i => `<i class="${i < v.weeks ? 'on' : ''}"></i>`).join('')}</span>
+       <button class="sw" role="switch" aria-label="${v.name} 자동발송" aria-checked="${v.auto && !A.kill}" data-k="${k}" ${v.weeks < 4 || A.kill ? 'disabled' : ''}></button></div>`).join('');
+  $('#bKill').textContent = A.kill ? '자동발송 다시 허용' : '전체 자동발송 중지';
+  const s = A.stat;
+  $('#kpis').innerHTML = [['발송', s.sent], ['수정', s.edit], ['제외', s.ex], ['정보 부족', s.lack]].map(([a, b]) => `<div class="kpi"><b>${b}</b><span>${a}</span></div>`).join('');
+}
+$('#msgList').onclick = e => {
+  const b = e.target.closest('.msg'); if (!b) return; A.cur = b.dataset.id;
+  const m = MSGS.find(x => x.id === A.cur), d = draft(m);
+  if (!A.sent.has(m.id) && !m.counted) {
+    m.counted = true;
+    if (d.ex) { A.stat.ex++; log($('#aiLog'), `${m.id} ${TYPES[m.type].name}: 자동발송 제외로 분류, 운영자에게 넘김`, 'e'); }
+    else if (d.lack) { A.stat.lack++; log($('#aiLog'), `${m.id} 정보 부족: 최대 인원·추가 요금 안내가 없어 확인 대상으로 분류`, 'w'); }
+  }
+  renderAI();
+};
+function send(edited) {
+  const m = MSGS.find(x => x.id === A.cur), t = TYPES[m.type];
+  if (A.sent.has(m.id)) return; // 중복 발송 방지
+  A.sent.add(m.id); A.stat.sent++;
+  if (!t.ex) {
+    if (edited) { t.weeks = 0; t.auto = false; A.stat.edit++; log($('#aiLog'), `${m.id} 운영자 수정 후 발송 → ${t.name} 무수정 기록 0주로 초기화`, 'w'); }
+    else { t.weeks = Math.min(4, t.weeks + 1); log($('#aiLog'), `${m.id} 수정 없이 발송 → ${t.name} 무수정 ${t.weeks}/4주`, 'g'); }
+  } else log($('#aiLog'), `${m.id} 운영자가 직접 작성해 발송`, '');
+  renderAI();
+}
+$('#bAsIs').onclick = () => send(false);
+$('#bEdit').onclick = () => send(true);
+$('#typeList').onclick = e => {
+  const s = e.target.closest('.sw'); if (!s || s.disabled) return;
+  const t = TYPES[s.dataset.k]; t.auto = !t.auto;
+  log($('#aiLog'), `${t.name} 자동발송 ${t.auto ? '켬' : '끔'} (운영자 기록 남김)`, t.auto ? 'g' : '');
+  renderAI();
+};
+$('#bKill').onclick = () => { A.kill = !A.kill; log($('#aiLog'), A.kill ? '전체 자동발송 중지. 모든 초안은 운영자 확인 대기로 전환' : '자동발송 중지 해제. 허용된 유형만 다시 동작', A.kill ? 'e' : 'g'); renderAI(); };
+log($('#aiLog'), '초안 생성은 서버에서만 실행, 비밀키는 브라우저에 두지 않음 (COM-01)');
+renderAI();
+</script>
+</body>
+</html>
