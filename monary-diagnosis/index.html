@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>1단계 진단 보고서 샘플</title>
+<meta name="description" content="가상 '용돈 앱 예시'에 대한 금융앱 1단계 진단 보고서 샘플. 위험도 분류, 항목별 재현·근거·수정안·견적, Supabase 판단, AWS 이관 영향 (가상 데이터)">
+<style>
+:root{
+  --bg:#f3f2ee;--shell:rgba(20,24,30,.04);--surface:#fdfcfa;--surface2:#f1efea;--hair:rgba(20,24,30,.08);
+  --ink:#15181d;--ink2:#474d57;--ink3:#737985;
+  --accent:#1f5f55;--accent-soft:#e1ece8;
+  --crit:#b3261e;--crit-bg:#f9e3e0;--high:#b85c12;--high-bg:#fbeadb;
+  --mid:#8a6d00;--mid-bg:#f6efd2;--low:#4f6070;--low-bg:#e7ebef;
+  --code-bg:#171a1f;--code-ink:#dfe3ea;--code-add:#8fd6a8;--code-del:#f19a92;--code-cm:#8a93a1;
+  --ease:cubic-bezier(.32,.72,0,1);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1113;--shell:rgba(255,255,255,.04);--surface:#171a1d;--surface2:#1e2226;--hair:rgba(255,255,255,.09);
+  --ink:#e9ebee;--ink2:#b5bbc4;--ink3:#8a919b;
+  --accent:#6fc2b2;--accent-soft:#17302b;
+  --crit:#f2867c;--crit-bg:#3a1b19;--high:#f0a463;--high-bg:#3a2616;
+  --mid:#e0c457;--mid-bg:#332c12;--low:#a8b6c4;--low-bg:#232a31;
+  --code-bg:#0a0c0e;color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0f1113;--shell:rgba(255,255,255,.04);--surface:#171a1d;--surface2:#1e2226;--hair:rgba(255,255,255,.09);
+  --ink:#e9ebee;--ink2:#b5bbc4;--ink3:#8a919b;
+  --accent:#6fc2b2;--accent-soft:#17302b;
+  --crit:#f2867c;--crit-bg:#3a1b19;--high:#f0a463;--high-bg:#3a2616;
+  --mid:#e0c457;--mid-bg:#332c12;--low:#a8b6c4;--low-bg:#232a31;
+  --code-bg:#0a0c0e;color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 "Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;overflow-x:hidden;word-break:keep-all;overflow-wrap:anywhere}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+h1{font-size:clamp(28px,4.6vw,46px);line-height:1.15;letter-spacing:-.035em;margin:14px 0 14px;font-weight:750}
+h2{font-size:clamp(21px,2.6vw,28px);letter-spacing:-.025em;margin:10px 0 8px;line-height:1.25}
+h3{font-size:17px;margin:0;letter-spacing:-.015em;line-height:1.35}
+p{margin:0 0 10px}
+.lead{color:var(--ink2);max-width:66ch;font-size:16px}
+.muted{color:var(--ink3);font-size:13px}
+code,pre{font-family:"JetBrains Mono","D2Coding",Consolas,ui-monospace,monospace}
+.ribbon{background:var(--ink);color:var(--bg);font-size:13px;padding:10px 24px;text-align:center}
+.ribbon b{font-weight:700}
+.eyebrow{display:inline-block;border-radius:999px;padding:4px 12px;font-size:11px;letter-spacing:.16em;font-weight:600;background:var(--accent-soft);color:var(--accent)}
+section{padding:72px 0 8px}
+.hero{padding:56px 0 8px}
+/* double bezel */
+.bezel{background:var(--shell);border-radius:26px;padding:6px;box-shadow:0 0 0 1px var(--hair)}
+.core{background:var(--surface);border-radius:20px;padding:24px;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 18px 40px -28px rgba(20,24,30,.25)}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:0}
+.meta div{padding:4px 20px;border-left:1px solid var(--hair)}
+.meta div:first-child{border-left:0;padding-left:0}
+.meta dt{font-size:12px;color:var(--ink3)}
+.meta dd{margin:2px 0 0;font-weight:650}
+/* summary bento */
+.bento{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-top:24px}
+.bento>.bezel,.two>.bezel{display:flex}.bento .core,.two .core{flex:1}
+.nw{white-space:nowrap}
+.counts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.cnt{border-radius:16px;padding:16px 14px}
+.cnt b{display:block;font-size:34px;line-height:1;letter-spacing:-.03em}
+.cnt span{font-size:13px;font-weight:600}
+.s-crit{background:var(--crit-bg);color:var(--crit)}
+.s-high{background:var(--high-bg);color:var(--high)}
+.s-mid{background:var(--mid-bg);color:var(--mid)}
+.s-low{background:var(--low-bg);color:var(--low)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--hair);vertical-align:top}
+th{white-space:nowrap;font-size:12px;color:var(--ink3);font-weight:600;background:var(--surface2)}
+th:first-child{border-top-left-radius:10px}th:last-child{border-top-right-radius:10px}
+tr:last-child td{border-bottom:0}
+td:first-child,td:last-child{white-space:nowrap}
+.bezel,.core{min-width:0}
+.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700;white-space:nowrap}
+/* filter */
+.filter{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 18px}
+.filter button{font:inherit;font-size:13px;font-weight:600;border:0;border-radius:999px;padding:8px 16px;background:var(--surface);color:var(--ink2);box-shadow:0 0 0 1px var(--hair);cursor:pointer;transition:transform .5s var(--ease),background .5s var(--ease)}
+.filter button:active{transform:scale(.97)}
+.filter button[aria-pressed="true"]{background:var(--ink);color:var(--bg);box-shadow:none}
+/* findings */
+.find{margin-bottom:16px}
+.find .core{padding:0;overflow:hidden}
+.fhead{display:flex;gap:14px;align-items:flex-start;padding:22px 24px 16px}
+.fid{font:600 12px/1 "JetBrains Mono",Consolas,monospace;color:var(--ink3);padding-top:6px;min-width:44px}
+.fhead .area{font-size:12px;color:var(--ink3);margin-top:4px}
+.fhead .pill{margin-left:auto;flex-shrink:0}
+.fgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--hair)}
+.fgrid>div{min-width:0;padding:16px 24px;border-bottom:1px solid var(--hair)}
+.fgrid>div:nth-child(odd){border-right:1px solid var(--hair)}
+.fgrid .full{grid-column:1/-1;border-right:0!important}
+.lbl{font-size:11px;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-bottom:6px}
+ol.steps{margin:0;padding-left:18px}
+ol.steps li{margin:2px 0}
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:14px 16px;font-size:12.5px;line-height:1.6;overflow-x:auto;margin:6px 0 0;white-space:pre}
+pre .cm{color:var(--code-cm)}pre .add{color:var(--code-add)}pre .del{color:var(--code-del)}
+.cost{display:flex;gap:28px;flex-wrap:wrap;padding:14px 24px;background:var(--surface2);font-size:14px}
+.cost b{font-variant-numeric:tabular-nums}
+.find[hidden]{display:none}
+/* checklist */
+.check{list-style:none;margin:0;padding:0}
+.check li{display:grid;grid-template-columns:52px 1fr auto;gap:10px;padding:12px 0;border-bottom:1px solid var(--hair);align-items:start}
+.check li:last-child{border-bottom:0}
+.mk{justify-self:start;height:22px;padding:0 8px;border-radius:999px;display:grid;place-items:center;white-space:nowrap;font-size:12px;font-weight:800;margin-top:1px}
+.mk.y{background:var(--accent-soft);color:var(--accent)}
+.mk.n{background:var(--high-bg);color:var(--high)}
+.verdict{margin-top:16px;border-radius:16px;padding:18px 20px;background:var(--accent-soft);color:var(--ink)}
+.verdict b{color:var(--accent)}
+.two{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-top:22px}
+footer{padding:64px 0 48px;color:var(--ink3);font-size:13px}
+/* reveal: content visible by default; JS adds motion only */
+.rv{transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.js .rv.pre{opacity:0;transform:translateY(24px)}
+@media (prefers-reduced-motion:reduce){.rv{transition:none}.js .rv.pre{opacity:1;transform:none}}
+@media (max-width:820px){
+  .wrap{padding:0 16px}
+  .ribbon{padding:10px 16px}
+  section{padding:52px 0 4px}
+  .hero{padding:36px 0 4px}
+  .meta{grid-template-columns:1fr 1fr;gap:14px 16px}
+  .meta div{border-left:0;padding:0}
+  .bento,.two{grid-template-columns:1fr}
+  .core{padding:18px}
+  .fgrid{grid-template-columns:minmax(0,1fr)}
+  .wide table{min-width:540px}
+  .check li{grid-template-columns:52px 1fr;row-gap:2px}
+  .check li .muted{grid-column:2}
+  .fgrid>div{border-right:0!important;padding:14px 18px}
+  .fhead{padding:18px 18px 14px;flex-wrap:wrap}
+  .fhead .pill{margin-left:0}
+  .fid{min-width:0}
+  .cost{padding:12px 18px;gap:14px 22px}
+  .counts{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="ribbon"><b>가상 데이터로 만든 샘플입니다.</b> "용돈 앱 예시"는 견적 설명용으로 만든 가상의 앱이며, 모든 항목·코드·수치는 실제 서비스와 관계없습니다.</div>
+
+<main class="wrap">
+<header class="hero rv">
+  <span class="eyebrow">1단계 진단 보고서 · 샘플</span>
+  <h1>용돈 앱 예시<br>종합 진단 결과</h1>
+  <p class="lead">재개발 없이 현재 소스와 출시 빌드를 그대로 두고, 무엇이 위험한지와 고치는 데 얼마가 드는지를 항목별로 정리한 보고서의 형식 견본입니다. 실제 보고서는 같은 틀에 발견된 모든 항목이 들어갑니다.</p>
+  <div class="bezel"><div class="core">
+    <dl class="meta">
+      <div><dt>진단 대상</dt><dd>웹·관리자·iOS·Android</dd></div>
+      <div><dt>스택</dt><dd>Next.js · Supabase · Capacitor</dd></div>
+      <div><dt>진단 기간</dt><dd>10영업일 (가상)</dd></div>
+      <div><dt>범위</dt><dd>기술·보안·결제·UX·출시·인프라</dd></div>
+    </dl>
+  </div></div>
+</header>
+
+<section id="summary">
+  <div class="rv">
+    <span class="eyebrow">01 요약</span>
+    <h2>위험도별 발견 건수</h2>
+    <p class="lead">각 항목은 사고가 났을 때의 피해 크기와 실제로 일어날 가능성을 함께 따져 네 단계로 나눕니다.</p>
+  </div>
+  <div class="bento">
+    <div class="bezel rv"><div class="core">
+      <h3>발견 항목 23건 (가상)</h3>
+      <div class="counts">
+        <div class="cnt s-crit"><b>2</b><span>치명</span></div>
+        <div class="cnt s-high"><b>4</b><span>높음</span></div>
+        <div class="cnt s-mid"><b>9</b><span>중간</span></div>
+        <div class="cnt s-low"><b>8</b><span>낮음</span></div>
+      </div>
+      <p class="muted" style="margin-top:14px">아래 상세에는 대표 항목 6건만 싣고, 나머지는 실제 보고서의 오류 목록 시트에 같은 형식으로 들어갑니다.</p>
+    </div></div>
+    <div class="bezel rv"><div class="core">
+      <h3>분류 기준</h3>
+      <div class="tbl"><table style="margin-top:10px">
+        <thead><tr><th>단계</th><th>기준</th><th>처리 시점</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill s-crit">치명</span></td><td>타인 데이터 열람, 금액 오류, 결제 이중 처리</td><td class="nw">즉시</td></tr>
+          <tr><td><span class="pill s-high">높음</span></td><td>법적 의무 미이행, 심사 반려 가능</td><td class="nw">출시 전</td></tr>
+          <tr><td><span class="pill s-mid">중간</span></td><td>특정 조건에서 기능 오류, 운영 부담</td><td class="nw">2단계 안</td></tr>
+          <tr><td><span class="pill s-low">낮음</span></td><td>문구·일관성·사소한 UI</td><td class="nw">여유 시</td></tr>
+        </tbody>
+      </table></div>
+    </div></div>
+  </div>
+</section>
+
+<section id="findings">
+  <div class="rv">
+    <span class="eyebrow">02 항목별 상세</span>
+    <h2>증상, 재현, 근거, 수정안, 견적</h2>
+    <p class="lead">한 항목은 한 장으로 끝나도록 씁니다. 개발자가 아니어도 증상과 견적만 읽고 우선순위를 정할 수 있게 하고, 근거와 재현 절차는 다른 개발자가 검증할 수 있게 남깁니다.</p>
+  </div>
+  <div class="filter" role="group" aria-label="위험도 필터">
+    <button aria-pressed="true" data-f="all">전체 6</button>
+    <button aria-pressed="false" data-f="crit">치명 2</button>
+    <button aria-pressed="false" data-f="high">높음 3</button>
+    <button aria-pressed="false" data-f="mid">중간 1</button>
+  </div>
+
+  <article class="find bezel rv" data-s="crit"><div class="core">
+    <div class="fhead"><span class="fid">SEC-01</span><div><h3>자녀 거래내역 테이블에 행 단위 보안 정책이 빠져 있음</h3><div class="area">보안 · Supabase RLS</div></div><span class="pill s-crit">치명</span></div>
+    <div class="fgrid">
+      <div><div class="lbl">증상</div><p>로그인한 아무 부모 계정이 공개 키만으로 다른 가족의 용돈 거래내역을 조회할 수 있습니다. 앱 화면에서는 보이지 않지만 API를 직접 부르면 열립니다.</p></div>
+      <div><div class="lbl">재현 절차</div><ol class="steps"><li>시험 가족 A, B 계정 생성</li><li>A 계정 토큰으로 transactions 테이블 조회</li><li>B 가족 행이 함께 반환되는지 확인</li></ol></div>
+      <div class="full"><div class="lbl">근거</div>
+<pre><span class="cm">-- 현재: RLS는 켜져 있으나 SELECT 정책이 모두 허용</span>
+alter table transactions enable row level security;
+<span class="del">create policy "read all" on transactions for select using (true);</span>
+
+<span class="cm">-- 수정안: 같은 가족 구성원만 조회</span>
+<span class="add">create policy "family read" on transactions for select
+  using (family_id in (
+    select family_id from family_members where user_id = auth.uid()
+  ));</span></pre></div>
+      <div class="full"><div class="lbl">수정안</div><p>전 테이블의 정책을 표로 뽑아 허용 범위를 확인하고, 가족 단위 정책으로 교체합니다. 관리자 기능은 서비스 키를 쓰는 서버 함수로만 남기고, 수정 후 시험 계정으로 교차 조회가 막히는지 다시 확인합니다.</p></div>
+    </div>
+    <div class="cost"><span>예상 공수 <b>3일</b></span><span>개선 견적 <b>120만원</b></span><span>재검증 포함</span></div>
+  </div></article>
+
+  <article class="find bezel rv" data-s="crit"><div class="core">
+    <div class="fhead"><span class="fid">FIN-02</span><div><h3>용돈 지급과 이자 정산이 동시에 돌면 잔액이 덮어써짐</h3><div class="area">기술·기능 · 금융 데이터 정합성</div></div><span class="pill s-crit">치명</span></div>
+    <div class="fgrid">
+      <div><div class="lbl">증상</div><p>매월 1일 이자 정산 작업과 부모의 수동 용돈 지급이 몇 초 차이로 겹치면 한쪽 금액이 사라집니다. 거래 기록은 두 건인데 잔액은 한 건만 반영됩니다.</p></div>
+      <div><div class="lbl">재현 절차</div><ol class="steps"><li>시험 계정 잔액 10,000원</li><li>이자 정산과 지급 5,000원을 동시에 20회 호출</li><li>최종 잔액과 거래 합계 비교 (가상 결과: 20회 중 6회 불일치)</li></ol></div>
+      <div class="full"><div class="lbl">근거</div>
+<pre><span class="cm">// 현재: 읽고 계산한 뒤 덮어쓰기 (두 요청이 같은 값을 읽음)</span>
+<span class="del">const { balance } = await getWallet(childId)
+await updateWallet(childId, { balance: balance + amount })</span>
+
+<span class="cm">-- 수정안: DB 함수 안에서 한 번에 더하고 기록 (원자적 처리)</span>
+<span class="add">update wallets set balance = balance + p_amount
+ where child_id = p_child returning balance;</span></pre></div>
+      <div class="full"><div class="lbl">수정안</div><p>잔액 변경은 모두 DB 함수 하나로 모으고, 거래 기록과 잔액 갱신을 같은 트랜잭션에 묶습니다. 정산 작업에는 중복 실행 방지 키를 붙이고, 거래 합계와 잔액이 맞는지 매일 대조하는 점검 쿼리를 남깁니다.</p></div>
+    </div>
+    <div class="cost"><span>예상 공수 <b>2.5일</b></span><span>개선 견적 <b>100만원</b></span><span>동시 호출 시험 포함</span></div>
+  </div></article>
+
+  <article class="find bezel rv" data-s="high"><div class="core">
+    <div class="fhead"><span class="fid">PAY-03</span><div><h3>결제 웹훅이 서명 확인 없이 처리되고, 같은 알림이 두 번 오면 두 번 충전됨</h3><div class="area">결제·구독 · PortOne 웹훅</div></div><span class="pill s-high">높음</span></div>
+    <div class="fgrid">
+      <div><div class="lbl">증상</div><p>결제사는 응답이 늦으면 같은 웹훅을 다시 보냅니다. 현재는 재전송마다 충전이 새로 일어나고, 서명을 보지 않아 외부에서 위조한 요청도 받아들입니다.</p></div>
+      <div><div class="lbl">재현 절차</div><ol class="steps"><li>테스트 채널에서 결제 1건 완료</li><li>같은 웹훅 본문을 두 번 전송</li><li>서명 헤더를 지운 요청도 전송</li><li>충전 건수와 응답 코드 확인</li></ol></div>
+      <div class="full"><div class="lbl">수정안</div><p>웹훅 서명을 먼저 확인하고, 결제 고유번호를 기준으로 이미 처리한 알림은 건너뜁니다. 웹훅 본문의 금액을 그대로 믿지 않고 결제사 조회 API로 실제 결제 상태와 금액을 다시 확인한 뒤 반영합니다.</p></div>
+    </div>
+    <div class="cost"><span>예상 공수 <b>2일</b></span><span>개선 견적 <b>80만원</b></span><span>테스트 채널에서만 시험</span></div>
+  </div></article>
+
+  <article class="find bezel rv" data-s="high"><div class="core">
+    <div class="fhead"><span class="fid">PAY-04</span><div><h3>정기구독 갱신 실패 후 환불하면 구독 상태가 '이용 중'으로 남음</h3><div class="area">결제·구독 · 상태 전이</div></div><span class="pill s-high">높음</span></div>
+    <div class="fgrid">
+      <div><div class="lbl">증상</div><p>갱신 결제가 실패한 상태에서 관리자가 지난 회차를 환불하면, 결제는 취소됐는데 앱에서는 유료 기능이 계속 열립니다.</p></div>
+      <div><div class="lbl">재현 절차</div><ol class="steps"><li>테스트 카드로 구독 시작</li><li>갱신일에 실패 카드로 교체</li><li>관리자 화면에서 직전 회차 환불</li><li>앱의 구독 상태와 유료 기능 확인</li></ol></div>
+      <div class="full"><div class="lbl">근거 · 상태 전이표 (발췌)</div>
+        <div class="tbl"><table>
+          <thead><tr><th>현재 상태</th><th>사건</th><th>기대 상태</th><th>실제 (가상)</th></tr></thead>
+          <tbody>
+            <tr><td>이용 중</td><td>갱신 성공</td><td>이용 중</td><td>이용 중</td></tr>
+            <tr><td>이용 중</td><td>갱신 실패</td><td>결제 대기</td><td>결제 대기</td></tr>
+            <tr><td>결제 대기</td><td>환불</td><td>해지</td><td><span class="pill s-high">이용 중</span></td></tr>
+            <tr><td>해지 예약</td><td>기간 만료</td><td>해지</td><td>해지</td></tr>
+          </tbody>
+        </table></div></div>
+      <div class="full"><div class="lbl">수정안</div><p>구독 상태를 한 곳에서만 바꾸도록 모으고, 허용된 전이만 통과시킵니다. 위 표의 모든 칸을 테스트 채널에서 실행해 재검증 결과서에 남깁니다.</p></div>
+    </div>
+    <div class="cost"><span>예상 공수 <b>3일</b></span><span>개선 견적 <b>120만원</b></span><span>전이표 전 칸 재검증</span></div>
+  </div></article>
+
+  <article class="find bezel rv" data-s="high"><div class="core">
+    <div class="fhead"><span class="fid">PRV-05</span><div><h3>만 14세 미만 자녀 가입에 법정대리인 동의 기록이 없고, 탈퇴 후 자녀 데이터가 남음</h3><div class="area">보안·개인정보 · 아동 개인정보</div></div><span class="pill s-high">높음</span></div>
+    <div class="fgrid">
+      <div><div class="lbl">증상</div><p>부모가 자녀를 추가할 때 동의 화면은 있지만 동의 일시·방법이 저장되지 않습니다. 부모가 탈퇴하면 부모 계정만 지워지고 자녀 프로필과 거래내역이 그대로 남습니다.</p></div>
+      <div><div class="lbl">재현 절차</div><ol class="steps"><li>부모 계정으로 자녀 추가</li><li>동의 기록 테이블 확인</li><li>부모 탈퇴 실행</li><li>자녀 관련 테이블 잔존 여부 확인</li></ol></div>
+      <div class="full"><div class="lbl">수정안</div><p>동의 기록을 별도로 남기고, 탈퇴 시 즉시 지울 것과 법정 보존기간 동안 분리 보관할 것을 데이터별로 나눈 삭제·보존 표를 만든 뒤 그대로 구현합니다. 개인정보 처리방침 문구와 실제 동작이 일치하는지도 대조합니다.</p></div>
+    </div>
+    <div class="cost"><span>예상 공수 <b>2.5일</b></span><span>개선 견적 <b>100만원</b></span><span>삭제·보존 표 포함</span></div>
+  </div></article>
+
+  <article class="find bezel rv" data-s="mid"><div class="core">
+    <div class="fhead"><span class="fid">REL-06</span><div><h3>스토어에 올라간 빌드와 저장소 기본 브랜치의 웹 번들이 다름</h3><div class="area">출시·운영 · Capacitor 빌드</div></div><span class="pill s-mid">중간</span></div>
+    <div class="fgrid">
+      <div><div class="lbl">증상</div><p>출시된 앱 안의 웹 번들이 저장소 최신 코드보다 한참 이전 커밋에서 만들어졌습니다. 소스를 고쳐도 앱에 반영됐는지 아무도 확인할 수 없는 상태입니다.</p></div>
+      <div><div class="lbl">재현 절차</div><ol class="steps"><li>출시 빌드 파일에서 웹 번들 추출</li><li>저장소 커밋별로 빌드해 해시 비교</li><li>일치하는 커밋을 찾아 차이 목록 작성</li></ol></div>
+      <div class="full"><div class="lbl">수정안</div><p>빌드할 때 커밋 번호와 버전을 앱 안에 새기고, 출시 절차를 문서 한 장으로 고정합니다. 이후 출시본은 설정 화면에서 커밋 번호로 바로 확인할 수 있습니다.</p></div>
+    </div>
+    <div class="cost"><span>예상 공수 <b>1일</b></span><span>개선 견적 <b>40만원</b></span><span>출시 절차 문서 포함</span></div>
+  </div></article>
+
+  <div class="bezel rv" style="margin-top:22px"><div class="core">
+    <h3>개선 견적 요약 (대표 6건)</h3>
+    <div class="tbl wide"><table style="margin-top:10px">
+      <thead><tr><th>번호</th><th>항목</th><th>위험도</th><th class="num">공수</th><th class="num">견적</th></tr></thead>
+      <tbody>
+        <tr><td>SEC-01</td><td>RLS 정책 누락</td><td><span class="pill s-crit">치명</span></td><td class="num">3일</td><td class="num">120만원</td></tr>
+        <tr><td>FIN-02</td><td>잔액 동시 처리</td><td><span class="pill s-crit">치명</span></td><td class="num">2.5일</td><td class="num">100만원</td></tr>
+        <tr><td>PAY-03</td><td>웹훅 서명·중복</td><td><span class="pill s-high">높음</span></td><td class="num">2일</td><td class="num">80만원</td></tr>
+        <tr><td>PAY-04</td><td>구독 상태 전이</td><td><span class="pill s-high">높음</span></td><td class="num">3일</td><td class="num">120만원</td></tr>
+        <tr><td>PRV-05</td><td>아동 동의·탈퇴 삭제</td><td><span class="pill s-high">높음</span></td><td class="num">2.5일</td><td class="num">100만원</td></tr>
+        <tr><td>REL-06</td><td>출시 빌드 불일치</td><td><span class="pill s-mid">중간</span></td><td class="num">1일</td><td class="num">40만원</td></tr>
+        <tr><td colspan="3"><b>합계</b></td><td class="num"><b>14일</b></td><td class="num"><b>560만원</b></td></tr>
+      </tbody>
+    </table></div>
+    <p class="muted" style="margin-top:10px">견적은 항목별로 따로 승인할 수 있습니다. 치명·높음만 먼저 고치고 나머지는 나중에 정해도 됩니다. 금액은 부가세 별도, 가상 수치입니다.</p>
+  </div></div>
+</section>
+
+<section id="backend">
+  <div class="rv">
+    <span class="eyebrow">03 인프라 판단</span>
+    <h2>Supabase 유지 vs 별도 백엔드</h2>
+    <p class="lead">취향이 아니라 아래 조건을 하나씩 확인해서 정합니다. "아니오"가 늘어날수록 별도 백엔드 쪽으로 기웁니다.</p>
+  </div>
+  <div class="two">
+    <div class="bezel rv"><div class="core">
+      <ul class="check">
+        <li><span class="mk y">예</span><div>모든 테이블의 접근 권한을 RLS 정책으로 표현할 수 있는가</div><span class="muted">SEC-01 수정 후</span></li>
+        <li><span class="mk y">예</span><div>금액이 바뀌는 처리를 DB 함수 하나로 원자적으로 묶을 수 있는가</div><span class="muted">FIN-02</span></li>
+        <li><span class="mk y">예</span><div>결제 웹훅·정산처럼 서버에서만 돌아야 할 로직이 서버 함수 안에 들어가는가</div><span class="muted">PAY-03</span></li>
+        <li><span class="mk y">예</span><div>예상 사용자 규모에서 DB 연결 수와 응답 시간이 요금제 한도 안인가</div><span class="muted">부하 측정</span></li>
+        <li><span class="mk n">아니오</span><div>제휴 금융사가 요구하는 망 분리·접속 기록 보관을 현재 구성으로 증빙할 수 있는가</div><span class="muted">제휴 조건 확인</span></li>
+        <li><span class="mk y">예</span><div>백업·복구 시점을 운영자가 직접 지정하고 시험 복구해 볼 수 있는가</div><span class="muted">복구 리허설</span></li>
+      </ul>
+    </div></div>
+    <div class="bezel rv"><div class="core">
+      <h3>판정 (가상)</h3>
+      <div class="verdict"><b>Supabase 유지, 금전 이동 구간만 분리 검토</b><br>여섯 조건 중 다섯이 충족되어 지금 전면 이전할 근거는 약합니다. 제휴 금융사의 보안 요구가 확정되면 그 구간만 별도 서버로 떼는 안을 비교합니다.</div>
+      <p class="muted" style="margin-top:14px">실제 보고서에서는 각 조건 옆에 측정값과 확인한 화면·쿼리를 근거로 붙입니다.</p>
+    </div></div>
+  </div>
+</section>
+
+<section id="aws">
+  <div class="rv">
+    <span class="eyebrow">04 이관 영향</span>
+    <h2>AWS 이관 시 바뀌는 곳</h2>
+    <p class="lead">이관을 실제로 하지 않더라도, 결정하기 전에 무엇이 얼마나 바뀌는지 보이도록 영역별로 나눕니다.</p>
+  </div>
+  <div class="bezel rv" style="margin-top:22px"><div class="core">
+    <div class="tbl wide"><table>
+      <thead><tr><th>영역</th><th>지금 (가상)</th><th>이관 시 바뀌는 것</th><th>영향</th></tr></thead>
+      <tbody>
+        <tr><td>인증</td><td>Supabase Auth</td><td>토큰 발급처 변경, 기존 회원 세션 이전, 소셜 로그인 재설정</td><td><span class="pill s-crit">큼</span></td></tr>
+        <tr><td>DB 권한</td><td>RLS + auth.uid()</td><td>auth.uid()에 기대는 정책 전부를 서버 코드 권한 검사로 옮김</td><td><span class="pill s-crit">큼</span></td></tr>
+        <tr><td>서버 함수</td><td>Edge Functions</td><td>웹훅·정산 함수를 Lambda 등으로 옮기고 비밀 키 저장소 교체</td><td><span class="pill s-high">중간</span></td></tr>
+        <tr><td>파일 저장</td><td>Supabase Storage</td><td>S3로 이전, 업로드 경로와 접근 정책 재작성</td><td><span class="pill s-high">중간</span></td></tr>
+        <tr><td>웹 배포</td><td>Vercel</td><td>그대로 둘 수 있음. 환경변수와 API 주소만 교체</td><td><span class="pill s-low">작음</span></td></tr>
+        <tr><td>앱</td><td>Capacitor</td><td>API 주소 교체 후 양 스토어 재심사</td><td><span class="pill s-mid">일정 영향</span></td></tr>
+        <tr><td>운영</td><td>대시보드 기본 기능</td><td>로그·모니터링·백업을 직접 구성하고 비용 추정</td><td><span class="pill s-high">중간</span></td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+</section>
+</main>
+
+<footer class="wrap">
+  제안용 작동 데모 · 가상 데이터 · 실제 진단 실적 아님. 실제 보고서는 같은 구성에 발견된 전 항목, 재현 영상, 수정 전후 비교가 들어갑니다.
+</footer>
+
+<script>
+document.documentElement.classList.add('js');
+// filter
+const btns=document.querySelectorAll('.filter button');
+btns.forEach(b=>b.addEventListener('click',()=>{
+  btns.forEach(x=>x.setAttribute('aria-pressed',x===b));
+  document.querySelectorAll('.find').forEach(f=>{f.hidden=b.dataset.f!=='all'&&f.dataset.s!==b.dataset.f});
+}));
+// reveal: only below-the-fold elements start hidden
+if('IntersectionObserver' in window){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.remove('pre');io.unobserve(e.target)}}),{rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.rv').forEach(el=>{if(el.getBoundingClientRect().top>innerHeight){el.classList.add('pre');io.observe(el)}});
+}
+</script>
+</body>
+</html>
