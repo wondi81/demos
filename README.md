@@ -7,7 +7,4 @@
 ## 목록
 
 - [art-gallery-site](art-gallery-site/) — 아트 갤러리 반응형 사이트(두 공간·전시 아카이브·라이트박스·국/영) + 직원용 작품 이미지 일괄 업로드·게시 시연
-
-## 목록
-
 - [toeic-lms-pwa](toeic-lms-pwa/) — 토익 브랜드 LMS(PWA): 수강증 이미지 자동 인증(승인·거절·보관·검토), 수업 달력 편성(금요일 격주·A/B 교대), 등급·기간별 권한과 Supabase RLS 요약
