@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>TOEIC ON 시연</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="band">SAMPLE · ZTW 시연용</div>
+
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brand"><span class="logo">ON</span><b>TOEIC ON</b><span class="tag">LMS · PWA</span></div>
+    <p class="lead">수강증 사진 한 장으로 반 배정까지 자동 처리하고, 강사가 찍은 수업일과 반 기간대로 열람 권한이 열리고 닫히는 구조를 직접 눌러 보는 시연입니다.</p>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" class="tab on" data-tab="cert" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z M8 9h8 M8 13h5"/></svg><span>수강증 인증</span></button>
+  <button role="tab" class="tab" data-tab="cal" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M4 6h16v14H4z M4 10h16 M9 3v5 M15 3v5"/></svg><span>수업 달력</span></button>
+  <button role="tab" class="tab" data-tab="perm" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg><span>권한 시뮬레이터</span></button>
+</nav>
+
+<main class="wrap">
+
+<!-- 1. 수강증 자동 인증 -->
+<section id="cert" class="panel on" role="tabpanel">
+  <div class="sec-head">
+    <div>
+      <h2>수강증 자동 인증</h2>
+      <p class="sub">본사 사이트 수강증 캡처를 올리면 판독 → 열린 반 대조 → 승인·거절·보관·검토까지 자동으로 갈립니다. 시연 기준일 <b>2026년 11월 2일</b>, 로그인 계정 <b>me***</b>.</p>
+    </div>
+    <label class="kill"><input type="checkbox" id="kill"><span class="sw"></span><span>긴급 정지<small>켜면 전부 관리자 검토</small></span></label>
+  </div>
+
+  <div class="note">시연에서는 판독 결과를 미리 정해 두었습니다. 실제 서비스는 <b>서버에서 PaddleOCR 등 자체 OCR을 실행</b>하며, 수강증은 개인정보라 외부 OCR API로 보내지 않습니다.</div>
+
+  <div class="samples" id="samples"></div>
+
+  <label class="upload">
+    <input type="file" id="file" accept="image/*">
+    <svg viewBox="0 0 24 24"><path d="M12 16V4 M7 9l5-5 5 5 M4 16v4h16v-4"/></svg>
+    <span><b>내 수강증 이미지 올리기</b><small>파일 해시를 계산해 중복 여부까지 확인합니다 (이미지는 브라우저 밖으로 나가지 않음)</small></span>
+  </label>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>11월 열린 반</h3>
+      <div class="tbl-wrap"><table class="tbl" id="openTbl"></table></div>
+      <p class="hint">120분 반은 같은 트랙의 60분 반 두 개를 묶은 반입니다.</p>
+    </div>
+    <div class="card">
+      <h3>처리 내역</h3>
+      <ul class="log" id="log"><li class="empty">위 수강증 중 하나를 눌러 보세요.</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 수업 달력 -->
+<section id="cal" class="panel" role="tabpanel" hidden>
+  <div class="sec-head">
+    <div>
+      <h2>수업 달력 편성</h2>
+      <p class="sub">금요일은 두 트랙이 격주로 번갈아 들어가서, 강사가 매달 수업일을 달력에 직접 찍습니다. 아래는 관리자 화면입니다.</p>
+    </div>
+    <button class="btn primary" id="nextMonth">다음 달 자동 생성</button>
+  </div>
+
+  <div class="card">
+    <div class="cal-top">
+      <h3 id="calTitle"></h3>
+      <div class="brushes" id="brushes">
+        <button data-b="MWF" class="brush on"><i class="dot mwf"></i>월수금</button>
+        <button data-b="TTF" class="brush"><i class="dot ttf"></i>화목금</button>
+        <button data-b="SP" class="brush"><i class="dot sp"></i>특강</button>
+        <button data-b="" class="brush"><i class="dot none"></i>지우기</button>
+      </div>
+    </div>
+    <p class="hint">도구를 고른 뒤 날짜를 누르면 그 날의 수업이 바뀝니다.</p>
+    <div class="cal" id="calGrid"></div>
+    <div class="stats" id="calStats"></div>
+  </div>
+
+  <div class="card">
+    <h3>시간대별 과정 · 과목 <span class="pill" id="abBadge"></span></h3>
+    <div class="tbl-wrap"><table class="tbl slots" id="slotTbl"></table></div>
+    <p class="hint">과정 A/B는 달마다 서로 뒤바뀝니다. "다음 달 자동 생성"은 요일 패턴·금요일 격주 순서를 이어 받고 A/B만 뒤집어 만듭니다.</p>
+  </div>
+</section>
+
+<!-- 3. 권한 시뮬레이터 -->
+<section id="perm" class="panel" role="tabpanel" hidden>
+  <div class="sec-head">
+    <div>
+      <h2>권한 시뮬레이터</h2>
+      <p class="sub">등급과 날짜를 바꾸면 보이는 반·자료·학생 정보가 달라집니다. 화면이 아니라 DB에서 막는 구조입니다.</p>
+    </div>
+  </div>
+
+  <div class="card controls">
+    <div class="seg" id="roles">
+      <button data-r="student" class="on">학생</button>
+      <button data-r="ta">조교</button>
+      <button data-r="teacher">강사</button>
+      <button data-r="admin">관리자</button>
+    </div>
+    <div class="slider">
+      <div class="slider-top"><span>오늘 날짜</span><b id="dayLabel"></b></div>
+      <input type="range" id="day" min="0" max="41" value="15" aria-label="오늘 날짜">
+      <div class="slider-marks"><span>10/26</span><span>개강 11/2</span><span>종강 11/27</span><span>12/6</span></div>
+    </div>
+    <p class="who" id="who"></p>
+  </div>
+
+  <div class="grid2 perm-grid">
+    <div>
+      <div class="card"><h3>볼 수 있는 반 · 자료</h3><div id="classList"></div></div>
+      <div class="card"><h3>학생 정보</h3><div class="tbl-wrap"><table class="tbl" id="stuTbl"></table></div><p class="hint" id="stuHint"></p></div>
+    </div>
+    <div class="card sql">
+      <h3>Supabase RLS로 거는 방법 (요약)</h3>
+<pre><code><span class="c">-- 수업 자료: 반 배정 + 개강~종강 기간만 (종강 다음 날 자동 차단)</span>
+<b>create policy</b> lesson_read <b>on</b> lessons <b>for select using</b> (
+  class_id <b>in</b> (<b>select</b> class_id <b>from</b> my_class_access   <span class="c">-- 120분 반이면 안의 60분 반까지 포함</span>
+               <b>where</b> current_date <b>between</b> start_date <b>and</b> end_date)
+  <b>or</b> auth_role() <b>in</b> ('teacher', 'admin'));
+
+<span class="c">-- 조교: 이름 열만 있는 뷰로만 조회 (원본 테이블 권한 회수)</span>
+<b>create view</b> students_for_ta <b>as select</b> id, name <b>from</b> students;
+<b>revoke select on</b> students <b>from</b> ta;</code></pre>
+      <p class="hint">화면에서 숨기는 게 아니라 쿼리·API 응답 자체에 없도록 DB 정책으로 막습니다. 상세 설계는 계약 후 진행합니다.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<dialog id="dlg">
+  <div class="dlg-in" id="dlgBody"></div>
+</dialog>
+
+<footer class="foot">© 2026 ZTW · 제안용 시연 화면입니다. 화면·설계의 무단 복제·사용을 금합니다.</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
