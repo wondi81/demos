@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%279%27 fill=%27%230ca678%27/%3E%3C/svg%3E">
+<title>클린매치 시연</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="band">SAMPLE · ZTW 시연용</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></symbol>
+  <symbol id="i-brief" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 12h18"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-unlock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 7.8-8 9-4.6-1.2-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-area" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16M12 4v16"/></symbol>
+  <symbol id="i-cam" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-team" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c.8-3.5 3.4-5 7-5s6.2 1.5 7 5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 15c2 .6 3.4 2.2 4 5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-won" viewBox="0 0 24 24"><path d="M3 7l3 10 3-8 3 8 3-8 3 8 3-10M2 11h20"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brand">
+      <span class="logo"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span>
+      <b>클린매치</b><span class="tag">MVP 시연</span>
+    </div>
+    <button class="ghost" id="reset" type="button"><svg><use href="#i-reset"/></svg>시연 초기화</button>
+  </div>
+  <div class="wrap">
+    <nav class="roles" role="tablist" aria-label="역할 전환">
+      <button role="tab" data-role="customer"><svg><use href="#i-user"/></svg><span>고객</span></button>
+      <button role="tab" data-role="biz"><svg><use href="#i-brief"/></svg><span>업체·작업자</span></button>
+      <button role="tab" data-role="admin"><svg><use href="#i-chart"/></svg><span>관리자</span></button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- 고객 -->
+<section class="panel" id="p-customer" role="tabpanel">
+  <div class="intro">
+    <h1>청소 견적, 업체 3곳까지만 받습니다</h1>
+    <p>요청 한 건에 참여할 수 있는 업체는 3곳. 내 연락처는 참여한 업체에만 열립니다. 고객 <b>윤○○</b>님 시점입니다.</p>
+  </div>
+  <div class="grid">
+    <form class="card form" id="reqForm" autocomplete="off">
+      <h2>견적 요청하기</h2>
+      <div class="field">
+        <span class="lbl">청소 유형</span>
+        <div class="chips" id="typeChips"></div>
+      </div>
+      <div class="row2">
+        <label class="field"><span class="lbl">시·도</span>
+          <select name="sido"><option>서울</option><option>경기</option><option>인천</option><option>부산</option><option>대전</option></select></label>
+        <label class="field"><span class="lbl">구·동</span><input name="dong" required maxlength="30" value="마포구 공덕동"></label>
+      </div>
+      <div class="row2">
+        <label class="field"><span class="lbl">희망일</span><input type="date" name="date" required value="2026-11-21" min="2026-11-02"></label>
+        <label class="field"><span class="lbl">면적(평)</span><input type="number" name="area" required min="3" max="500" value="28" inputmode="numeric"></label>
+      </div>
+      <div class="field">
+        <span class="lbl">작업 조건</span>
+        <div class="chips" id="condChips"></div>
+      </div>
+      <label class="field"><span class="lbl">요청 메모 <em>선택</em></span><textarea name="memo" rows="2" maxlength="200" placeholder="예: 오전 9시 이후 출입 가능, 베란다 곰팡이 있음"></textarea></label>
+      <div class="field">
+        <span class="lbl">현장 사진 <em>최대 4장</em></span>
+        <label class="drop"><input type="file" id="photo" accept="image/*" multiple><svg><use href="#i-cam"/></svg><span>사진 선택</span></label>
+        <div class="thumbs" id="thumbs"></div>
+        <p class="hint">사진은 이 브라우저 안에서만 미리 보입니다. 서버로 전송되지 않습니다.</p>
+      </div>
+      <label class="field"><span class="lbl">어떻게 알고 오셨나요?</span>
+        <select name="src" id="srcSel"><option value="search">검색</option><option value="ad">광고</option><option value="direct">직접 방문</option><option value="ref">지인 추천</option></select></label>
+      <button class="btn pri wide" type="submit">견적 요청 등록</button>
+    </form>
+    <div>
+      <div class="list-head"><h2>내 견적 요청</h2><span class="muted" id="myCount"></span></div>
+      <div id="myReqs" class="stack"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 업체·작업자 -->
+<section class="panel" id="p-biz" role="tabpanel">
+  <div class="acct card">
+    <div class="acct-who"><span class="avatar">박</span><div><b>박○○ 계정</b><small>한 계정 · 역할 2개 (업체 대표, 작업자)</small></div></div>
+    <div class="seg" id="modeSeg" role="group" aria-label="역할 모드">
+      <button data-mode="biz" type="button"><svg><use href="#i-brief"/></svg>업체 모드</button>
+      <button data-mode="worker" type="button"><svg><use href="#i-user"/></svg>작업자 모드</button>
+    </div>
+  </div>
+
+  <div id="m-biz" class="mode">
+    <div class="grid">
+      <aside class="stack">
+        <div class="card" id="regCard"></div>
+        <div class="card rls">
+          <div class="rls-h"><svg><use href="#i-shield"/></svg><b>실서비스에서는 서버가 막습니다</b></div>
+          <p>실서비스에서는 DB 행 단위 보안(RLS)으로 서버에서 막습니다 — 화면에서 숨기는 방식 아님. 참여하지 않은 업체의 요청에는 연락처 데이터 자체가 내려가지 않습니다.</p>
+          <pre><code>create policy "참여 업체만 연락처 열람"
+on request_contacts for select
+using (exists (
+  select 1 from bids b
+  where b.request_id = request_contacts.request_id
+    and b.company_id = my_company_id()
+    and b.cancelled_at is null));</code></pre>
+          <p class="small">정원은 서버 함수가 요청 행을 잠근 뒤 확인합니다. 4곳이 동시에 눌러도 3곳까지만 들어갑니다.</p>
+        </div>
+        <div class="card rules">
+          <b>참여 규칙</b>
+          <ul>
+            <li>요청당 정원 3곳, 선착순</li>
+            <li>참여 즉시 우리 업체에만 고객 연락처 공개</li>
+            <li>고객이 상담을 시작하기 전까지 참여 취소 가능</li>
+            <li>취소하면 정원 1곳 즉시 복구, 연락처 다시 잠김</li>
+            <li>취소한 요청은 재참여 불가 (연락처 열람 남용 방지)</li>
+          </ul>
+        </div>
+      </aside>
+      <div class="stack">
+        <label class="card field switcher"><span class="lbl">시연용 업체 시점 전환</span>
+          <select id="actingSel"></select>
+          <small class="hint">정원 마감을 보려면 다른 업체로 바꿔 가며 참여해 보세요.</small></label>
+        <div class="list-head"><h2>견적 요청</h2><span class="muted" id="openCount"></span></div>
+        <div id="openReqs" class="stack"></div>
+        <div class="list-head mt"><h2>구인 공고</h2></div>
+        <form class="card form" id="jobForm" autocomplete="off">
+          <h3>새 공고 등록</h3>
+          <div class="row2">
+            <label class="field"><span class="lbl">지역</span><input name="region" required maxlength="30" value="서울 마포구"></label>
+            <label class="field"><span class="lbl">작업일</span><input type="date" name="date" required value="2026-11-21" min="2026-11-02"></label>
+          </div>
+          <div class="row2">
+            <label class="field"><span class="lbl">조건</span><input name="cond" required maxlength="40" value="입주청소 보조 · 09~18시 · 일당 15만원"></label>
+            <label class="field"><span class="lbl">모집 인원</span><input type="number" name="head" required min="1" max="10" value="3"></label>
+          </div>
+          <label class="check"><input type="checkbox" name="team" checked> 팀 지원 허용</label>
+          <button class="btn pri wide" type="submit">공고 등록</button>
+        </form>
+        <div id="myJobs" class="stack"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="m-worker" class="mode">
+    <div class="grid">
+      <aside class="stack">
+        <div class="list-head"><h2>내 지원 현황</h2></div>
+        <div id="myApps" class="stack"></div>
+      </aside>
+      <div class="stack">
+        <div class="list-head"><h2>구인 공고</h2><span class="muted">작업자 박○○ 시점</span></div>
+        <div id="jobList" class="stack"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 관리자 -->
+<section class="panel" id="p-admin" role="tabpanel">
+  <div class="intro">
+    <h1>운영 현황</h1>
+    <p>업체 승인, 요청별 참여 현황, 유입 경로, 계약 결과를 한 화면에서 봅니다. <span id="srcNow"></span></p>
+  </div>
+  <div class="kpis" id="kpis"></div>
+  <div class="grid2">
+    <div class="card"><div class="card-h"><h2>업체 승인</h2></div><div id="coTable"></div></div>
+    <div class="card"><div class="card-h"><h2>유입 경로</h2><span class="muted">요청 기준</span></div><div id="srcBars"></div>
+      <div class="card-h mt"><h2>계약 결과</h2></div><div id="resultBar"></div></div>
+  </div>
+  <div class="card mt"><div class="card-h"><h2>요청별 참여 현황</h2></div><div id="reqTable"></div></div>
+</section>
+
+</main>
+
+<footer class="foot">© 2026 ZTW · 제안용 시연 화면입니다. 화면·설계의 무단 복제·사용을 금합니다.</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
