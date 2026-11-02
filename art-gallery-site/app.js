@@ -197,7 +197,7 @@ const EXHIBITIONS = [
 
 /* ---------- 문구 ---------- */
 const S = {
-  ko: { nav_ex: '전시', nav_ar: '작가', nav_vi: '방문', current: '현재 전시', upcoming: '예정 전시', past: '지난 전시', viewAll: '전체 보기', spaces: '두 공간', exhibitions: '전시', artists: '작가', visit: '방문 안내', hours: '운영시간', hoursV: '화–토 10:00–18:00 · 일 12:00–18:00', closed: '휴관', closedV: '월요일, 공휴일', admission: '관람료', admissionV: '무료', address: '주소', map: '지도에서 보기 →', mapNote: '실납품 시 네이버·카카오 지도로 연결', period: '기간', space: '공간', artist: '작가', works: '작품', back: '← 전시 목록', none: '해당하는 전시가 없습니다.', born: '년생', visitNote: '단체 관람·도슨트 예약은 실납품 시 예약 폼으로 연결됩니다. 주소·운영시간은 시연용 가상 정보입니다.', newBadge: 'NEW' },
+  ko: { nav_ex: 'Exhibitions', nav_ar: 'Artists', nav_vi: 'Visit', current: '현재 전시', upcoming: '예정 전시', past: '지난 전시', viewAll: '전체 보기', spaces: '두 공간', exhibitions: '전시', artists: '작가', visit: '방문 안내', hours: '운영시간', hoursV: '화–토 10:00–18:00 · 일 12:00–18:00', closed: '휴관', closedV: '월요일, 공휴일', admission: '관람료', admissionV: '무료', address: '주소', map: '지도에서 보기 →', mapNote: '실납품 시 네이버·카카오 지도로 연결', period: '기간', space: '공간', artist: '작가', works: '작품', back: '← 전시 목록', none: '해당하는 전시가 없습니다.', born: '년생', visitNote: '단체 관람·도슨트 예약은 실납품 시 예약 폼으로 연결됩니다. 주소·운영시간은 시연용 가상 정보입니다.', newBadge: 'NEW' },
   en: { nav_ex: 'Exhibitions', nav_ar: 'Artists', nav_vi: 'Visit', current: 'Current', upcoming: 'Upcoming', past: 'Past', viewAll: 'View all', spaces: 'Two Spaces', exhibitions: 'Exhibitions', artists: 'Artists', visit: 'Visit', hours: 'Hours', hoursV: 'Tue–Sat 10:00–18:00 · Sun 12:00–18:00', closed: 'Closed', closedV: 'Mondays, public holidays', admission: 'Admission', admissionV: 'Free', address: 'Address', map: 'View on map →', mapNote: 'Linked to Naver/Kakao Map on delivery', period: 'Dates', space: 'Space', artist: 'Artist', works: 'Works', back: '← All exhibitions', none: 'No exhibitions here.', born: 'b.', visitNote: 'Group visits and docent bookings will link to a booking form on delivery. Address and hours are fictional for this demo.', newBadge: 'NEW' },
 };
 let lang = 'ko';
@@ -342,15 +342,30 @@ const toggleAdmin = (open) => {
 $('admin-toggle').onclick = () => toggleAdmin(admin.hidden);
 $('admin-close').onclick = () => toggleAdmin(false);
 
+// 대량 업로드 대비: 긴 변 2400px로 줄이고 WebP로 바꿔 용량을 미리 보여 줌
+const MAX_SIDE = 2400, WEBP_Q = 0.82;
+const kb = (n) => (n >= 1048576 ? (n / 1048576).toFixed(1) + 'MB' : Math.max(1, Math.round(n / 1024)) + 'KB');
+const readAs = (blob) => new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = rej; fr.readAsDataURL(blob); });
+async function optimize(f) {
+  const orig = await readAs(f);
+  const im = new Image(); im.src = orig; await im.decode();
+  const k = Math.min(1, MAX_SIDE / Math.max(im.naturalWidth, im.naturalHeight));
+  const cv = document.createElement('canvas');
+  cv.width = Math.round(im.naturalWidth * k); cv.height = Math.round(im.naturalHeight * k);
+  cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+  const webp = await new Promise((res) => cv.toBlob(res, 'image/webp', WEBP_Q));
+  const useWebp = webp && webp.size < f.size; // 이미 작은 파일은 원본 유지
+  return {
+    src: useWebp ? await readAs(webp) : orig, artist: '', title: f.name.replace(/\.[^.]+$/, ''), year: '', material: '', size: '',
+    before: f.size, after: useWebp ? webp.size : f.size, dims: `${im.naturalWidth}×${im.naturalHeight} → ${cv.width}×${cv.height}`,
+  };
+}
 function addFiles(files) {
   const imgs = [...files].filter((f) => f.type.startsWith('image/'));
   if (!imgs.length) { msg('이미지 파일만 올릴 수 있습니다.'); return; }
-  Promise.all(imgs.map((f) => new Promise((res) => {
-    const fr = new FileReader();
-    fr.onload = () => res({ src: fr.result, artist: '', title: f.name.replace(/\.[^.]+$/, ''), year: '', material: '', size: '' });
-    fr.onerror = () => res(null);
-    fr.readAsDataURL(f);
-  }))).then((list) => { items.push(...list.filter(Boolean)); drawRows(); msg(''); });
+  msg(`${imgs.length}장 변환 중…`, true);
+  Promise.all(imgs.map((f) => optimize(f).catch(() => null)))
+    .then((list) => { items.push(...list.filter(Boolean)); drawRows(); msg(''); });
 }
 const drop = $('drop');
 ['dragenter', 'dragover'].forEach((t) => drop.addEventListener(t, (ev) => { if (ev.dataTransfer.types.includes('Files')) { ev.preventDefault(); drop.classList.add('over'); } }));
@@ -361,12 +376,14 @@ $('f-files').addEventListener('change', (ev) => { addFiles(ev.target.files); ev.
 const COLS = [['artist', '작가'], ['title', '제목'], ['year', '연도'], ['material', '재료'], ['size', '크기 (cm)']];
 function drawRows() {
   if (!items.length) { rowsEl.innerHTML = '<p class="empty">아직 올린 이미지가 없습니다.</p>'; return; }
-  rowsEl.innerHTML = `<div class="row head"><span></span><span>이미지</span>${COLS.map((c) => `<span>${c[1]}</span>`).join('')}<span></span></div>` +
+  const tb = items.reduce((a, x) => a + x.before, 0), ta = items.reduce((a, x) => a + x.after, 0);
+  rowsEl.innerHTML = `<div class="opt-sum"><strong>${items.length}장</strong> · 원본 ${kb(tb)} → 변환 후 ${kb(ta)} <b>−${Math.round((1 - ta / tb) * 100)}%</b><span>긴 변 ${MAX_SIDE}px 자동 축소 · WebP 변환</span></div><div class="row head"><span></span><span>이미지</span>${COLS.map((c) => `<span>${c[1]}</span>`).join('')}<span></span></div>` +
     items.map((it, i) => `<div class="row" data-row="${i}">
       <span class="handle" draggable="true" title="끌어서 순서 바꾸기">⋮⋮</span>
       <span class="th"><img src="${it.src}" alt=""></span>
       ${COLS.map(([k, label]) => `<input data-k="${k}" placeholder="${label}" value="${esc(it[k])}">`).join('')}
-      <button class="del" data-del="${i}" aria-label="삭제">×</button></div>`).join('');
+      <button class="del" data-del="${i}" aria-label="삭제">×</button>
+      <span class="sz">${it.dims} · ${kb(it.before)} → ${kb(it.after)} <b>−${Math.round((1 - it.after / it.before) * 100)}%</b></span></div>`).join('');
 }
 rowsEl.addEventListener('input', (ev) => { const r = ev.target.closest('[data-row]'); if (r && ev.target.dataset.k) items[+r.dataset.row][ev.target.dataset.k] = ev.target.value; });
 rowsEl.addEventListener('click', (ev) => { const d = ev.target.closest('[data-del]'); if (d) { items.splice(+d.dataset.del, 1); drawRows(); } });

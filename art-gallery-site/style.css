@@ -21,8 +21,8 @@ img{display:block;max-width:100%}
   backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:space-between;gap:24px;
   padding:22px var(--gut);border-bottom:1px solid transparent;transition:border-color .2s}
 .site-head.scrolled{border-color:var(--line)}
-.logo{font:500 22px/1 var(--serif);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
-.nav{display:flex;align-items:center;gap:32px;font-size:13px;letter-spacing:.06em}
+.logo{font:600 15px/1 var(--sans);letter-spacing:.32em;text-transform:uppercase;white-space:nowrap}
+.nav{display:flex;align-items:center;gap:36px;font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase}
 .nav a{position:relative;padding:4px 0;color:var(--ink2)}
 .nav a.on,.nav a:hover{color:var(--ink)}
 .nav a.on::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:var(--ink)}
@@ -39,9 +39,10 @@ main{min-height:70vh}
 h1,h2,h3{font-weight:400;margin:0}
 
 /* home hero */
-.hero{display:grid;grid-template-columns:1fr 1fr;gap:var(--gut);padding:28px var(--gut) 0}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2vw,28px);padding:8px var(--gut) 0}
+.hero .hero-art{aspect-ratio:5/6}
 .hero-item{display:block}
-.hero-art{background:var(--wall);aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;padding:12%;overflow:hidden}
+.hero-art{background:var(--wall);aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;padding:8%;overflow:hidden}
 .hero-art img{max-height:100%;width:auto;box-shadow:0 18px 40px -22px rgba(0,0,0,.45);transition:transform .8s cubic-bezier(.2,.7,.2,1)}
 .hero-item:hover .hero-art img{transform:scale(1.02)}
 .hero-text{padding:22px 0 0}
@@ -117,7 +118,7 @@ h1,h2,h3{font-weight:400;margin:0}
 /* footer */
 .site-foot{margin-top:clamp(96px,12vw,160px);border-top:1px solid var(--line);padding:48px var(--gut) 96px}
 .foot-grid{display:grid;grid-template-columns:4fr 8fr;gap:var(--gut);font-size:13px;color:var(--ink2)}
-.foot-logo{font:500 18px/1 var(--serif);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.foot-logo{font:600 13px/1 var(--sans);letter-spacing:.32em;text-transform:uppercase;color:var(--ink)}
 #foot-spaces{display:grid;grid-template-columns:1fr 1fr;gap:var(--gut)}
 #foot-spaces strong{display:block;font-weight:500;color:var(--ink);margin-bottom:4px;letter-spacing:.06em}
 .copy{margin:56px 0 0;font-size:12px;color:var(--mute)}
@@ -174,6 +175,10 @@ h1,h2,h3{font-weight:400;margin:0}
 .row .th img{max-width:100%;max-height:100%}
 .row input{padding:7px 7px !important;font-size:13px !important}
 .del{color:var(--mute);font-size:18px}
+.sz{grid-column:2/-2;font-size:11px;color:var(--mute);letter-spacing:.01em}
+.sz b,.opt-sum b{color:#1b6b3a;font-weight:600}
+.opt-sum{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;font-size:13px;padding:10px 12px;margin-bottom:10px;border:1px solid var(--line);border-radius:4px}
+.opt-sum span{margin-left:auto;font-size:11px;color:var(--mute)}
 .admin-foot{position:sticky;bottom:0;display:flex;justify-content:flex-end;align-items:center;gap:14px;margin-top:20px;padding:14px 24px;background:#fafafa;border-top:1px solid var(--line)}
 .publish{padding:12px 32px;font-size:14px}
 .msg{font-size:13px;color:#b00020}
@@ -187,7 +192,7 @@ h1,h2,h3{font-weight:400;margin:0}
 @media (max-width: 680px){
   body{font-size:14px}
   .site-head{flex-direction:column;align-items:flex-start;gap:14px;padding:16px var(--gut) 12px}
-  .logo{font-size:19px}
+  .logo{font-size:13px}
   .nav{gap:22px;width:100%}
   .lang{margin-left:auto}
   .hero,.spaces,.visit,.ex-list{grid-template-columns:1fr}
@@ -205,7 +210,8 @@ h1,h2,h3{font-weight:400;margin:0}
   .form-grid{grid-template-columns:1fr 1fr}
   .bulk{grid-template-columns:1fr 1fr}
   .row.head{display:none}
-  .row{grid-template-columns:22px 56px 1fr 1fr 24px;grid-template-areas:"h t a ti d" "h t y m d" "h t s s d"}
+  .row{grid-template-columns:22px 56px 1fr 1fr 24px;grid-template-areas:"h t a ti d" "h t y m d" "h t s s d" "h z z z d"}
+  .row .sz{grid-area:z}
   .row .handle{grid-area:h}.row .th{grid-area:t}.row .del{grid-area:d}
   .row [data-k=artist]{grid-area:a}.row [data-k=title]{grid-area:ti}
   .row [data-k=year]{grid-area:y}.row [data-k=material]{grid-area:m}.row [data-k=size]{grid-area:s}
