@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>韩游通 미니프로그램 시연</title>
+<meta name="description" content="방한 중화권 관광객 대상 할인권·예약 안내 위챗 미니프로그램 화면 흐름 시연 (가상 데이터)">
+<style>
+:root{
+  --wx:#07C160; --wx-d:#06AD56; --wx-l:#E8F8EF;
+  --bg:#F4F5F7; --page:#EEF0F3; --card:#fff; --ink:#191919; --ink2:#5F6368; --ink3:#9AA0A6;
+  --line:#ECEDEF; --orange:#FF5B32; --orange-l:#FFF1EC; --gold:#FFB020;
+  --admin-ink:#1F2933; --admin-line:#E3E7EC;
+  --cn:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --ko:-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--page);color:var(--admin-ink);font-family:var(--ko);font-size:14px;line-height:1.5;padding-top:30px}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.band{position:fixed;top:0;left:0;right:0;z-index:99;height:30px;display:flex;align-items:center;justify-content:center;background:#111;color:#fff;font-size:12px;letter-spacing:.12em;font-weight:600}
+.intro{max-width:1240px;margin:16px auto 0;padding:0 16px}
+.intro p{background:#fff;border:1px solid var(--admin-line);border-left:4px solid var(--wx);border-radius:10px;padding:12px 16px;font-size:14px;color:#334}
+.wrap{max-width:1240px;margin:16px auto;padding:0 16px;display:grid;grid-template-columns:420px 1fr;gap:24px;align-items:start}
+.wrap>*{min-width:0}
+footer{max-width:1240px;margin:8px auto 32px;padding:0 16px;color:#7b8794;font-size:12px;text-align:center}
+
+/* ---------- phone ---------- */
+.phone-col{position:sticky;top:40px}
+.phone{width:390px;height:800px;margin:0 auto;border-radius:48px;background:#111;padding:10px;box-shadow:0 30px 60px -20px rgba(16,24,40,.35),0 0 0 1px #2a2a2a inset}
+.screen{position:relative;height:100%;border-radius:38px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;font-family:var(--cn);color:var(--ink)}
+.status{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 30px;font-size:14px;font-weight:600;background:var(--navbg,#fff)}
+.status .sys{display:flex;gap:5px;align-items:center}
+.nav{height:44px;flex:none;position:relative;display:flex;align-items:center;justify-content:center;background:var(--navbg,#fff);font-size:16px;font-weight:600}
+.nav .back{position:absolute;left:6px;top:6px;width:32px;height:32px;display:grid;place-items:center}
+.nav .back[hidden]{display:none}
+.nav h1{font-size:16px;font-weight:600;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.capsule{position:absolute;right:8px;top:6px;width:87px;height:32px;border-radius:16px;border:1px solid rgba(0,0,0,.12);background:rgba(255,255,255,.7);display:flex;align-items:center}
+.capsule span{flex:1;display:grid;place-items:center;height:100%}
+.capsule i{width:1px;height:18px;background:rgba(0,0,0,.14)}
+.body{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;position:relative}
+.body::-webkit-scrollbar{display:none}
+.tabbar{flex:none;height:62px;padding-bottom:10px;display:flex;background:#fff;border-top:1px solid var(--line)}
+.tabbar[hidden]{display:none}
+.tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;color:#7A7E83}
+.tabbar button.on{color:var(--wx)}
+.tabbar svg{width:24px;height:24px}
+
+.pad{padding:12px}
+.search{display:flex;align-items:center;gap:6px;height:36px;border-radius:18px;background:#fff;padding:0 14px;color:var(--ink3);font-size:13px}
+.hero{margin-top:10px;border-radius:14px;overflow:hidden;position:relative;height:132px}
+.hero svg{display:block;width:100%;height:100%}
+.hero .txt{position:absolute;left:16px;top:18px;color:#fff}
+.hero .txt b{display:block;font-size:19px;letter-spacing:.02em;text-shadow:0 1px 8px rgba(0,0,0,.18)}
+.hero .txt small{display:inline-block;margin-top:6px;font-size:11px;background:rgba(255,255,255,.22);border-radius:10px;padding:2px 8px}
+.trust{display:flex;justify-content:space-between;margin-top:10px;font-size:11px;color:var(--ink2)}
+.trust span{display:flex;align-items:center;gap:3px}
+.cats{margin-top:12px;background:#fff;border-radius:14px;padding:14px 4px 10px;display:grid;grid-template-columns:repeat(5,1fr)}
+.cats button{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:var(--ink)}
+.cats .ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center}
+.cats .ic svg{width:26px;height:26px}
+.sec{display:flex;align-items:baseline;justify-content:space-between;margin:16px 2px 8px}
+.sec h2{font-size:16px;font-weight:700}
+.sec a{font-size:12px;color:var(--ink3);cursor:pointer}
+.strip{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.mini-cp{flex:none;width:150px;border-radius:10px;background:linear-gradient(135deg,#FF7A45,#FF4D2E);color:#fff;padding:10px 12px;position:relative;cursor:pointer}
+.mini-cp b{font-size:17px;display:block}
+.mini-cp span{font-size:11px;opacity:.92;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-cp::after{content:"";position:absolute;right:-6px;top:50%;width:12px;height:12px;border-radius:50%;background:var(--bg);transform:translateY(-50%)}
+
+.shop{display:flex;gap:10px;background:#fff;border-radius:12px;padding:10px;margin-bottom:10px;cursor:pointer;transition:transform .12s}
+.shop:active{transform:scale(.985)}
+.shop .th{width:92px;height:92px;flex:none;border-radius:8px;overflow:hidden}
+.shop .th svg{width:100%;height:100%;display:block}
+.shop .inf{flex:1;min-width:0;display:flex;flex-direction:column}
+.shop .nm{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rate{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--orange);margin-top:3px}
+.rate em{font-style:normal;color:var(--ink3)}
+.meta{font-size:12px;color:var(--ink2);margin-top:2px}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.tag{font-size:10px;line-height:16px;padding:0 5px;border-radius:3px;background:#F2F3F5;color:var(--ink2)}
+.tag.g{background:var(--wx-l);color:var(--wx-d)}
+.tag.o{background:var(--orange-l);color:var(--orange)}
+.from{margin-top:auto;font-size:12px;color:var(--ink3)}
+.from b{color:var(--orange);font-size:15px}
+
+.chips{display:flex;gap:8px;padding:10px 12px;background:#fff;position:sticky;top:0;z-index:2}
+.chip{padding:4px 12px;border-radius:14px;background:#F2F3F5;font-size:12px;color:var(--ink2)}
+.chip.on{background:var(--wx-l);color:var(--wx-d);font-weight:600}
+.empty{text-align:center;color:var(--ink3);font-size:13px;padding:40px 0}
+
+.dhero{height:210px;position:relative}
+.dhero svg{width:100%;height:100%;display:block}
+.dcard{background:#fff;border-radius:14px 14px 0 0;margin-top:-16px;position:relative;padding:16px}
+.dcard h2{font-size:19px;font-weight:700}
+.info{background:#fff;margin-top:8px;padding:4px 16px}
+.info .row{display:flex;align-items:center;gap:10px;padding:11px 0;font-size:13px;border-bottom:1px solid var(--line)}
+.info .row:last-child{border:0}
+.info .row svg{flex:none;color:var(--ink2)}
+.info .row span{flex:1}
+.block{background:#fff;margin-top:8px;padding:14px 16px}
+.block h3{font-size:15px;font-weight:700;margin-bottom:6px}
+.prod{display:flex;align-items:center;gap:10px;padding:12px;border:1.5px solid var(--line);border-radius:10px;margin-top:8px;cursor:pointer;transition:border-color .15s,background .15s}
+.prod.on{border-color:var(--wx);background:#F6FCF8}
+.prod .rd{width:18px;height:18px;border-radius:50%;border:1.5px solid #C8CBD0;flex:none;display:grid;place-items:center}
+.prod.on .rd{border-color:var(--wx);background:var(--wx)}
+.prod .pn{flex:1;font-size:14px}
+.prod .pp{text-align:right}
+.prod .pp b{display:block;color:var(--orange);font-size:15px}
+.prod .pp small{color:var(--ink3);font-size:11px}
+.cpline{display:flex;align-items:center;justify-content:space-between;background:var(--orange-l);border-radius:8px;padding:9px 12px;margin-top:10px;font-size:13px;color:var(--orange)}
+.cpline button{font-size:12px;color:#fff;background:var(--orange);border-radius:12px;padding:2px 10px}
+.note{font-size:12px;color:var(--ink3);padding:12px 16px 20px;line-height:1.7}
+.actbar{flex:none;height:72px;padding:8px 12px 18px;background:#fff;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px;z-index:5}
+.actbar .ib{display:flex;flex-direction:column;align-items:center;font-size:10px;color:var(--ink2);width:34px}
+.btn{height:44px;border-radius:22px;background:var(--wx);color:#fff;font-size:16px;font-weight:600;flex:1;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn:active{background:var(--wx-d)}
+.btn.ghost{background:#fff;color:var(--wx);border:1px solid var(--wx)}
+
+/* chat */
+.chat{background:#EDEDED;min-height:100%;padding:8px 12px 16px}
+.sys-tip{text-align:center;font-size:11px;color:#9a9a9a;margin:10px 0}
+.sys-tip span{background:#DADADA;color:#fff;border-radius:4px;padding:2px 6px}
+.msg{display:flex;gap:8px;margin:12px 0;align-items:flex-start;animation:pop .25s ease-out}
+.msg.me{flex-direction:row-reverse}
+.av{width:38px;height:38px;border-radius:6px;flex:none;overflow:hidden}
+.bub{max-width:230px;background:#fff;border-radius:6px;padding:9px 11px;font-size:14px;line-height:1.55;position:relative;word-break:break-word}
+.msg.me .bub{background:#95EC69}
+.bub::before{content:"";position:absolute;top:13px;left:-5px;border:5px solid transparent;border-left:0;border-right-color:#fff}
+.msg.me .bub::before{left:auto;right:-5px;border:5px solid transparent;border-right:0;border-left-color:#95EC69}
+.mpcard{width:230px;background:#fff;border-radius:6px;overflow:hidden}
+.mpcard .h{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink3);padding:8px 10px 4px}
+.mpcard .t{font-size:14px;font-weight:600;padding:0 10px}
+.mpcard .p{font-size:12px;color:var(--ink2);padding:2px 10px 0}
+.mpcard .im{height:110px;margin:8px 10px 0;border-radius:4px;overflow:hidden}
+.mpcard .im svg{width:100%;height:100%;display:block}
+.mpcard .f{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);margin-top:8px;padding:6px 10px;font-size:11px;color:var(--ink3)}
+.mpcard .f b{color:var(--orange);font-size:13px}
+.typing{display:inline-flex;gap:3px}
+.typing i{width:6px;height:6px;border-radius:50%;background:#bbb;animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.quick{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0 46px}
+.quick button{background:#fff;border-radius:14px;padding:4px 10px;font-size:12px;color:var(--wx-d);border:1px solid #CDEFD9}
+.inputbar{flex:none;background:#F7F7F7;border-top:1px solid #DCDCDC;padding:8px 10px 20px;display:flex;gap:8px;align-items:center;z-index:5}
+.inputbar input{flex:1;height:36px;border-radius:6px;border:0;background:#fff;padding:0 10px;font-size:16px;outline:none}
+.inputbar button{height:34px;padding:0 14px;border-radius:5px;background:var(--wx);color:#fff;font-size:14px}
+
+/* coupons */
+.seg{display:flex;background:#fff;position:sticky;top:0;z-index:2}
+.seg button{flex:1;height:44px;font-size:14px;color:var(--ink2);position:relative}
+.seg button.on{color:var(--ink);font-weight:700}
+.seg button.on::after{content:"";position:absolute;left:50%;bottom:6px;width:22px;height:3px;border-radius:2px;background:var(--wx);transform:translateX(-50%)}
+.cp{display:flex;background:#fff;border-radius:10px;margin-bottom:10px;overflow:hidden;position:relative}
+.cp .l{width:104px;flex:none;background:linear-gradient(160deg,#FF7A45,#FF4D2E);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px;text-align:center}
+.cp .l b{font-size:20px;line-height:1.2}
+.cp .l small{font-size:11px;opacity:.9}
+.cp .r{flex:1;padding:10px 12px;min-width:0;border-left:1px dashed #F2C4B5;display:flex;flex-direction:column}
+.cp .r .n{font-size:14px;font-weight:600}
+.cp .r .s{font-size:12px;color:var(--ink2);margin-top:2px}
+.cp .r .v{font-size:11px;color:var(--ink3);margin-top:auto;padding-top:6px;display:flex;align-items:center;justify-content:space-between}
+.cp .take{font-size:12px;border-radius:13px;padding:3px 12px;background:var(--orange);color:#fff}
+.cp .take[disabled]{background:#F2F3F5;color:var(--ink3)}
+.cp.used .l{background:#C9CDD2}
+.cp.used .r .n{color:var(--ink3)}
+.stamp{position:absolute;right:10px;top:8px;font-size:11px;border:1.5px solid currentColor;border-radius:4px;padding:0 5px;transform:rotate(-8deg)}
+.stamp.ok{color:var(--wx)} .stamp.no{color:#B0B4B9}
+
+.cpd{margin:12px;background:#fff;border-radius:14px;overflow:hidden;text-align:center}
+.cpd .top{background:linear-gradient(160deg,#FF7A45,#FF4D2E);color:#fff;padding:18px 16px}
+.cpd .top b{font-size:26px;display:block}
+.cpd .qr{width:176px;height:176px;margin:18px auto 6px;padding:8px;border:1px solid var(--line);border-radius:8px;position:relative}
+.cpd .qr svg{width:100%;height:100%;display:block}
+.cpd .qr.dim::after{content:"已使用";position:absolute;inset:0;display:grid;place-items:center;background:rgba(255,255,255,.86);font-size:20px;font-weight:700;color:var(--wx)}
+.code{font-size:26px;font-weight:700;letter-spacing:.28em;font-variant-numeric:tabular-nums;margin-top:4px}
+.cpd .rules{text-align:left;font-size:12px;color:var(--ink2);padding:12px 16px 16px;border-top:1px dashed var(--line);margin-top:14px;line-height:1.8}
+
+.sheet-mask{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:20;display:flex;align-items:flex-end;animation:fade .2s}
+@keyframes fade{from{opacity:0}}
+.sheet{width:100%;background:#fff;border-radius:16px 16px 0 0;padding:18px 18px 30px;animation:up .25s ease-out}
+@keyframes up{from{transform:translateY(100%)}}
+.sheet h3{font-size:17px;text-align:center}
+.sheet p{font-size:12px;color:var(--ink3);text-align:center;margin-top:4px}
+.pin{display:flex;gap:10px;justify-content:center;margin:18px 0 8px}
+.pin input{width:200px;height:48px;text-align:center;font-size:24px;letter-spacing:.5em;border:1.5px solid var(--line);border-radius:10px;outline:none;font-variant-numeric:tabular-nums}
+.pin input:focus{border-color:var(--wx)}
+.pin.err input{border-color:#FA5151;animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.errmsg{color:#FA5151;font-size:12px;text-align:center;min-height:18px}
+.demo-hint{background:#FFF8E6;border-radius:8px;padding:8px 10px;font-size:12px;color:#8A6200;margin:6px 0 14px;text-align:center}
+
+.toast{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);background:rgba(17,17,17,.82);color:#fff;border-radius:10px;padding:14px 18px;font-size:14px;z-index:30;text-align:center;min-width:120px;max-width:240px;animation:fade .15s}
+.toast svg{display:block;margin:0 auto 6px}
+
+.me-head{background:linear-gradient(180deg,#fff,#F4F5F7);padding:20px 16px;display:flex;gap:12px;align-items:center}
+.me-head .av{width:58px;height:58px;border-radius:50%}
+.me-head b{font-size:18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);background:#fff;margin:0 12px;border-radius:12px;padding:14px 0;text-align:center}
+.stats b{font-size:19px;display:block}
+.stats span{font-size:12px;color:var(--ink2)}
+.list{background:#fff;margin:12px;border-radius:12px}
+.list .it{display:flex;align-items:center;gap:10px;padding:13px 14px;border-bottom:1px solid var(--line);font-size:14px;cursor:pointer}
+.list .it:last-child{border:0}
+.list .it span{flex:1}
+.list .it small{color:var(--ink3);font-size:12px}
+
+/* ---------- admin ---------- */
+.admin{background:#fff;border:1px solid var(--admin-line);border-radius:14px;overflow:hidden}
+.ad-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--admin-line);background:#FAFBFC;gap:10px;flex-wrap:wrap}
+.ad-head h2{font-size:16px;display:flex;align-items:center;gap:8px}
+.ad-head h2 small{font-size:12px;font-weight:400;color:#7b8794}
+.reset{font-size:12px;color:#52606D;border:1px solid var(--admin-line);border-radius:6px;padding:4px 10px;background:#fff}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 18px 0}
+.kpi{border:1px solid var(--admin-line);border-radius:10px;padding:10px 12px}
+.kpi span{font-size:12px;color:#7b8794}
+.kpi b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.ad-tabs{display:flex;gap:4px;padding:14px 18px 0;border-bottom:1px solid var(--admin-line);overflow-x:auto}
+.ad-tabs button{padding:8px 12px;font-size:13px;color:#52606D;border-bottom:2px solid transparent;white-space:nowrap}
+.ad-tabs button.on{color:var(--admin-ink);font-weight:700;border-color:var(--wx)}
+.ad-body{padding:16px 18px 20px}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end;background:#F7F9FA;border:1px solid var(--admin-line);border-radius:10px;padding:12px}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:#52606D}
+.form input,.form select{height:34px;border:1px solid #CBD2D9;border-radius:6px;padding:0 8px;background:#fff;font-size:13px;min-width:0}
+.form .go{height:34px;border-radius:6px;background:var(--wx);color:#fff;font-weight:600;font-size:13px}
+.form-t{font-size:13px;font-weight:700;margin:16px 0 8px}
+.form-t:first-child{margin-top:0}
+.tw{overflow-x:auto;margin-top:12px;border:1px solid var(--admin-line);border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;white-space:nowrap}
+th{background:#F7F9FA;color:#52606D;font-weight:600;text-align:left;padding:8px 10px;border-bottom:1px solid var(--admin-line)}
+td{padding:8px 10px;border-bottom:1px solid #F0F2F4}
+tr:last-child td{border:0}
+td .zh{font-family:var(--cn)}
+.pill{display:inline-block;font-size:11px;border-radius:10px;padding:1px 8px;background:#F0F2F4;color:#52606D}
+.pill.g{background:var(--wx-l);color:var(--wx-d)} .pill.o{background:var(--orange-l);color:var(--orange)}
+.del{font-size:12px;color:#CF1124}
+.flash{animation:flash 1.4s}
+@keyframes flash{0%{background:#E8F8EF}100%{background:transparent}}
+.ad-note{font-size:12px;color:#7b8794;margin-top:10px}
+
+@media (max-width:1100px){
+  .wrap{grid-template-columns:1fr}
+  .phone-col{position:static}
+}
+@media (max-width:440px){
+  .wrap{padding:0;gap:16px}
+  .phone{width:100%;height:780px;border-radius:0;padding:0;box-shadow:none}
+  .screen{border-radius:0}
+  .admin{border-radius:0;border-left:0;border-right:0}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="band">SAMPLE · ZTW 시연용</div>
+<div class="intro"><p>위챗 미니프로그램 화면 흐름 시연 — 실제 납품은 위챗 공식 개발도구(WXML/WXSS)로 개발</p></div>
+
+<main class="wrap">
+  <section class="phone-col" aria-label="미니프로그램 화면">
+    <div class="phone"><div class="screen" id="screen">
+      <div class="status"><span>9:41</span><span class="sys">
+        <svg width="18" height="11" viewBox="0 0 18 11"><rect x="0" y="7" width="3" height="4" rx="1" fill="#111"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#111"/><rect x="10" y="2.5" width="3" height="8.5" rx="1" fill="#111"/><rect x="15" y="0" width="3" height="11" rx="1" fill="#111"/></svg>
+        <svg width="16" height="11" viewBox="0 0 16 11"><path d="M8 2.2c2.3 0 4.3.9 5.9 2.3l1.1-1.2A10 10 0 0 0 8 .5 10 10 0 0 0 1 3.3l1.1 1.2A8.4 8.4 0 0 1 8 2.2Zm0 3.3c1.4 0 2.6.5 3.6 1.3l1.1-1.2A7 7 0 0 0 8 3.9a7 7 0 0 0-4.7 1.7l1.1 1.2c1-.8 2.2-1.3 3.6-1.3Zm0 3.3c.6 0 1.1.2 1.5.5L8 11 6.5 9.3c.4-.3.9-.5 1.5-.5Z" fill="#111"/></svg>
+        <svg width="26" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="#111" opacity=".4"/><rect x="2" y="2" width="17" height="8" rx="1.6" fill="#111"/><rect x="24" y="4" width="1.6" height="4" rx=".8" fill="#111" opacity=".4"/></svg>
+      </span></div>
+      <div class="nav">
+        <button class="back" id="back" aria-label="返回" hidden><svg width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <h1 id="title">韩游通</h1>
+        <div class="capsule" aria-hidden="true"><span><svg width="20" height="4" viewBox="0 0 20 4"><circle cx="2" cy="2" r="2" fill="#111"/><circle cx="10" cy="2" r="2" fill="#111"/><circle cx="18" cy="2" r="2" fill="#111"/></svg></span><i></i><span><svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7.5" fill="none" stroke="#111" stroke-width="1.6"/><circle cx="9" cy="9" r="3" fill="#111"/></svg></span></div>
+      </div>
+      <div class="body" id="body"></div>
+      <div id="dock" style="display:contents"></div>
+      <nav class="tabbar" id="tabbar"></nav>
+    </div></div>
+  </section>
+
+  <section class="admin" aria-label="관리자 화면">
+    <div class="ad-head">
+      <h2>관리자 화면 <small>입점 업체·할인권 운영 (상담사/운영자용)</small></h2>
+      <button class="reset" id="reset">데모 초기화</button>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="ad-tabs" id="adtabs"></div>
+    <div class="ad-body" id="adbody"></div>
+  </section>
+</main>
+
+<footer>© 2026 ZTW · 제안용 시연 화면입니다. 화면·설계의 무단 복제·사용을 금합니다.</footer>
+
+<script>
+(() => {
+'use strict';
+const RATE = 190; // ponytail: fixed demo rate, real build reads a daily rate from admin settings
+const won = k => '₩' + Number(k).toLocaleString('ko-KR');
+const cny = k => '约 ¥' + Math.round(k / RATE).toLocaleString('zh-CN');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $ = id => document.getElementById(id);
+const today = () => new Date().toISOString().slice(0, 10);
+const nowStr = () => { const d = new Date(); return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
+
+/* ---------- icons ---------- */
+const I = {
+  deal:'<path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4Z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.5 14.5l5-5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="9.7" cy="9.7" r="1.1" fill="#fff"/><circle cx="14.3" cy="14.3" r="1.1" fill="#fff"/>',
+  food:'<path d="M4 12h16a8 8 0 0 1-16 0Z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3l-3 7M19 4l-5 6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>',
+  beauty:'<circle cx="6.5" cy="17.5" r="2.7" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="17.5" cy="17.5" r="2.7" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M8.5 15.5 17 3M15.5 15.5 7 3" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>',
+  clinic:'<rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M12 8v8M8 12h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>',
+  hotel:'<path d="M3 19V6M3 15h18v4M21 15v-3a3 3 0 0 0-3-3h-7v6" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="11.5" r="2" fill="none" stroke="#fff" stroke-width="1.8"/>',
+  pin:'<path d="M12 21s-6.5-6.1-6.5-11a6.5 6.5 0 0 1 13 0c0 4.9-6.5 11-6.5 11Z" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="10" r="2.3" fill="none" stroke="currentColor" stroke-width="1.7"/>',
+  clock:'<circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',
+  chat:'<path d="M4 5.5h16v10H9l-4 3.5v-3.5H4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 10.5h.01M12 10.5h.01M16 10.5h.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
+  star:'<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+  check:'<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 12.3l2.7 2.7L16.3 9.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+  shield:'<path d="M12 3l7 3v5.5c0 4.4-3 7.8-7 9.5-4-1.7-7-5.1-7-9.5V6Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',
+  search:'<circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 16l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+  lang:'<path d="M4 6h9M8.5 4v2M6 6c.6 3 2.6 5.5 5.5 6.8M11 6c-.7 3.2-3 6-6.5 7.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 20l3.5-8 3.5 8M13.2 17.3h4.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+  right:'<path d="M9 6l6 6-6 6" fill="none" stroke="#C4C7CC" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+};
+const ic = (n, s = 18, extra = '') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" ${extra}>${I[n]}</svg>`;
+const TAB_IC = {
+  home: on => `<svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1Z" fill="${on?'currentColor':'none'}" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`,
+  coupon: on => `<svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4Z" fill="${on?'currentColor':'none'}" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9.5 14.5l5-5" stroke="${on?'#fff':'currentColor'}" stroke-width="1.7" stroke-linecap="round"/></svg>`,
+  me: on => `<svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4" fill="${on?'currentColor':'none'}" stroke="currentColor" stroke-width="1.7"/><path d="M4.5 20.5c.8-3.8 3.9-6 7.5-6s6.7 2.2 7.5 6Z" fill="${on?'currentColor':'none'}" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`,
+};
+
+/* ---------- SVG illustrations (no external images) ---------- */
+let gid = 0;
+const BG = {grill:['#FFB36B','#E5482E'],soup:['#FFE3A6','#E9A23B'],tray:['#F6D7A7','#C9773A'],hair:['#F7B5D8','#9B5DE5'],nail:['#FFD1DC','#FF7AA2'],skin:['#B8F0E6','#1FA6A0'],tooth:['#CFE6FF','#4C8DF6'],hotel:['#4C6EF5','#1B2559'],hanok:['#FFC07A','#D9534F'],deal:['#FFB088','#FF4D2E']};
+const SHAPES = {
+  grill:`<ellipse cx="80" cy="78" rx="48" ry="30" fill="#2A2A2A"/><ellipse cx="80" cy="74" rx="42" ry="25" fill="#3B3B3B"/><g stroke="#585858" stroke-width="1.6"><path d="M44 66h72M40 74h80M44 82h72"/></g><g><rect x="52" y="62" width="26" height="13" rx="5" fill="#C0392B"/><rect x="82" y="64" width="28" height="13" rx="5" fill="#B03026"/><rect x="64" y="76" width="30" height="12" rx="5" fill="#C7432F"/><path d="M56 67q8 2 18-1M86 69q9 2 20-1M68 81q10 2 22-1" stroke="#F6D3C8" stroke-width="1.6" fill="none" stroke-linecap="round"/></g><circle cx="104" cy="84" r="4" fill="#F7EBD0"/><circle cx="54" cy="82" r="3.5" fill="#F7EBD0"/><g stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".75"><path d="M62 46q-5-7 0-14t0-14"/><path d="M80 44q-5-7 0-14t0-14"/><path d="M98 46q-5-7 0-14t0-14"/></g>`,
+  soup:`<ellipse cx="80" cy="96" rx="52" ry="8" fill="#000" opacity=".12"/><path d="M30 62h100c0 22-20 36-50 36S30 84 30 62Z" fill="#3E2A20"/><ellipse cx="80" cy="62" rx="50" ry="13" fill="#5A3E2E"/><ellipse cx="80" cy="62" rx="44" ry="10" fill="#F3E2B5"/><ellipse cx="78" cy="60" rx="22" ry="8" fill="#F7D9A8"/><circle cx="58" cy="62" r="3.5" fill="#B5261E"/><circle cx="102" cy="60" r="3.5" fill="#B5261E"/><path d="M94 66l8-2M60 56l7 1" stroke="#4CAF50" stroke-width="2.4" stroke-linecap="round"/><g stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".8"><path d="M66 42q-4-6 0-12t0-12"/><path d="M84 40q-4-6 0-12t0-12"/></g>`,
+  tray:`<rect x="20" y="34" width="120" height="66" rx="10" fill="#7B4A24"/><rect x="25" y="39" width="110" height="56" rx="8" fill="#9A6234"/><circle cx="80" cy="67" r="15" fill="#fff"/><circle cx="80" cy="67" r="11" fill="#F5F1E8"/><circle cx="46" cy="52" r="9" fill="#fff"/><circle cx="46" cy="52" r="6" fill="#D9412B"/><circle cx="114" cy="52" r="9" fill="#fff"/><circle cx="114" cy="52" r="6" fill="#6DA544"/><circle cx="46" cy="82" r="9" fill="#fff"/><circle cx="46" cy="82" r="6" fill="#F2C14E"/><circle cx="114" cy="82" r="9" fill="#fff"/><circle cx="114" cy="82" r="6" fill="#B5651D"/><path d="M128 30l-26 50M134 32l-26 50" stroke="#D9B26B" stroke-width="2" stroke-linecap="round"/>`,
+  hair:`<g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"><circle cx="58" cy="82" r="11"/><circle cx="84" cy="88" r="11"/></g><path d="M64 73l42-46M78 78l26-50" stroke="#fff" stroke-width="5" stroke-linecap="round"/><rect x="108" y="40" width="12" height="56" rx="3" fill="#fff" opacity=".9"/><g stroke="#fff" stroke-width="2.4" opacity=".9"><path d="M120 46h8M120 53h8M120 60h8M120 67h8M120 74h8M120 81h8M120 88h8"/></g><path d="M34 32l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="#fff" opacity=".85"/>`,
+  nail:`<rect x="66" y="28" width="28" height="22" rx="4" fill="#2B2B2B"/><path d="M58 56q0-6 6-6h32q6 0 6 6v36q0 8-8 8H66q-8 0-8-8Z" fill="#fff" opacity=".9"/><path d="M62 66h36v26q0 5-5 5H67q-5 0-5-5Z" fill="#E8457A"/><circle cx="118" cy="44" r="6" fill="#fff" opacity=".85"/><circle cx="128" cy="62" r="4" fill="#fff" opacity=".7"/><path d="M36 76l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="#fff" opacity=".85"/>`,
+  skin:`<circle cx="80" cy="62" r="34" fill="#fff" opacity=".25"/><rect x="56" y="38" width="48" height="48" rx="12" fill="#fff"/><path d="M80 50v24M68 62h24" stroke="#1FA6A0" stroke-width="7" stroke-linecap="round"/><path d="M122 34q10 14 10 22a10 10 0 0 1-20 0q0-8 10-22Z" fill="#fff" opacity=".85"/><path d="M34 86l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="#fff" opacity=".8"/>`,
+  tooth:`<path d="M60 36c8-5 14 0 20 0s12-5 20 0c9 6 6 22 2 32-3 8-4 30-11 30-5 0-5-16-11-16s-6 16-11 16c-7 0-8-22-11-30-4-10-7-26 2-32Z" fill="#fff"/><path d="M118 30l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="#fff"/><path d="M38 70l2.4 5.6 5.6 2.4-5.6 2.4L38 86l-2.4-5.6L30 78l5.6-2.4Z" fill="#fff" opacity=".8"/>`,
+  hotel:`<circle cx="124" cy="26" r="10" fill="#FFE8A3"/><circle cx="128" cy="22" r="9" fill="#2A3A8C"/><g fill="#fff" opacity=".7"><circle cx="30" cy="20" r="1.2"/><circle cx="52" cy="34" r="1"/><circle cx="96" cy="16" r="1.2"/><circle cx="20" cy="46" r="1"/></g><rect x="48" y="30" width="64" height="90" rx="3" fill="#0F1A45"/><rect x="48" y="30" width="64" height="8" fill="#2A3A8C"/><g fill="#FFD66B">${[0,1,2,3,4,5,6].map(r=>[0,1,2,3].map(c=>((r*3+c)%4)?`<rect x="${56+c*13}" y="${44+r*11}" width="8" height="6" rx="1" opacity="${(r+c)%3?1:.35}"/>`:'').join('')).join('')}</g><rect x="20" y="70" width="28" height="50" fill="#16225A"/><rect x="112" y="60" width="30" height="60" fill="#16225A"/>`,
+  hanok:`<circle cx="118" cy="38" r="14" fill="#FFE6B0" opacity=".9"/><rect x="0" y="96" width="160" height="24" fill="#5B3A29" opacity=".35"/><rect x="38" y="66" width="84" height="32" fill="#F4E4C8"/><g stroke="#7B4A24" stroke-width="2"><path d="M50 70v28M66 70v28M94 70v28M110 70v28"/><path d="M70 74h20v24H70Z" fill="#E9D3AC"/><path d="M80 74v24M70 86h20"/></g><path d="M18 64q20-4 30-20h64q10 16 30 20q-12 4-20 2H38q-8 2-20-2Z" fill="#2F2A2A"/><path d="M48 44h64" stroke="#4A4040" stroke-width="3"/>`,
+  deal:`<path d="M30 36h100v14a10 10 0 0 0 0 20v14H30V70a10 10 0 0 0 0-20Z" fill="#fff"/><path d="M62 36v48" stroke="#FF4D2E" stroke-width="2" stroke-dasharray="4 4"/><text x="98" y="68" text-anchor="middle" font-size="22" font-weight="700" fill="#FF4D2E" font-family="Arial">%</text>`,
+};
+const art = kind => { const id = 'g' + (++gid); const [a, b] = BG[kind] || BG.deal;
+  return `<svg viewBox="0 0 160 120" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="160" height="120" fill="url(#${id})"/>${SHAPES[kind] || SHAPES.deal}</svg>`; };
+const heroArt = () => `<svg viewBox="0 0 360 132" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22C58B"/><stop offset="1" stop-color="#0A9F63"/></linearGradient></defs><rect width="360" height="132" fill="url(#hg)"/><circle cx="300" cy="34" r="46" fill="#fff" opacity=".08"/><circle cx="330" cy="120" r="60" fill="#fff" opacity=".07"/><path d="M180 132V104l14-10 14 10v28Z" fill="#fff" opacity=".18"/><g fill="#fff" opacity=".28"><rect x="214" y="80" width="18" height="52"/><rect x="236" y="92" width="14" height="40"/><rect x="316" y="86" width="20" height="46"/><rect x="340" y="98" width="20" height="34"/></g><path d="M252 132c10-30 30-44 56-44v44Z" fill="#fff" opacity=".22"/><rect x="281" y="40" width="4" height="52" fill="#fff" opacity=".9"/><path d="M276 92h14l-3-10h-8Z" fill="#fff" opacity=".9"/><ellipse cx="283" cy="56" rx="9" ry="4" fill="#fff"/><rect x="282" y="26" width="2" height="14" fill="#fff"/><path d="M0 132v-12q60-18 120-6t120-4v22Z" fill="#fff" opacity=".12"/></svg>`;
+const avatar = (bg, ch) => `<svg viewBox="0 0 40 40"><rect width="40" height="40" fill="${bg}"/><text x="20" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" font-family="PingFang SC,Microsoft YaHei,sans-serif">${ch}</text></svg>`;
+const fakeQR = seed => { // ponytail: decorative pseudo-QR from the code; real build renders a scannable QR via wx canvas lib
+  const n = 25, cells = []; let h = 0; for (const c of seed) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const rnd = () => (h = (h * 1103515245 + 12345) >>> 0) / 4294967296;
+  const finder = (x, y) => (x < 8 && y < 8) || (x > n - 9 && y < 8) || (x < 8 && y > n - 9);
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (!finder(x, y) && rnd() > .52) cells.push(`M${x} ${y}h1v1h-1Z`);
+  const f = (x, y) => `<rect x="${x+.5}" y="${y+.5}" width="6" height="6" fill="none" stroke="#111"/><rect x="${x+2}" y="${y+2}" width="3" height="3" fill="#111"/>`;
+  return `<svg viewBox="0 0 25 25" shape-rendering="crispEdges">${f(0,0)}${f(n-7,0)}${f(0,n-7)}<path d="${cells.join('')}" fill="#111"/></svg>`;
+};
+
+/* ---------- data ---------- */
+const CATS = [
+  {id:'deal', zh:'优惠折扣', ko:'할인권', color:'#FF6A3D'},
+  {id:'food', zh:'餐厅预约', ko:'식당', color:'#FF9F1C', art:'grill'},
+  {id:'beauty', zh:'美发预约', ko:'미용실', color:'#E05BA8', art:'hair'},
+  {id:'clinic', zh:'医院预约', ko:'병원', color:'#1FA6A0', art:'skin'},
+  {id:'hotel', zh:'酒店住宿', ko:'숙박', color:'#4C6EF5', art:'hotel'},
+];
+const catOf = id => CATS.find(c => c.id === id);
+const P = (name, krw) => ({name, krw});
+const SEED = () => ({
+  shops: [
+    {id:'f1',cat:'food',name:'明洞·青瓦韩牛烤肉',area:'明洞',addr:'首尔中区明洞8街 21号 2楼',hours:'11:30–23:00',rate:4.8,cnt:1286,tags:['中文菜单','1++韩牛','可包间'],art:'grill',rec:1,products:[P('韩牛精品拼盘（2人份）',158000),P('韩牛里脊 150g',69000),P('午市韩牛定食',39000)]},
+    {id:'f2',cat:'food',name:'弘大·本家参鸡汤',area:'弘大',addr:'首尔麻浦区杨花路 152号',hours:'10:00–22:00',rate:4.7,cnt:932,tags:['三十年老店','滋补'],art:'soup',products:[P('传统人参鸡汤',19000),P('乌鸡参鸡汤',26000),P('双人套餐（含海鲜饼）',52000)]},
+    {id:'f3',cat:'food',name:'江南·月光韩定食',area:'江南',addr:'首尔江南区狎鸥亭路 48号',hours:'11:00–22:00',rate:4.9,cnt:511,tags:['宫廷料理','适合宴请'],art:'tray',products:[P('月光宫廷套餐',89000),P('午间韩定食',45000)]},
+    {id:'b1',cat:'beauty',name:'清潭·LUMIÈRE 造型沙龙',area:'江南',addr:'首尔江南区清潭洞 宣陵路 822号',hours:'10:00–21:00',rate:4.9,cnt:708,tags:['韩式烫发','中文造型师'],art:'hair',rec:1,products:[P('韩式气垫烫（含洗剪）',180000),P('女士洗剪吹',55000),P('头皮护理 SPA',90000)]},
+    {id:'b2',cat:'beauty',name:'明洞·Pinky 美甲美睫',area:'明洞',addr:'首尔中区明洞10街 7号 3楼',hours:'11:00–21:00',rate:4.6,cnt:344,tags:['美甲','睫毛嫁接'],art:'nail',products:[P('法式美甲',45000),P('睫毛嫁接（自然款）',60000)]},
+    {id:'k1',cat:'clinic',name:'江南·清肌皮肤科诊所',area:'江南',addr:'首尔江南区江南大路 396号 9楼',hours:'10:00–19:00（周六至15:00）',rate:4.8,cnt:1520,tags:['皮肤管理','中文翻译陪同'],art:'skin',rec:1,products:[P('水光针 1次',220000),P('基础皮肤管理',99000),P('皮肤检测与面诊',30000)]},
+    {id:'k2',cat:'clinic',name:'新沙·微笑牙科',area:'江南',addr:'首尔江南区新沙洞 论岘路 150号',hours:'09:30–18:30',rate:4.7,cnt:402,tags:['洗牙','冷光美白'],art:'tooth',products:[P('洗牙 + 口腔检查',80000),P('冷光美白 1次',250000)]},
+    {id:'h1',cat:'hotel',name:'明洞·Stay 9 精品酒店',area:'明洞',addr:'首尔中区退溪路 123号（明洞站 3号口）',hours:'入住 15:00 / 退房 11:00',rate:4.8,cnt:2210,tags:['近地铁','含早餐'],art:'hotel',rec:1,products:[P('高级大床房 / 晚',165000),P('家庭三人房 / 晚',230000)]},
+    {id:'h2',cat:'hotel',name:'北村·云庭韩屋民宿',area:'北村',addr:'首尔钟路区北村路 11街 25号',hours:'入住 16:00 / 退房 11:00',rate:4.9,cnt:618,tags:['韩屋体验','免费韩服拍照'],art:'hanok',products:[P('韩屋双人房 / 晚',210000),P('独栋整院 / 晚',480000)]},
+  ],
+  tpls: [
+    {id:'t1',shop:'f1',name:'韩牛拼盘立减券',val:'减₩20,000',cond:'满₩150,000可用',qty:100,until:'2026-12-31'},
+    {id:'t2',shop:'b1',name:'烫发造型 85折',val:'8.5折',cond:'限烫发项目',qty:50,until:'2026-12-31'},
+    {id:'t3',shop:'k1',name:'皮肤管理首单 9折',val:'9折',cond:'首次到店可用',qty:80,until:'2026-12-15'},
+    {id:'t4',shop:'h1',name:'连住两晚立减',val:'减₩30,000',cond:'连住2晚及以上',qty:40,until:'2027-01-31'},
+  ],
+  staff: [
+    {id:'s1',shop:'f1',name:'김민준',code:'8421'},{id:'s2',shop:'f1',name:'박지우',code:'3390'},
+    {id:'s3',shop:'b1',name:'이서연',code:'5307'},{id:'s4',shop:'k1',name:'최유나',code:'7716'},{id:'s5',shop:'h1',name:'정하늘',code:'2648'},
+  ],
+  claims: [
+    {id:'c1',tpl:'t1',code:'482913',status:'unused',claimedAt:'11/01 19:20'},
+    {id:'c2',tpl:'t4',code:'730158',status:'used',claimedAt:'10/28 10:05',usedAt:'10/29 15:42',staff:'정하늘'},
+  ],
+  chats: [],
+  seq: 100,
+});
+const KEY = 'ztw-wxmp-demo-v1';
+let S;
+try { S = JSON.parse(localStorage.getItem(KEY)) || SEED(); } catch { S = SEED(); }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
+const uid = p => p + (++S.seq);
+const shopOf = id => S.shops.find(s => s.id === id);
+const tplOf = id => S.tpls.find(t => t.id === id);
+const minPrice = s => Math.min(...s.products.map(p => p.krw));
+const expired = t => t.until < today();
+const claimedCount = t => S.claims.filter(c => c.tpl === t.id).length;
+const left = t => t.qty - claimedCount(t);
+
+/* ---------- mini program router ---------- */
+let tab = 'home', stack = [{v:'home'}], ui = {area:'全部', seg:'center', prod:{}};
+const top_ = () => stack[stack.length - 1];
+const go = (v, p = {}) => { stack.push({v, ...p}); render(true); };
+const back = () => { if (stack.length > 1) { stack.pop(); render(true); } };
+const switchTab = t => { tab = t; stack = [{v: t}]; render(true); };
+$('back').onclick = back;
+
+const TITLES = {home:'韩游通', coupon:'优惠券', me:'我的', list:'', detail:'商家详情', chat:'韩游通客服 · 小韩', cpd:'券码详情'};
+function render(scrollTop) {
+  const t = top_(), body = $('body');
+  const views = {home: vHome, coupon: vCoupon, me: vMe, list: vList, detail: vDetail, chat: vChat, cpd: vCouponDetail};
+  body.innerHTML = views[t.v](t);
+  $('dock').replaceChildren(...body.querySelectorAll(':scope > .actbar, :scope > .inputbar'));
+  $('title').textContent = t.v === 'list' ? catOf(t.cat).zh : TITLES[t.v];
+  $('back').hidden = stack.length < 2;
+  $('tabbar').hidden = stack.length > 1;
+  $('screen').style.setProperty('--navbg', t.v === 'chat' ? '#EDEDED' : '#fff');
+  $('tabbar').innerHTML = [['home','首页'],['coupon','优惠券'],['me','我的']].map(([k, l]) => `<button class="${tab===k?'on':''}" data-tab="${k}">${TAB_IC[k](tab===k)}<span>${l}</span></button>`).join('');
+  if (scrollTop) body.scrollTop = 0;
+  if (t.v === 'chat') { body.scrollTop = body.scrollHeight; }
+}
+
+const shopCard = s => { const cp = S.tpls.find(t => t.shop === s.id && !expired(t) && left(t) > 0);
+  return `<div class="shop" data-shop="${s.id}"><div class="th">${art(s.art)}</div><div class="inf">
+  <div class="nm">${esc(s.name)}</div>
+  <div class="rate">${'★★★★★'.slice(0, Math.round(s.rate))}<b>${s.rate}</b><em>${s.cnt}条评价</em></div>
+  <div class="meta">${esc(s.area)} · ${catOf(s.cat).zh}</div>
+  <div class="tags"><span class="tag g">中文客服</span>${s.tags.slice(0, 2).map(x => `<span class="tag">${esc(x)}</span>`).join('')}${cp ? `<span class="tag o">券 ${esc(cp.val)}</span>` : ''}</div>
+  <div class="from"><b>${won(minPrice(s))}</b> 起 · ${cny(minPrice(s))}</div></div></div>`; };
+
+const couponCard = (t, mode, c) => { const s = shopOf(t.shop); const l = left(t);
+  let act = '';
+  if (mode === 'take') act = expired(t) ? '<button class="take" disabled>已过期</button>' : l <= 0 ? '<button class="take" disabled>已抢光</button>' : `<button class="take" data-take="${t.id}">领取</button>`;
+  if (mode === 'mine') act = c.status === 'unused' ? (expired(t) ? '<span class="stamp no">已过期</span>' : `<button class="take" data-cpd="${c.id}" style="background:var(--wx)">去使用</button>`) : '';
+  const used = mode === 'mine' && (c.status === 'used' || expired(t));
+  return `<div class="cp ${used ? 'used' : ''}" ${mode==='mine' ? `data-cpd="${c.id}"` : ''}><div class="l"><b>${esc(t.val)}</b><small>${esc(t.cond)}</small></div><div class="r">
+  <div class="n">${esc(t.name)}</div><div class="s">${s ? esc(s.name) : ''}</div>
+  <div class="v"><span>${mode === 'take' ? `剩余 ${Math.max(l,0)} 张 · ` : ''}有效期至 ${t.until}</span>${mode==='mine' && c.status==='used' ? '' : act}</div></div>
+  ${mode==='mine' && c.status==='used' ? '<span class="stamp ok">已核销</span>' : ''}</div>`; };
+
+function vHome() {
+  const live = S.tpls.filter(t => !expired(t) && left(t) > 0);
+  return `<div class="pad">
+  <div class="search">${ic('search', 16)}搜索餐厅、美发、医美、酒店</div>
+  <div class="hero">${heroArt()}<div class="txt"><b>首尔吃喝玩乐<br>中文客服帮你订</b><small>免费代预约 · 到店付款</small></div></div>
+  <div class="trust"><span>${ic('chat', 14)}全程中文沟通</span><span>${ic('shield', 14)}精选正规商家</span><span>${ic('check', 14)}到店核销优惠</span></div>
+  <div class="cats">${CATS.map(c => `<button data-cat="${c.id}"><span class="ic" style="background:${c.color}">${ic(c.id, 26)}</span>${c.zh}</button>`).join('')}</div>
+  <div class="sec"><h2>限时领券</h2><a data-tab="coupon">全部 ${live.length} 张 ›</a></div>
+  <div class="strip">${live.map(t => `<div class="mini-cp" data-tab="coupon"><b>${esc(t.val)}</b><span>${esc(t.name)}</span><span>${esc(shopOf(t.shop)?.name || '')}</span></div>`).join('') || '<div class="empty" style="padding:10px">暂无可领优惠券</div>'}</div>
+  <div class="sec"><h2>精选商家</h2><a data-cat="food">更多 ›</a></div>
+  ${S.shops.filter(s => s.rec).map(shopCard).join('')}
+  </div>`;
+}
+function vList(t) {
+  const all = S.shops.filter(s => s.cat === t.cat);
+  const areas = ['全部', ...new Set(all.map(s => s.area))];
+  const shown = all.filter(s => ui.area === '全部' || s.area === ui.area);
+  return `<div class="chips">${areas.map(a => `<button class="chip ${a===ui.area?'on':''}" data-area="${esc(a)}">${esc(a)}</button>`).join('')}</div>
+  <div class="pad">${shown.map(shopCard).join('') || '<div class="empty">该区域暂无商家</div>'}</div>`;
+}
+function vDetail(t) {
+  const s = shopOf(t.shop); const sel = ui.prod[s.id] ?? 0;
+  const cps = S.tpls.filter(x => x.shop === s.id && !expired(x) && left(x) > 0);
+  const hoursLabel = s.cat === 'hotel' ? '入住/退房' : '营业时间';
+  return `<div class="dhero">${art(s.art)}</div>
+  <div class="dcard"><h2>${esc(s.name)}</h2>
+    <div class="rate" style="margin-top:6px">${'★★★★★'.slice(0, Math.round(s.rate))}<b>${s.rate}</b><em>${s.cnt}条评价 · ${catOf(s.cat).zh}</em></div>
+    <div class="tags" style="margin-top:8px"><span class="tag g">中文客服代预约</span>${s.tags.map(x => `<span class="tag">${esc(x)}</span>`).join('')}</div>
+    ${cps.map(c => `<div class="cpline"><span>券 · ${esc(c.name)}（${esc(c.val)}）</span><button data-take="${c.id}">领取</button></div>`).join('')}
+  </div>
+  <div class="info">
+    <div class="row">${ic('pin')}<span>${esc(s.addr)}</span>${ic('right', 16)}</div>
+    <div class="row">${ic('clock')}<span>${hoursLabel}　${esc(s.hours)}</span></div>
+    <div class="row">${ic('lang')}<span>支持中文 · 预约由韩游通客服致电商家确认</span></div>
+  </div>
+  <div class="block"><h3>选择项目</h3>
+    ${s.products.map((p, i) => `<div class="prod ${i===sel?'on':''}" data-prod="${i}"><span class="rd">${i===sel?'<svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 5.2l2 2L8 3" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>':''}</span><span class="pn">${esc(p.name)}</span><span class="pp"><b>${won(p.krw)}</b><small>${cny(p.krw)}</small></span></div>`).join('')}
+  </div>
+  <div class="note">· 人民币价格按 1 CNY ≈ ${RATE} KRW 估算，以到店实际结算为准。<br>· 本平台不在线收款，费用到店支付；预约结果由客服在微信中回复。</div>
+  <div class="actbar"><button class="ib">${ic('star', 22)}收藏</button><button class="ib" data-consult="1">${ic('chat', 22)}客服</button><button class="btn" data-consult="1">${ic('chat', 18, 'style="color:#fff"')}咨询预约</button></div>`;
+}
+const AGENT = avatar('#07C160', '韩'), ME = avatar('#8E7CC3', '我');
+function vChat(t) {
+  const ch = S.chats.find(c => c.id === t.chat);
+  const s = shopOf(ch.shop), p = s.products[ch.prod];
+  const card = `<div class="mpcard"><div class="h">${ic('chat', 12)}韩游通 · 预约咨询</div><div class="t">${esc(s.name)}</div><div class="p">${esc(p.name)}</div><div class="im">${art(s.art)}</div><div class="f"><span>${esc(s.area)} · ${esc(s.hours.split('（')[0])}</span><b>${won(p.krw)}</b></div></div>`;
+  const msgs = ch.msgs.map(m => m.t === 'card'
+    ? `<div class="msg"><div class="av">${AGENT}</div><div><div class="bub">您好，我是韩游通预约顾问小韩。已收到您从小程序发来的咨询：</div><div style="margin-top:6px">${card}</div></div></div>`
+    : m.t === 'typing' ? `<div class="msg"><div class="av">${AGENT}</div><div class="bub"><span class="typing"><i></i><i></i><i></i></span></div></div>`
+    : `<div class="msg ${m.me?'me':''}"><div class="av">${m.me?ME:AGENT}</div><div class="bub">${esc(m.text)}</div></div>`).join('');
+  const quick = ch.stage === 1 ? `<div class="quick">${['明天 19:00 · 2位','后天中午 · 4位','这周六 · 1位'].map(q => `<button data-quick="${q}">${q}</button>`).join('')}</div>` : '';
+  return `<div class="chat"><div class="sys-tip"><span>${ch.time}</span></div>
+  <div class="sys-tip" style="font-size:10.5px">正式版通过 wx.openCustomerServiceChat 进入微信客服会话</div>
+  ${msgs}${quick}</div>
+  <form class="inputbar" id="chatform"><input id="chatin" placeholder="输入日期、时间、人数…" autocomplete="off" aria-label="消息"><button>发送</button></form>`;
+}
+function vCoupon() {
+  const mine = S.claims.slice().reverse();
+  return `<div class="seg"><button class="${ui.seg==='center'?'on':''}" data-seg="center">领券中心</button><button class="${ui.seg==='mine'?'on':''}" data-seg="mine">我的券（${S.claims.filter(c=>c.status==='unused'&&!expired(tplOf(c.tpl))).length}）</button></div>
+  <div class="pad">${ui.seg === 'center'
+    ? (S.tpls.slice().reverse().map(t => couponCard(t, 'take')).join('') || '<div class="empty">暂无优惠券</div>')
+    : (mine.map(c => couponCard(tplOf(c.tpl), 'mine', c)).join('') || '<div class="empty">还没有领取优惠券</div>')}
+  <div class="note" style="padding:6px 2px 20px">到店消费时出示券码，由店员输入「店员核销码」完成核销。</div></div>`;
+}
+function vCouponDetail(t) {
+  const c = S.claims.find(x => x.id === t.claim), tp = tplOf(c.tpl), s = shopOf(tp.shop);
+  const used = c.status === 'used';
+  return `<div class="cpd"><div class="top"><b>${esc(tp.val)}</b>${esc(tp.name)}<div style="font-size:12px;opacity:.9;margin-top:4px">${esc(s.name)}</div></div>
+  <div class="qr ${used?'dim':''}">${fakeQR(c.code)}</div>
+  <div style="font-size:12px;color:var(--ink3)">券码</div><div class="code">${c.code}</div>
+  <div style="padding:14px 16px 0">${used ? `<div class="btn ghost" style="cursor:default">已于 ${c.usedAt} 核销 · 店员 ${esc(c.staff)}</div>` : expired(tp) ? '<div class="btn ghost" style="cursor:default;color:#999;border-color:#ccc">已过期</div>' : `<button class="btn" style="width:100%" data-verify="${c.id}">门店核销</button>`}</div>
+  <div class="rules">使用说明<br>1. ${esc(tp.cond)}，有效期至 ${tp.until}。<br>2. 到店结账前向店员出示本页面。<br>3. 店员在本页输入专属核销码后即完成核销，每张券限用一次。</div></div>`;
+}
+function vMe() {
+  const unused = S.claims.filter(c => c.status === 'unused' && !expired(tplOf(c.tpl))).length;
+  return `<div class="me-head"><div class="av">${ME}</div><div><b>微信用户</b><div style="font-size:12px;color:var(--ink3)">来自 上海 · 首尔旅行中</div></div></div>
+  <div class="stats"><div><b>${unused}</b><span>可用券</span></div><div><b>${S.claims.filter(c=>c.status==='used').length}</b><span>已核销</span></div><div><b>${S.chats.length}</b><span>咨询记录</span></div></div>
+  <div class="list">${S.chats.slice().reverse().map(c => { const s = shopOf(c.shop); return `<div class="it" data-openchat="${c.id}">${ic('chat', 18, 'style="color:var(--wx)"')}<span>${esc(s.name)}<br><small>${esc(s.products[c.prod].name)} · ${c.time}</small></span>${ic('right', 16)}</div>`; }).join('') || '<div class="it" style="cursor:default"><span style="color:var(--ink3);font-size:13px">还没有咨询记录，去首页看看吧</span></div>'}</div>
+  <div class="list"><div class="it" data-tab="coupon">${ic('deal', 18, 'style="color:var(--orange)"').replace(/#fff/g,'currentColor')}<span>我的优惠券</span>${ic('right', 16)}</div>
+  <div class="it">${ic('lang', 18)}<span>语言</span><small>简体中文</small></div>
+  <div class="it">${ic('shield', 18)}<span>服务说明</span><small>免费代预约 · 到店付款</small></div></div>`;
+}
+
+/* ---------- interactions ---------- */
+const toast = (text, ok = true) => { const el = document.createElement('div'); el.className = 'toast';
+  el.innerHTML = (ok ? ic('check', 34) : '') + esc(text); $('screen').appendChild(el); setTimeout(() => el.remove(), 1500); };
+function take(id) {
+  const t = tplOf(id);
+  if (S.claims.some(c => c.tpl === id && c.status === 'unused')) return toast('您已领取过该券', false);
+  if (left(t) <= 0 || expired(t)) return toast('该券已领完', false);
+  let code; do code = String(Math.floor(100000 + Math.random() * 900000)); while (S.claims.some(c => c.code === code));
+  S.claims.push({id: uid('c'), tpl: id, code, status: 'unused', claimedAt: nowStr()});
+  save(); render(); renderAdmin(); toast('领取成功');
+}
+function consult(shopId) {
+  const ch = {id: uid('ch'), shop: shopId, prod: ui.prod[shopId] ?? 0, time: nowStr(), stage: 0, msgs: [{t:'typing'}]};
+  S.chats.push(ch); save(); go('chat', {chat: ch.id});
+  setTimeout(() => { ch.msgs = [{t:'card'}, {text:'请告诉我您希望的日期、时间和人数，我会马上致电商家为您确认，通常 10 分钟内回复。'}]; ch.stage = 1; save(); if (top_().chat === ch.id) render(); }, 900);
+}
+function userSay(text) {
+  const t = top_(); const ch = S.chats.find(c => c.id === t.chat); if (!ch || !text.trim()) return;
+  ch.msgs.push({me: 1, text: text.trim()}, {t: 'typing'}); ch.stage = 2; save(); render();
+  setTimeout(() => { ch.msgs.pop(); ch.msgs.push({text: '好的，已记录您的需求，正在致电商家确认，请稍等。'}); save(); if (top_().chat === ch.id) render();
+    setTimeout(() => { const s = shopOf(ch.shop); ch.msgs.push({text: `预约成功！${s.name}已为您保留「${text.trim()}」。到店报手机号后四位即可，费用到店支付。如需更改随时告诉我。`}); ch.stage = 3; save(); if (top_().chat === ch.id) render(); }, 1400);
+  }, 800);
+}
+function openVerify(claimId) {
+  const c = S.claims.find(x => x.id === claimId), tp = tplOf(c.tpl);
+  const codes = S.staff.filter(x => x.shop === tp.shop);
+  const m = document.createElement('div'); m.className = 'sheet-mask';
+  m.innerHTML = `<form class="sheet" id="vform"><h3>门店核销</h3><p>请将手机交给店员，由店员输入专属核销码</p>
+  <div class="pin" id="pinbox"><input id="pin" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="店员核销码" placeholder="····"></div>
+  <div class="errmsg" id="perr"></div>
+  <div class="demo-hint">演示用店员码：${codes.length ? codes.map(x => `${esc(x.name)} <b>${esc(x.code)}</b>`).join(' / ') : '该门店尚未登记店员（请在右侧管理后台添加）'}</div>
+  <button class="btn" style="width:100%">确认核销</button></form>`;
+  m.onclick = e => { if (e.target === m) m.remove(); };
+  $('screen').appendChild(m); setTimeout(() => $('pin').focus(), 50);
+  $('vform').onsubmit = e => { e.preventDefault();
+    const v = $('pin').value.trim(), st = codes.find(x => x.code === v);
+    if (!st) { const b = $('pinbox'); b.classList.remove('err'); void b.offsetWidth; b.classList.add('err'); $('perr').textContent = '核销码错误，请店员重新输入'; $('pin').select(); return; }
+    Object.assign(c, {status: 'used', usedAt: nowStr(), staff: st.name}); save(); m.remove(); render(); renderAdmin('log'); toast('核销成功');
+  };
+}
+$('screen').addEventListener('click', e => {
+  const el = e.target.closest('[data-tab],[data-cat],[data-shop],[data-area],[data-prod],[data-consult],[data-take],[data-seg],[data-cpd],[data-verify],[data-quick],[data-openchat]');
+  if (!el) return; const d = el.dataset;
+  if (d.take) { e.stopPropagation(); return take(d.take); }
+  if (d.verify) return openVerify(d.verify);
+  if (d.cpd) return go('cpd', {claim: d.cpd});
+  if (d.tab) { if (d.tab === 'coupon') ui.seg = 'center'; return switchTab(d.tab); }
+  if (d.cat) { if (d.cat === 'deal') { ui.seg = 'center'; return switchTab('coupon'); } ui.area = '全部'; return go('list', {cat: d.cat}); }
+  if (d.shop) return go('detail', {shop: d.shop});
+  if (d.area) { ui.area = d.area; return render(); }
+  if (d.prod) { ui.prod[top_().shop] = +d.prod; return render(); }
+  if (d.consult) return consult(top_().shop);
+  if (d.seg) { ui.seg = d.seg; return render(true); }
+  if (d.quick) return userSay(d.quick);
+  if (d.openchat) return go('chat', {chat: d.openchat});
+});
+$('screen').addEventListener('submit', e => { if (e.target.id === 'chatform') { e.preventDefault(); const v = $('chatin').value; $('chatin').value = ''; userSay(v); } });
+
+/* ---------- admin ---------- */
+let adTab = 'tpl', flashId = null;
+const AD_TABS = [['shop','업체·상품'],['tpl','할인권 발급'],['staff','직원 코드'],['log','사용 내역']];
+const shopOpts = () => S.shops.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('');
+const fl = id => id === flashId ? ' class="flash"' : '';
+function renderAdmin(t) {
+  if (t) adTab = t;
+  const issued = S.tpls.reduce((a, t) => a + Number(t.qty), 0), claimed = S.claims.length, used = S.claims.filter(c => c.status === 'used').length;
+  $('kpis').innerHTML = [['입점 업체', S.shops.length + '곳'],['발급 수량', issued.toLocaleString() + '장'],['수령', claimed + '장'],['사용(核销)', used + '장 · ' + (claimed ? Math.round(used / claimed * 100) : 0) + '%']].map(([k, v]) => `<div class="kpi"><span>${k}</span><b>${v}</b></div>`).join('');
+  $('adtabs').innerHTML = AD_TABS.map(([k, l]) => `<button class="${adTab===k?'on':''}" data-ad="${k}">${l}</button>`).join('');
+  const B = {
+    shop: () => `<div class="form-t">업체 등록</div>
+      <form class="form" id="f-shop"><label>카테고리<select name="cat">${CATS.filter(c=>c.id!=='deal').map(c => `<option value="${c.id}">${c.ko} · ${c.zh}</option>`).join('')}</select></label>
+      <label>업체명(중문)<input name="name" required placeholder="例：东大门·炸鸡啤酒"></label><label>지역(중문)<input name="area" required placeholder="例：东大门"></label>
+      <label>주소(중문)<input name="addr" required placeholder="首尔中区…"></label><label>영업시간<input name="hours" required value="11:00–22:00"></label>
+      <label>대표 상품명(중문)<input name="pname" required placeholder="例：双人炸鸡套餐"></label><label>가격(원)<input name="krw" type="number" min="1000" step="1000" required value="35000"></label>
+      <label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" name="rec" checked style="height:auto">首页 추천</label><button class="go">등록</button></form>
+      <div class="form-t">상품 추가</div>
+      <form class="form" id="f-prod"><label>업체<select name="shop">${shopOpts()}</select></label><label>상품명(중문)<input name="pname" required placeholder="例：套餐 B"></label><label>가격(원)<input name="krw" type="number" min="1000" step="1000" required value="50000"></label><button class="go">추가</button></form>
+      <div class="tw"><table><thead><tr><th>업체</th><th>카테고리</th><th>지역</th><th>상품</th><th>최저가</th><th>추천</th></tr></thead><tbody>${S.shops.slice().reverse().map(s => `<tr${fl(s.id)}><td class="zh">${esc(s.name)}</td><td>${catOf(s.cat).ko}</td><td class="zh">${esc(s.area)}</td><td>${s.products.length}개</td><td>${won(minPrice(s))} <span style="color:#9aa5b1">(${cny(minPrice(s))})</span></td><td>${s.rec ? '<span class="pill g">추천</span>' : '-'}</td></tr>`).join('')}</tbody></table></div>`,
+    tpl: () => `<div class="form-t">할인권 발급</div>
+      <form class="form" id="f-tpl"><label>업체<select name="shop">${shopOpts()}</select></label><label>쿠폰명(중문)<input name="name" required value="新客专享立减"></label>
+      <label>혜택 표기<input name="val" required value="减₩10,000"></label><label>사용 조건(중문)<input name="cond" required value="满₩50,000可用"></label>
+      <label>수량<input name="qty" type="number" min="1" max="10000" required value="30"></label><label>유효기간(까지)<input name="until" type="date" required value="2026-12-31" min="${today()}"></label><button class="go">발급</button></form>
+      <div class="ad-note">발급 즉시 왼쪽 미니프로그램 「优惠券 → 领券中心」과 首页 「限时领券」에 나타납니다.</div>
+      <div class="tw"><table><thead><tr><th>쿠폰</th><th>업체</th><th>혜택</th><th>수량</th><th>수령</th><th>사용</th><th>잔여</th><th>유효기간</th><th>상태</th></tr></thead><tbody>${S.tpls.slice().reverse().map(t => { const u = S.claims.filter(c => c.tpl === t.id && c.status === 'used').length;
+        return `<tr${fl(t.id)}><td class="zh">${esc(t.name)}</td><td class="zh">${esc(shopOf(t.shop)?.name || '-')}</td><td class="zh">${esc(t.val)}</td><td>${t.qty}</td><td>${claimedCount(t)}</td><td>${u}</td><td>${Math.max(left(t),0)}</td><td>~${t.until}</td><td>${expired(t) ? '<span class="pill">만료</span>' : left(t) <= 0 ? '<span class="pill o">소진</span>' : '<span class="pill g">진행중</span>'}</td></tr>`; }).join('')}</tbody></table></div>`,
+    staff: () => `<div class="form-t">직원 고유 코드 등록</div>
+      <form class="form" id="f-staff"><label>업체<select name="shop">${shopOpts()}</select></label><label>직원명<input name="name" required placeholder="예: 홍길동"></label>
+      <label>코드(숫자 4자리)<input name="code" required pattern="\\d{4}" maxlength="4" inputmode="numeric" value="${String(Math.floor(1000 + Math.random() * 9000))}"></label><button class="go">등록</button></form>
+      <div class="ad-note">매장 직원이 고객 휴대폰의 「门店核销」 화면에 이 코드를 입력하면 사용 완료 처리됩니다. 코드는 업체별로 구분되며, 다른 업체 코드로는 처리되지 않습니다.</div>
+      <div class="tw"><table><thead><tr><th>업체</th><th>직원</th><th>코드</th><th>처리 건수</th><th></th></tr></thead><tbody>${S.staff.slice().reverse().map(x => `<tr${fl(x.id)}><td class="zh">${esc(shopOf(x.shop)?.name || '-')}</td><td>${esc(x.name)}</td><td><b style="font-variant-numeric:tabular-nums;letter-spacing:.1em">${esc(x.code)}</b></td><td>${S.claims.filter(c => c.staff === x.name).length}</td><td><button class="del" data-delstaff="${x.id}">삭제</button></td></tr>`).join('')}</tbody></table></div>`,
+    log: () => `<div class="form-t">쿠폰 수령·사용 내역</div>
+      <div class="tw"><table><thead><tr><th>쿠폰번호</th><th>쿠폰</th><th>업체</th><th>상태</th><th>수령</th><th>사용</th><th>확인 직원</th></tr></thead><tbody>${S.claims.slice().reverse().map(c => { const t = tplOf(c.tpl);
+        return `<tr${fl(c.id)}><td><b style="font-variant-numeric:tabular-nums">${c.code}</b></td><td class="zh">${esc(t.name)}</td><td class="zh">${esc(shopOf(t.shop)?.name || '-')}</td><td>${c.status === 'used' ? '<span class="pill g">사용 완료</span>' : expired(t) ? '<span class="pill">만료</span>' : '<span class="pill o">미사용</span>'}</td><td>${c.claimedAt}</td><td>${c.usedAt || '-'}</td><td>${esc(c.staff || '-')}</td></tr>`; }).join('') || '<tr><td colspan="7" style="text-align:center;color:#9aa5b1">내역 없음</td></tr>'}</tbody></table></div>
+      <div class="ad-note">자동 정산은 범위 밖 — 이 표를 엑셀로 내려받아 업체별로 정산하는 방식을 기본으로 둡니다.</div>`,
+  };
+  $('adbody').innerHTML = B[adTab]();
+  flashId = null;
+}
+$('adtabs').addEventListener('click', e => { const b = e.target.closest('[data-ad]'); if (b) renderAdmin(b.dataset.ad); });
+$('adbody').addEventListener('click', e => { const b = e.target.closest('[data-delstaff]'); if (b) { S.staff = S.staff.filter(x => x.id !== b.dataset.delstaff); save(); renderAdmin(); } });
+$('adbody').addEventListener('submit', e => {
+  e.preventDefault(); const f = Object.fromEntries(new FormData(e.target)); const id = e.target.id;
+  if (id === 'f-shop') { const s = {id: uid('s'), cat: f.cat, name: f.name.trim(), area: f.area.trim(), addr: f.addr.trim(), hours: f.hours.trim(), rate: 5.0, cnt: 0, tags: ['新入驻'], art: catOf(f.cat).art, rec: f.rec ? 1 : 0, products: [P(f.pname.trim(), +f.krw)]};
+    S.shops.push(s); flashId = s.id; toast('新商家已上线'); }
+  if (id === 'f-prod') { shopOf(f.shop).products.push(P(f.pname.trim(), +f.krw)); flashId = f.shop; toast('商品已更新'); }
+  if (id === 'f-tpl') { const t = {id: uid('t'), shop: f.shop, name: f.name.trim(), val: f.val.trim(), cond: f.cond.trim(), qty: +f.qty, until: f.until};
+    S.tpls.push(t); flashId = t.id; toast('有新的优惠券可领取'); }
+  if (id === 'f-staff') { if (S.staff.some(x => x.shop === f.shop && x.code === f.code)) { alert('같은 업체에 이미 있는 코드입니다.'); return; }
+    const x = {id: uid('st'), shop: f.shop, name: f.name.trim(), code: f.code}; S.staff.push(x); flashId = x.id; }
+  save(); renderAdmin(); render();
+});
+$('reset').onclick = () => { S = SEED(); save(); ui = {area:'全部', seg:'center', prod:{}}; tab = 'home'; stack = [{v:'home'}]; render(true); renderAdmin('tpl'); };
+
+render(true); renderAdmin();
+})();
+</script>
+</body>
+</html>
