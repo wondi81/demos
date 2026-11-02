@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gallery Haneul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="band">SAMPLE · ZTW 시연용</div>
+
+<header class="site-head">
+  <a href="#/" class="logo">Gallery Haneul</a>
+  <nav class="nav">
+    <a href="#/exhibitions" data-nav="exhibitions" data-t="nav_ex"></a>
+    <a href="#/artists" data-nav="artists" data-t="nav_ar"></a>
+    <a href="#/visit" data-nav="visit" data-t="nav_vi"></a>
+    <span class="lang"><button data-lang="ko">KO</button><button data-lang="en">EN</button></span>
+  </nav>
+</header>
+
+<main id="view"></main>
+
+<footer class="site-foot">
+  <div class="foot-grid">
+    <div class="foot-logo">Gallery Haneul</div>
+    <div id="foot-spaces"></div>
+  </div>
+  <p class="copy">© 2026 ZTW · 제안용 시연 화면입니다. 화면·설계의 무단 복제·사용을 금합니다.</p>
+</footer>
+
+<div class="lightbox" id="lb" hidden>
+  <button class="lb-close" aria-label="닫기">×</button>
+  <button class="lb-prev" aria-label="이전">‹</button>
+  <figure>
+    <img id="lb-img" alt="">
+    <figcaption id="lb-cap"></figcaption>
+  </figure>
+  <button class="lb-next" aria-label="다음">›</button>
+</div>
+
+<button class="admin-toggle" id="admin-toggle">관리 화면 보기</button>
+
+<aside class="admin" id="admin" hidden>
+  <div class="admin-head">
+    <strong>직원용 관리 화면 <span class="muted">(시연)</span></strong>
+    <button class="admin-close" id="admin-close" aria-label="닫기">×</button>
+  </div>
+  <p class="admin-note">실제 납품은 아임웹 게시판·갤러리 위젯으로 같은 흐름을 세팅하고 직원용 매뉴얼(영상) 제공. 이 화면은 새 전시를 올리는 순서를 미리 보여 드리는 시연입니다.</p>
+
+  <section class="step">
+    <h3><span>1</span> 새 전시 만들기</h3>
+    <div class="form-grid">
+      <label class="full">전시 제목<input id="f-title" placeholder="예: 겨울의 표면"></label>
+      <label>시작일<input type="date" id="f-start"></label>
+      <label>종료일<input type="date" id="f-end"></label>
+      <label class="full">전시 공간
+        <span class="seg">
+          <label><input type="radio" name="f-space" value="jongno" checked> 종로</label>
+          <label><input type="radio" name="f-space" value="yongsan"> 용산</label>
+        </span>
+      </label>
+      <label class="full">전시 소개 (선택)<textarea id="f-desc" rows="2" placeholder="한두 문장으로 충분합니다."></textarea></label>
+    </div>
+  </section>
+
+  <section class="step">
+    <h3><span>2</span> 작품 이미지 올리기</h3>
+    <label class="drop" id="drop">
+      <input type="file" id="f-files" accept="image/*" multiple>
+      <strong>이미지를 여기로 끌어다 놓으세요</strong>
+      <span>여러 장을 한 번에 올릴 수 있습니다 · 클릭해서 고르기</span>
+    </label>
+  </section>
+
+  <section class="step">
+    <h3><span>3</span> 순서 정하고 작품 정보 입력</h3>
+    <p class="hint">왼쪽 손잡이(⋮⋮)를 끌어 순서를 바꿉니다. 같은 값은 아래 '전체 적용'으로 한 번에 채우세요.</p>
+    <div class="bulk">
+      <input id="b-artist" placeholder="작가">
+      <input id="b-year" placeholder="연도">
+      <input id="b-material" placeholder="재료">
+      <button id="b-apply" type="button">전체 적용</button>
+    </div>
+    <div class="rows" id="rows"><p class="empty">아직 올린 이미지가 없습니다.</p></div>
+  </section>
+
+  <div class="admin-foot">
+    <span id="f-msg" class="msg"></span>
+    <button class="publish" id="publish" type="button">게시</button>
+  </div>
+</aside>
+
+<script src="app.js"></script>
+</body>
+</html>
