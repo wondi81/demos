@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%279%27 fill=%27%2312306b%27/%3E%3C/svg%3E">
+<title>홈페이지 통합 리뉴얼 시연</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="band">시연용 가상 데이터 · 가상 회사</div>
+
+<header class="top">
+  <div class="wrap">
+    <h1 class="title">홈페이지 통합 리뉴얼 시연 <span class="tag">Cafe24 + WordPress + ASP.NET WebForms</span></h1>
+    <div class="tabs" role="tablist" aria-label="시연 구성">
+      <button role="tab" id="t-home" aria-controls="p-home" aria-selected="true">통합 홈페이지 시안</button>
+      <button role="tab" id="t-redir" aria-controls="p-redir" aria-selected="false" tabindex="-1">기존 URL 리디렉션 표</button>
+      <button role="tab" id="t-arch" aria-controls="p-arch" aria-selected="false" tabindex="-1">WebForms 연동 구조</button>
+      <button role="tab" id="t-qa" aria-controls="p-qa" aria-selected="false" tabindex="-1">검수 기준표</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- 1. 통합 홈페이지 시안 -->
+<section class="panel" id="p-home" role="tabpanel" aria-labelledby="t-home">
+  <div class="intro">
+    <h2>카페24 홈페이지와 워드프레스 블로그를 한 사이트로</h2>
+    <p>아래 틀은 실제 화면 폭(PC·태블릿·모바일)으로 바뀌는 시안입니다. 메뉴·블로그 최신글·서비스 진입 버튼이 한 디자인으로 이어집니다.</p>
+  </div>
+  <div class="vp" role="group" aria-label="화면 폭 전환">
+    <button type="button" data-w="1280" aria-pressed="true">PC 1280</button>
+    <button type="button" data-w="768" aria-pressed="false">태블릿 768</button>
+    <button type="button" data-w="390" aria-pressed="false">모바일 390</button>
+    <span class="vp-now" id="vpNow" aria-live="polite">현재 틀 너비 1280px</span>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="frame" id="frame" data-w="1280">
+      <header class="s-head">
+        <a class="s-brand" href="#"><span class="s-logo" aria-hidden="true"></span>온누리솔루션</a>
+        <button type="button" class="s-burger" id="burger" aria-expanded="false" aria-controls="gnb">메뉴</button>
+        <nav class="s-nav" id="gnb" aria-label="주 메뉴">
+          <a href="#">회사소개</a><a href="#">서비스</a><a href="#">고객사례</a><a href="#">블로그</a><a href="#">고객센터</a>
+          <a href="#" class="s-cta">서비스 바로가기</a>
+        </nav>
+      </header>
+
+      <section class="s-hero">
+        <div class="s-hero-tx">
+          <p class="s-eyebrow">업무 시스템 · 홈페이지 · 블로그를 한 곳에서</p>
+          <h2>현장에서 쓰는 업무 시스템,<br>이제 하나의 사이트로 만납니다</h2>
+          <p class="s-lead">기존 서비스는 그대로 두고, 소개 페이지와 소식을 같은 디자인으로 묶었습니다. 로그인 한 번이면 서비스로 바로 이동합니다.</p>
+          <div class="s-btns"><a href="#" class="s-btn pri">서비스 바로가기</a><a href="#" class="s-btn">도입 상담 안내</a></div>
+        </div>
+        <div class="s-hero-art" aria-hidden="true"><i></i><i></i><i></i></div>
+      </section>
+
+      <section class="s-sec">
+        <h3>서비스</h3>
+        <div class="s-cards">
+          <article><span class="s-ic a"></span><h4>업무 자동화</h4><p>반복되는 접수·승인 업무를 화면 하나에서 처리합니다.</p></article>
+          <article><span class="s-ic b"></span><h4>데이터 연동</h4><p>기존 DB 자료를 읽기 전용으로 안전하게 보여줍니다.</p></article>
+          <article><span class="s-ic c"></span><h4>보고서·통계</h4><p>월별 현황을 표와 그래프로 확인하고 내려받습니다.</p></article>
+          <article><span class="s-ic d"></span><h4>운영 지원</h4><p>장애 대응과 변경 요청을 한 창구로 받습니다.</p></article>
+        </div>
+      </section>
+
+      <section class="s-sec s-alt">
+        <div class="s-sec-h"><h3>최신 블로그 글</h3><a href="#">블로그 전체 보기</a></div>
+        <div class="s-posts" id="posts" aria-live="polite"></div>
+        <p class="s-note">워드프레스 REST API(<code>/wp-json/wp/v2/posts?_embed</code>) 응답 모양의 가상 데이터를 읽어 그린 영역입니다.</p>
+      </section>
+
+      <footer class="s-foot">
+        <div><b>가상기업 온누리솔루션</b><p>시연용 가상 데이터 · 가상 회사</p></div>
+        <nav aria-label="하단 메뉴"><a href="#">개인정보처리방침</a><a href="#">이용약관</a><a href="#">고객센터</a></nav>
+      </footer>
+    </div>
+  </div>
+
+  <details class="json">
+    <summary>블로그 연동 데이터 모양 보기 (WordPress REST 응답 1건)</summary>
+    <pre><code id="jsonOut"></code></pre>
+  </details>
+</section>
+
+<!-- 2. 리디렉션 -->
+<section class="panel" id="p-redir" role="tabpanel" aria-labelledby="t-redir" hidden>
+  <div class="intro">
+    <h2>기존 주소는 새 주소로 영구 이동(301)</h2>
+    <p>카페24 주소와 블로그 주소가 검색 결과·즐겨찾기에서 끊기지 않게, 표의 행마다 IIS 규칙을 만듭니다.</p>
+  </div>
+  <div class="bar">
+    <label class="sr" for="q">주소 검색</label>
+    <input id="q" type="search" placeholder="주소·메모 검색 (예: login, 블로그)" autocomplete="off">
+    <span class="count" id="cnt" aria-live="polite"></span>
+    <button type="button" class="btn pri" id="showXml" aria-expanded="false" aria-controls="xmlBox">web.config 규칙 보기</button>
+  </div>
+  <div class="tbl-wrap">
+    <table class="tbl" id="rtbl">
+      <thead><tr><th>#</th><th>기존 주소</th><th>새 주소</th><th>상태</th><th>메모</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="xml" id="xmlBox" hidden>
+    <div class="xml-h"><b>IIS URL Rewrite 규칙 (표 전체 기준)</b><button type="button" class="btn sm" id="copyXml">복사</button><span class="small" id="copyMsg" role="status"></span></div>
+    <pre><code id="xmlOut"></code></pre>
+    <p class="small">조건이 있는 규칙(쿼리스트링·블로그 도메인)을 먼저 두고 <code>stopProcessing</code>으로 중복 이동을 막습니다. 규칙은 <code>system.webServer</code> 안에 넣습니다.</p>
+  </div>
+</section>
+
+<!-- 3. 구조 -->
+<section class="panel" id="p-arch" role="tabpanel" aria-labelledby="t-arch" hidden>
+  <div class="intro">
+    <h2>WebForms를 유지한 채 새 홈페이지를 얹는 구조</h2>
+    <p>새 페이지는 기존 서비스와 같은 IIS 애플리케이션에 들어가고, 공통 레이아웃(Site.Master) 하나로 디자인이 이어집니다.</p>
+  </div>
+  <div class="dia">
+    <div class="iis">
+      <div class="iis-t">같은 IIS 애플리케이션 · .NET Framework 4.8 WebForms</div>
+      <div class="master">Site.Master 공통 레이아웃 (헤더·메뉴·푸터)</div>
+      <div class="iis-row">
+        <div class="box new"><b>새 홈페이지</b><span>Default.aspx · Company.aspx<br>Cases.aspx · Support.aspx</span></div>
+        <div class="link" aria-hidden="true">↔<small>로그인 세션 공유</small></div>
+        <div class="box old"><b>기존 서비스 페이지</b><span>Login.aspx · Order.aspx<br>Report.aspx … (수정 없음)</span></div>
+      </div>
+    </div>
+    <div class="arrows" aria-hidden="true"><span>↓ SqlCommand(매개변수)</span><span>↓ HttpClient · 캐시 10분</span></div>
+    <div class="dia-row">
+      <div class="box db"><b>MS SQL</b><span>기존 테이블은 그대로<br><code>vw_HomeNotice</code> · <code>vw_HomeCase</code><br>홈페이지 노출용 읽기 전용 뷰만 조회</span></div>
+      <div class="box wp"><b>WordPress 블로그</b><span>REST API로 최신글 3건만 가져옴<br>실패하면 마지막 캐시 또는 빈 영역</span></div>
+    </div>
+  </div>
+
+  <h3 class="sub">코드 예시 (.NET Framework 4.8)</h3>
+  <div class="tabs sm" role="tablist" aria-label="코드 예시">
+    <button role="tab" id="c-master" aria-selected="true" aria-controls="codeBox">Site.Master</button>
+    <button role="tab" id="c-cs" aria-selected="false" aria-controls="codeBox" tabindex="-1">Default.aspx.cs</button>
+    <button role="tab" id="c-cfg" aria-selected="false" aria-controls="codeBox" tabindex="-1">web.config</button>
+  </div>
+  <div class="code" id="codeBox" role="tabpanel" tabindex="0"><pre><code id="codeOut"></code></pre></div>
+</section>
+
+<!-- 4. 검수 -->
+<section class="panel" id="p-qa" role="tabpanel" aria-labelledby="t-qa" hidden>
+  <div class="intro">
+    <h2>이 5가지가 되면 완료입니다</h2>
+    <p>항목마다 확인 방법과 남기는 증빙을 미리 정해 둡니다. 체크하면 진행 수가 바뀝니다.</p>
+  </div>
+  <div class="prog"><div class="prog-bar"><i id="progBar"></i></div><b id="progTx">0 / 5 확인</b></div>
+  <div class="tbl-wrap">
+    <table class="tbl" id="qtbl">
+      <thead><tr><th>#</th><th>검수 기준</th><th>확인 방법</th><th>남기는 증빙</th><th>확인</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+<footer class="pg-foot wrap">시연용 가상 데이터 · 가상 회사 — 화면·주소·코드는 모두 예시입니다.</footer>
+<script src="app.js"></script>
+</body>
+</html>

@@ -11,3 +11,4 @@
 - [safari-ext-a11y](safari-ext-a11y/) — 크롬→사파리 확장 이식 점검: manifest 권한별 Safari macOS·iOS 지원표(MDN 데이터), iOS 알림 대체 구조, 강의 알림 접근성 보완 전·후 비교
 - [toeic-lms-pwa](toeic-lms-pwa/) — 토익 브랜드 LMS(PWA): 수강증 이미지 자동 인증(승인·거절·보관·검토), 수업 달력 편성(금요일 격주·A/B 교대), 등급·기간별 권한과 Supabase RLS 요약
 - [wechat-miniprogram](wechat-miniprogram/) — 방한 중화권 관광객 할인권·예약 안내 위챗 미니프로그램 화면 흐름 + 관리자 화면 시연
+- [site-integration-aspnet](site-integration-aspnet/) — Cafe24·WordPress·ASP.NET WebForms 통합 리뉴얼: 반응형 통합 홈페이지 시안(블로그 최신글 연동), 기존 URL 301 리디렉션 표와 IIS web.config 규칙 생성, WebForms 연동 구조·검수 기준표
