@@ -12,3 +12,4 @@
 - [toeic-lms-pwa](toeic-lms-pwa/) — 토익 브랜드 LMS(PWA): 수강증 이미지 자동 인증(승인·거절·보관·검토), 수업 달력 편성(금요일 격주·A/B 교대), 등급·기간별 권한과 Supabase RLS 요약
 - [wechat-miniprogram](wechat-miniprogram/) — 방한 중화권 관광객 할인권·예약 안내 위챗 미니프로그램 화면 흐름 + 관리자 화면 시연
 - [site-integration-aspnet](site-integration-aspnet/) — Cafe24·WordPress·ASP.NET WebForms 통합 리뉴얼: 반응형 통합 홈페이지 시안(블로그 최신글 연동), 기존 URL 301 리디렉션 표와 IIS web.config 규칙 생성, WebForms 연동 구조·검수 기준표
+- [kbeauty-funding-mvp](kbeauty-funding-mvp/) — K뷰티 리워드 펀딩몰 MVP: 4개 국어(한·영·베·태), 펀딩·장바구니·주문, 크레딧 선불 장부(추가 전용·잔액 검증), PG 결제창 흐름·실패 복구, 관리자 환불(카드 취소·크레딧 복원)
